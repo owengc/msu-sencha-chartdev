@@ -1,20 +1,20 @@
 Ext.define("ChartDev.store.UserLogStore", {
     extend: "Ext.data.Store",
-//    requires: ['ChartDev.model.UserLogModel'],
+    requires: ['ChartDev.model.UserLogModel'],
     config: {
         model: 'ChartDev.model.UserLogModel',
 	storeId: 'UserLogStore',
+	autoLoad: false,
 //	clearOnPageLoad: false,
 //	remoteFilter: false,
         proxy: {
 	    type: 'ajax',
-	    url: '../../sample_user_log.json',
+	    url: 'sample_user_log.json',
 	    reader: {
 		type: 'json',
 		rootProperty: 'userlog'
 	    }
-	},
-	autoLoad: false
+	}
     }
 });
 

@@ -1,9 +1,12 @@
+var UserLogStore = Ext.create('ChartDev.store.UserLogStore');
+
 Ext.define('ChartDev.view.ChartView', {
     extend: 'Ext.Panel',
     alias: 'widget.chartview',
 
     requires: [
-        //'iPad2.view.TopBar',
+        'Ext.data.Store',
+	'ChartDev.store.UserLogStore',
         'Ext.MessageBox',
         'Ext.draw.Color',
         'Ext.chart.axis.Numeric',
@@ -26,7 +29,7 @@ Ext.define('ChartDev.view.ChartView', {
             {
                 xtype: 'chart',
 		height: '100%',
-                store: 'ChartDev.store.UserLogStore',
+                store: UserLogStore,
 		axes: [
 
                     {

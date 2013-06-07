@@ -21,7 +21,7 @@ Ext.Loader.setPath({
 
 Ext.application({
     name: 'ChartDev',
-
+    stores: ['UserLogStore'],
     requires: [
         'Ext.MessageBox'
     ],
@@ -52,7 +52,8 @@ Ext.application({
     launch: function() {
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
-
+	//var UserLogStore = Ext.create('ChartDev.store.UserLogStore').load();
+	//console.log(UserLogStore);
         // Initialize the main view
         Ext.Viewport.add(Ext.create('ChartDev.view.ChartView'));
     },
