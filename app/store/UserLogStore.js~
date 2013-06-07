@@ -1,0 +1,61 @@
+Ext.define("ChartDev.store.ChartStore", {
+    extend: "Ext.data.Store",
+    alias: 'store.ChartStore',
+    requires: ['ChartDev.model.UserLogModel'],
+    config: {
+        storeId: 'ChartStore',
+        model: 'UserLogModel',
+	clearOnPageLoad: false,
+	rootProperty: 'items',
+	remoteFilter: false,
+        proxy: {
+	    type: 'ajax',
+	    url: '../../sample_user_log.json',
+	    reader: 'json'
+	},
+	autoLoad: true
+    }
+});
+
+/*
+Ext.regStore('UserLogStore', {
+    model: 'UserLogModel',  
+    //pageSize: 10,
+    //currentPage:1,
+    clearOnPageLoad: false,
+    proxy: {
+        type: 'ajax',
+        url: '../promse/journal?token=' + localStorage.getItem('token') + '&action=getuserlog',
+        reader:{
+            type:'json',
+            root: 'userlog',            
+        },
+        
+    },
+    filterOnLoad: false,
+    remoteFilter: false,
+    sortOnfilter: false,
+    listeners:{
+        beforeload:function(){
+            this.clearFilter();
+            //console.log("before load");
+        },
+        load:function(){
+            //console.log("store load", this.getCount());
+            if(VPDApp.logCount!=this.getCount()){
+                VPDApp.logCount = this.getCount();
+            }else {
+                Ext.Msg.alert(" ","All logs are loaded.", Ext.emptyFn);
+            }
+            VPDApp.views.logFilterView.addDates(this.collect('datetaught'));
+            VPDApp.views.logFilterView.addTopics(this.collect('frameworktitle'));
+            VPDApp.views.logFilterView.addCourses(this.collect('classname'));  
+            VPDApp.views.logFilterView.fireFilter();
+            
+        },
+        //autoLoaded:true
+        
+    }
+    
+});
+*/
