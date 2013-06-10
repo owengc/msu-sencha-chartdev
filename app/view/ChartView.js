@@ -2,7 +2,6 @@ var UserLogStore = Ext.create('ChartDev.store.UserLogStore');
 UserLogStore.load();
 Ext.define('ChartDev.view.ChartView', {
     extend: 'Ext.Panel',
-//    layout: 'card',
     alias: 'widget.chartview',
 
     requires: [
@@ -23,69 +22,41 @@ Ext.define('ChartDev.view.ChartView', {
 	'Ext.chart.axis.Time',
         'Ext.chart.Legend'
     ],
-
     config: {
-        items: [
-  	    /*{
-		xtype: 'panel',
-		items: [
-		    {
-			xtype: 'datepicker',
-			id: 'chartFilterX',
-			config: {
-			    yearFrom: 2010,
-			    value: new Date(),
-			    useTitles: false,
-			    stretchX: false
-			}
-		    },
-		    {
-			xtype: 'picker',
-			id: 'chartFilterY',
-			config: {
-			    //width: 100,
-			    stretchX: false
-			},
-			slots: [
-			    {
-				name: 'collection',
-				title: 'Collection',
-				data: [
-				    {text: 'Domain', value: 0},
-				    {text: 'Cluster', value: 1},
-				    {text: 'Topic', value: 2}
-				]
-			    }
-			]
-		    }
-		]
-	    },*/
-	    {
-                xtype: 'chart',
-		height: '100%',
+	fullscreen: true,
+	layout: 'vbox',
+    
+   
+    
+	items: [
+  	    {
+		xtype: 'chart',
+		height: '70%',
 		animate: true,
-                store: UserLogStore,
+		innerPadding: {
+		    top: 40,
+		    bottom: 40
+		},
+		store: UserLogStore,
 		axes: [
 		    {
-                        type: 'numeric',
+			type: 'category',
 			position: 'left',
 			fields: [
 			    'materialid'
-                        ],
+			],
 			title: {
 			    text: 'Material Id',
 			    fontSize: 14
 			},
-			grid: true,
-			minimum: 1000,
-			maximum: 12000
+			grid: true
 		    },
 		    {
-                        type: 'time',
-                        position: 'bottom',
+			type: 'time',
+			position: 'bottom',
 			fields: [
-			   'datetaught'
-                        ],
+			    'datetaught'
+			],
 			fromDate: new Date('Apr 1 2013'),
 			toDate: new Date(),
 			title: {
@@ -96,17 +67,17 @@ Ext.define('ChartDev.view.ChartView', {
 			    //axisLine: false
 			}
 		    }
-                ],
-                series: [
+		],
+		series: [
 		    {
-                        type: 'scatter',
-                        highlight: {
+			type: 'scatter',
+			highlight: {
 			    size: 7,
 			    radius: 7
 			},
 			fill: true,
-                        xField: 'datetaught',
-                        yField: 'materialid',
+			xField: 'datetaught',
+			yField: 'materialid',
 			marker: {
 			    type: 'circle',
 			    fillStyle: 'blue',
@@ -114,14 +85,81 @@ Ext.define('ChartDev.view.ChartView', {
 			    lineWidth: 0
 			}
 		    }
-                ],
-                interactions: [
+		],
+		interactions: [
 		    {
-                        type: 'panzoom'
+			type: 'panzoom'
 		    }
-                ]
+		]
+	    },		
+	    {
+		xtype: 'panel',
+		//height: '30%',
+		docked: 'bottom',
+		layout: 'hbox',
+		items: [
+		    {
+			xtype: 'fieldset',
+			flex: 1,
+			height: '100%',
+			items: [
+			    {
+				xtype: 'picker',
+				id: 'chartFilterY',
+				
+				cancelButton: false,
+				doneButton: false,
+				slots: [
+				    {
+					name: 'collection',
+					title: 'Collection',
+					data: [
+					    {text: 'Domain', value: 0},
+					    {text: 'Cluster', value: 1},
+					    {text: 'Topic', value: 2}
+					]
+				    }
+				]
+			    }
+			]
+		    },
+		    {
+			xtype: 'fieldset',
+			flex: 1,
+			height: '100%',
+			items: [
+			    {
+				xtype: 'datepicker',
+				id: 'chartFilterXStart',
+			
+				yearFrom: 2010,
+				value: new Date(),
+				useTitles: false,
+				cancelButton: false,
+				doneButton: false
+			    }
+			]
+		    },
+		    {
+			xtype: 'fieldset',
+			flex: 1,
+			height: '100%',
+			items: [
+			    {
+				xtype: 'datepicker',
+				id: 'chartFilterXEnd',
+				
+				yearFrom: 2010,
+				value: new Date(),
+				useTitles: false,
+				cancelButton: false,
+				doneButton: false
+			    }
+			]
+		    }	
+		]
 	    }
-        ]
+	]
     }
 });
 
