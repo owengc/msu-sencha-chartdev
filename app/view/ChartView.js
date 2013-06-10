@@ -1,10 +1,13 @@
 var UserLogStore = Ext.create('ChartDev.store.UserLogStore');
-
+UserLogStore.load();
 Ext.define('ChartDev.view.ChartView', {
     extend: 'Ext.Panel',
+//    layout: 'card',
     alias: 'widget.chartview',
 
     requires: [
+	'Ext.picker.Picker',
+	'Ext.picker.Date',
         'Ext.data.Store',
 	'ChartDev.store.UserLogStore',
         'Ext.MessageBox',
@@ -15,73 +18,111 @@ Ext.define('ChartDev.view.ChartView', {
         'Ext.chart.interactions.ItemInfo',
         'Ext.chart.CartesianChart',
         'Ext.chart.axis.Category',
-        'Ext.chart.series.Line',
+        'Ext.chart.series.Scatter',
         'Ext.chart.axis.Numeric',
+	'Ext.chart.axis.Time',
         'Ext.chart.Legend'
     ],
 
     config: {
         items: [
-            {
-                xtype: /*'topbar'*/'container',
-                title: 'Chart - Under Construction'
-            },
-            {
+  	    /*{
+		xtype: 'panel',
+		items: [
+		    {
+			xtype: 'datepicker',
+			id: 'chartFilterX',
+			config: {
+			    yearFrom: 2010,
+			    value: new Date(),
+			    useTitles: false,
+			    stretchX: false
+			}
+		    },
+		    {
+			xtype: 'picker',
+			id: 'chartFilterY',
+			config: {
+			    //width: 100,
+			    stretchX: false
+			},
+			slots: [
+			    {
+				name: 'collection',
+				title: 'Collection',
+				data: [
+				    {text: 'Domain', value: 0},
+				    {text: 'Cluster', value: 1},
+				    {text: 'Topic', value: 2}
+				]
+			    }
+			]
+		    }
+		]
+	    },*/
+	    {
                 xtype: 'chart',
 		height: '100%',
+		animate: true,
                 store: UserLogStore,
 		axes: [
-
-                    {
-                        type: 'category',
-			fields: [
-                            'x'
-                        ]
-                    },
-                    {
+		    {
                         type: 'numeric',
-                        fields: [
-                            'y1',
-                            'y2'
+			position: 'left',
+			fields: [
+			    'materialid'
                         ],
-                        grid: {
-                            odd: {
-                                fill: '#e8e8e8'
-                            }
-                        },
-                        position: 'left'
-                    }
+			title: {
+			    text: 'Material Id',
+			    fontSize: 14
+			},
+			grid: true,
+			minimum: 1000,
+			maximum: 12000
+		    },
+		    {
+                        type: 'time',
+                        position: 'bottom',
+			fields: [
+			   'datetaught'
+                        ],
+			fromDate: new Date('Apr 1 2013'),
+			toDate: new Date(),
+			title: {
+			    text: 'Dates',
+			    fontSize: 14
+			},
+			style: {
+			    //axisLine: false
+			}
+		    }
                 ],
                 series: [
-                    {
-                        type: 'line',
-                        style: {
-                            smooth: true,
-                            stroke: 'rgb(0,200,0)',
-                            fill: 'rgba(0,200,0,0.3)'
-                        },
-                        xField: 'x',
-                        yField: 'y1'
-                    },
-                    {
-                        type: 'line',
-                        style: {
-                            stroke: 'rgb(0,0,200)',
-                            lineWidth: 2
-                        },
-                        xField: 'x',
-                        yField: 'y2'
-                    }
+		    {
+                        type: 'scatter',
+                        highlight: {
+			    size: 7,
+			    radius: 7
+			},
+			fill: true,
+                        xField: 'datetaught',
+                        yField: 'materialid',
+			marker: {
+			    type: 'circle',
+			    fillStyle: 'blue',
+			    radius: 10,
+			    lineWidth: 0
+			}
+		    }
                 ],
                 interactions: [
-                    {
+		    {
                         type: 'panzoom'
-                    }
+		    }
                 ]
-            }
+	    }
         ]
     }
-
 });
 
 /*

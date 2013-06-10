@@ -1,18 +1,24 @@
+//convert function for date records (turns date string into javascript Date object)                                                                                                                       
+/*function makeDate(v, record){
+    var dateParts = record.get('datetaught').split('-');
+    console.log(dateParts);
+}*/
+
 Ext.define('ChartDev.model.UserLogModel', {
     extend: 'Ext.data.Model',
     
     config: {       
         fields: [
             {name: 'journalid', type: 'string'},
-         //   {name: 'framework_id', type: 'string'},
-         //   {name: 'frameworktitle', type: 'string'},
-            {name: 'datetaught',     type: 'string'},
+            {name: 'framework_id', type: 'string'},
+            {name: 'frameworktitle', type: 'string'},
+            {name: 'datetaught', /*type: 'string'*/    type: 'date', dateFormat: 'Y-m-d'},
             {name: 'classid', type: 'string'},
             {name: 'classname', type: 'string'},
             {name: 'duration',    type: 'string'},
-            //{name: 'activity', type: 'string'},
+            {name: 'activity', type: 'string'},
             {name: 'materialid', type: 'int'},
-            //{name: 'materialname', type:'string'},
+            {name: 'materialname', type:'string'},
             {name: 'usermaterials', type: 'string'},
             {name: 'pages', type: 'string'},
             {name: 'background', type: 'string'},
