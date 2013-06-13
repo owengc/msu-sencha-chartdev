@@ -27,6 +27,9 @@ Ext.application({
 	'ChartDev.store.UserLogStoreR'
     ],
     layout: 'fit',
+    controllers: [
+	'Report'
+    ],
     views: [
         'Main',
 	'Report'
