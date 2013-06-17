@@ -33,15 +33,18 @@ Ext.define('ChartDev.view.Report', {
 	    { 
 		xtype: 'toolbar',
 		id: 'report_toolbar',
-		title: 'Report',
+		title: 'Reports',
 		docked: 'top',
 		items: [
 		    {
 			xtype: 'button',
 			id: 'report_menuButton',
-			iconCls: 'arrow_down'
+			iconCls: 'arrow_up'
 		    }
-		]
+		],
+		initialize: function(){
+		    this.relayEvents(this.element, ['tap']);
+		}
 	    },
 	    {
 		xtype: 'formpanel',
@@ -82,7 +85,7 @@ Ext.define('ChartDev.view.Report', {
 			    },
 			    {
 				xtype: 'datepickerfield',
-				id: 'report_FilterXStart',
+				id: 'report_filterXStart',
 				label: 'Start Date:',
 				value: new Date(),
 				picker: {
@@ -91,7 +94,7 @@ Ext.define('ChartDev.view.Report', {
 			    },
 			    {
 				xtype: 'datepickerfield',
-				id: 'report_FilterXEnd',
+				id: 'report_filterXEnd',
 				label: 'End Date:',
 				value: new Date(),
 				picker: {
@@ -105,12 +108,14 @@ Ext.define('ChartDev.view.Report', {
 	    {
 		xtype: 'chart',
 		id: 'report_chart',
-		hidden: true,
 		height: '90%',
 		animate: true,
 		innerPadding: {
 		    top: 40,
 		    bottom: 40
+		},
+		insetPadding: {
+		    right: 20
 		},
 		store: UserLogStore,
 		axes: [
