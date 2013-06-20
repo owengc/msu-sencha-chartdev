@@ -1,44 +1,29 @@
-var UserLogStore = Ext.create('ChartDev.store.UserLogStoreR');
-UserLogStore.load();
-
 Ext.define('ChartDev.view.Report', {
     extend: 'Ext.Panel',
     alias: 'widget.reportview',
-
+    xtype: 'reportview',
     requires: [
-	'ChartDev.store.UserLogStoreR',
-        'Ext.data.Store',
-        'Ext.MessageBox',
+	'Ext.Toolbar',
 	'Ext.form.Panel',
-	'Ext.form.FieldSet',
 	'Ext.field.Select',
-	'Ext.field.DatePicker',
-        'Ext.draw.Color',
-        'Ext.chart.axis.Numeric',
-        'Ext.chart.series.Area',
-        'Ext.chart.interactions.PanZoom',
-        'Ext.chart.interactions.ItemInfo',
-        'Ext.chart.CartesianChart',
-        'Ext.chart.axis.Category',
-        'Ext.chart.series.Scatter',
-        'Ext.chart.axis.Numeric',
-	'Ext.chart.axis.Time',
-        'Ext.chart.Legend',
-	'Ext.Anim'
-    ],
+	'Ext.field.DatePicker'
+    ],    
     config: {
-	fullscreen: true,
+	itemId: 'report',
 	layout: 'vbox',
+	initialized: false,
+	menuState: {},
 	items: [
 	    { 
 		xtype: 'toolbar',
-		id: 'report_toolbar',
-		title: 'Reports',
+		itemId: 'report_toolbar',
 		docked: 'top',
+		height: 50,
+		title: 'Reports',
 		items: [
 		    {
 			xtype: 'button',
-			id: 'report_menuButton',
+			id: 'report_toolbarButton',
 			iconCls: 'arrow_up'
 		    }
 		],
@@ -48,140 +33,200 @@ Ext.define('ChartDev.view.Report', {
 	    },
 	    {
 		xtype: 'formpanel',
-		id: 'report_menu',
-		height: '100%',
-		layout: 'vbox',
-		showAnimation: {type: 'slideIn', direction: 'down'},
-		hideAnimation: {type: 'slideOut', direction: 'up'},
+		itemId: 'report_menu',
+		height: 311,
+		showAnimation: {type: 'slideIn', direction: 'down', duration: 250},
+		hideAnimation: {type: 'slideOut', direction: 'up', duration: 250},
 		items: [
 		    {
 			xtype: 'fieldset',
 			defaults: {
-			    labelWidth: '15%',
-			    flex: 1
-			},
+			    minHeight: 75,
+			    labelWidth: '15%'
+			},	
 			items: [			    
 			    {
 				xtype: 'selectfield',
-				id: 'report_type',
+				itemId: 'report_type',
+				name: 'type',
 				label: 'Report Type:',
 				usePicker: true,
 				options: [
-				    {text: 'List', value: 0},
-				    {text: 'Dot Plot', value: 1},
-				    {text: 'Bar Graph', value: 2}
-				]
+				    {text: 'List', value: 'list'},
+				    {text: 'Dot Plot', value: 'dot'},
+				    {text: 'Bar Graph', value: 'bar'}
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Report Type:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				}
 			    },
 			    {
 				xtype: 'selectfield',
-				id: 'report_filterY',
+				itemId: 'report_tier',
+				name: 'tier',
 				label: 'View By:',
 				usePicker: true,
 				options: [
-				    {text: 'Domain', value: 0},
-				    {text: 'Cluster', value: 1},
-				    {text: 'Topic', value: 2}
-				]
-			    },
-			    {
-				xtype: 'datepickerfield',
-				id: 'report_filterXStart',
-				label: 'Start Date:',
-				value: new Date(),
-				picker: {
-				    yearFrom: 2010
+				    {text: 'Standard', value: 'standard'},
+				    {text: 'Cluster', value: 'cluster'},
+				    {text: 'Domain', value: 'domain'},
+				    {text: 'Framework Id', value: 'framework_id'}
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Report Tier:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
 				}
 			    },
 			    {
 				xtype: 'datepickerfield',
-				id: 'report_filterXEnd',
-				label: 'End Date:',
-				value: new Date(),
+				itemId: 'report_fromDate',
+				name: 'fromDate',
+				label: 'From:',
+				placeHolder: '-select-',
 				picker: {
-				    yearFrom: 2010
+				    yearFrom: 2010,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Report Start Date:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				}
+			    },
+			    {
+				xtype: 'datepickerfield',
+				itemId: 'report_toDate',
+				name: 'toDate',
+				label: 'To:',
+				placeHolder: '-select-',
+				picker: {
+				    yearFrom: 2010,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Report End Date:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
 				}
 			    }
 			]
 		    }
 		]
-	    },
-	    {
-		xtype: 'chart',
-		id: 'report_chart',
-		height: '90%',
-		animate: true,
-		innerPadding: {
-		    top: 40,
-		    bottom: 40
-		},
-		insetPadding: {
-		    right: 20
-		},
-		store: UserLogStore,
-		axes: [
-		    {
-			type: 'category',
-			position: 'left',
-			fields: [
-			    'framework_id'
-			],
-			title: {
-			    text: 'Framework Id',
-			    fontSize: 14
-			},
-			grid: true
-		    },
-		    {
-			type: 'time',
-			position: 'bottom',
-			fields: [
-			    'datetaught'
-			],
-			fromDate: new Date('Apr 1 2013'),
-			toDate: new Date(),
-			title: {
-			    text: '',
-			},
-			style: {
-			    
-			},
-			label: {
-			    rotate: 45
-			},
-			dateFormat: 'M d'
-		    }
-		],
-		series: [
-		    {
-			type: 'scatter',
-			highlight: {
-			    size: 7,
-			    radius: 7
-			},
-			fill: true,
-			xField: 'datetaught',
-			yField: 'framework_id',
-			marker: {
-			    type: 'circle',
-			    fillStyle: 'blue',
-			    radius: 10,
-			    lineWidth: 0
-			}
-		    }
-		],
-		interactions: [
-		    {
-			type: 'panzoom'
-		    }
-		]
-	    }
+	    }//...report_menu
 	]
-    },
+    },//report
     initialize: function(){
 	this.callParent(); 
+	this.setInitialized(true);
+	
+	//testing:
+	Ext.ComponentQuery.query('#report_menu')[0].setValues({
+            type: 'dot',
+            tier: 'framework_id',
+            fromDate: new Date('Apr 1 2013'),
+            toDate: new Date('Jun 1 2013')
+        });
     }
+    
 });
-
+/*
+  
+*/
 /*
 VPDApp.views.ChartView = Ext.extend(Ext.Panel, {
     fullscreen: true,    

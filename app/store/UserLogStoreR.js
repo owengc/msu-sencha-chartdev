@@ -4,7 +4,7 @@ Ext.define("ChartDev.store.UserLogStoreR", {
     config: {
         model: 'ChartDev.model.UserLogModelR',
 	storeId: 'UserLogStore',
-	autoLoad: false,
+	autoLoad: true,
         proxy: {
 	    type: 'ajax',
 	    url: 'sample_user_log.json',
@@ -12,6 +12,8 @@ Ext.define("ChartDev.store.UserLogStoreR", {
 		type: 'json',
 		rootProperty: 'userlog'
 	    }
-	}
+	},
+	groupField: 'classname',
+	sorters: ['datetaught'],
     }
 });

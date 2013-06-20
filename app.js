@@ -21,12 +21,12 @@ Ext.Loader.setPath({
 
 Ext.application({
     name: 'ChartDev',
+    models: ['UserLogModelR'],
     stores: ['UserLogStoreR'],
     requires: [
         'Ext.MessageBox',
 	'ChartDev.store.UserLogStoreR'
     ],
-    layout: 'fit',
     controllers: [
 	'Report'
     ],
@@ -54,7 +54,7 @@ Ext.application({
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
 
-	Ext.Viewport.add(Ext.create('ChartDev.view.Report'));
+	Ext.Viewport.add(Ext.create('ChartDev.view.Report', {}));
     },
     onUpdated: function() {
         Ext.Msg.confirm(
