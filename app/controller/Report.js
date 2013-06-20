@@ -6,9 +6,10 @@ Ext.define('ChartDev.controller.Report', {
 	'Ext.List',
         'Ext.draw.Color',
         'Ext.chart.axis.Numeric',
-        'Ext.chart.series.Area',
+        'Ext.chart.series.Bar',
         'Ext.chart.interactions.PanZoom',
         'Ext.chart.interactions.ItemInfo',
+	'Ext.chart.interactions.ItemHighlight',
         'Ext.chart.CartesianChart',
         'Ext.chart.axis.Category',
         'Ext.chart.series.Scatter',
@@ -102,7 +103,7 @@ Ext.define('ChartDev.controller.Report', {
 	    report.remove(content, true);
 	    store.clearFilter();
 	}
-	if(params.type==='list'){
+	if(params.fromDate && params.toDate){
 	    store.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
 		if(date>=params.fromDate || date<=params.toDate){
@@ -112,6 +113,8 @@ Ext.define('ChartDev.controller.Report', {
 		    return false;
 		}
 	    });
+	}
+	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
 		height: '100%',
@@ -163,7 +166,77 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
         }
-        else if(params.type==='dot'){
+        else if(params.type==='dot' || params.type==='bar'){
+	    if(params.type==='dot'){//dot
+		var series=[
+		    {
+			type: 'scatter',
+			fill: true,
+			xField: 'datetaught',
+			yField: params.tier,
+			marker: {
+			    type: 'circle',
+			    fillStyle: 'darkblue',
+			    strokeStyle: 'blue',
+			    radius: 10,
+			    lineWidth: 0
+			},
+			highlightCfg: {
+			    type: 'circle',
+			    fillStyle: 'green',
+			    strokeStyle: 'yellowgreen',
+			    radius: 15,
+			    lineWidth: 1
+			}
+		    }
+		];
+		var xAxis={
+                    type: 'time',
+                    position: 'bottom',
+                    fields: [
+                        'datetaught'
+                    ],
+                    fromDate: params.fromDate,
+                    toDate: params.toDate,
+                    title: {
+                        text: '',
+                    },
+                    style: {
+
+                    },
+                    label: {
+                        rotate: 45
+                    },
+                    dateFormat: 'M d'
+		};
+	    }
+	    else{//bar
+		var series=[
+		    {
+			type: 'bar',
+			fill: true,
+			xField: 'duration',
+			yField: params.tier,
+			style: {
+			    fill: 'darkblue'
+			}
+		    }
+		];
+		var xAxis={
+                    type: 'numeric',
+                    position: 'bottom',
+                    fields: [
+                        'duration'
+                    ],
+                    title: {
+                        text: 'Time Spent (min)',
+                    },
+                    style: {
+
+                    },
+		    minimum: 0
+		};
+	    }
             content=Ext.create('Ext.chart.CartesianChart', {
 		itemId: 'report_content',
 		height: '100%',
@@ -177,6 +250,7 @@ Ext.define('ChartDev.controller.Report', {
 		    right: 40,
 		    bottom: 40
 		},
+		flipXY: (params.type==='dot')?false:true,
                 store: 'UserLogStore',
                 axes: [
                     {
@@ -191,44 +265,9 @@ Ext.define('ChartDev.controller.Report', {
                         },
                         grid: true
                     },
-                    {
-                        type: 'time',
-                        position: 'bottom',
-                        fields: [
-                            'datetaught'
-                        ],
-                        fromDate: params.fromDate,
-                        toDate: params.toDate,
-                        title: {
-                            text: '',
-                        },
-                        style: {
-
-                        },
-                        label: {
-                            rotate: 45
-                        },
-                        dateFormat: 'M d'
-                    }
+		    xAxis
                 ],
-		series: [
-		    {
-			type: 'scatter',
-			highlight: {
-			    size: 7,
-			    radius: 7
-			},
-			fill: true,
-			xField: 'datetaught',
-			yField: params.tier,
-			marker: {
-			    type: 'circle',
-			    fillStyle: 'blue',
-			    radius: 10,
-			    lineWidth: 0
-			}
-		    }
-		],
+		series: series,
 		interactions: [
 		    {
 			type: 'panzoom',
@@ -258,10 +297,7 @@ Ext.define('ChartDev.controller.Report', {
 		]
             });
         }
-        else if(params.type==='bar'){
-
-        }
-        else{
+	else{
             console.log('invalid report type');
 	    return false;
         }

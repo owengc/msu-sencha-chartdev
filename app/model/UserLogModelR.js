@@ -9,7 +9,7 @@ Ext.define('ChartDev.model.UserLogModelR', {
             {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
             {name: 'classid', type: 'string'},
             {name: 'classname', type: 'string'},
-            {name: 'duration',    type: 'string'},
+            {name: 'duration', type: 'int'},
             {name: 'activity', type: 'string'},
             {name: 'materialid', type: 'int'},
             {name: 'materialname', type:'string'},
@@ -21,7 +21,7 @@ Ext.define('ChartDev.model.UserLogModelR', {
             {name: 'practicescsv', type:'string'},
             {name: 'activity'},
             {name: 'standards'},
-            {name: 'math_practices'},
+            {name: 'math_practices'}
         ],
         hasMany:[{model:'ULActivityModel', name:'activity'},
                 {model:'FrameworkModel1', name:'standards'},

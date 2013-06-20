@@ -4,7 +4,7 @@
          "classid" : "8",
          "journalid" : "87331",
          "background" : "0",
-         "duration" : "0",
+         "duration" : 0,
          "classname" : "3rd Grade Math",
          "framework_id" : "10205",
          "frameworktitle" : "No Math Taught",
@@ -17,7 +17,7 @@
          "classid" : "8",
          "journalid" : "87330",
          "background" : "1",
-         "duration" : "88",
+         "duration" : 88,
          "activity" : [
             {
                "activity_id" : "2",
@@ -37,7 +37,7 @@
          "classid" : "8",
          "journalid" : "87329",
          "background" : "3",
-         "duration" : "50",
+         "duration" : 50,
          "activity" : [
             {
                "activity_id" : "1",
@@ -57,7 +57,7 @@
          "classid" : "8",
          "journalid" : "87328",
          "background" : "0",
-         "duration" : "0",
+         "duration" : 0,
          "classname" : "3rd Grade Math",
          "framework_id" : "10205",
          "frameworktitle" : "No Math Taught",
@@ -70,7 +70,7 @@
          "classid" : "8",
          "journalid" : "87325",
          "background" : "3",
-         "duration" : "50",
+         "duration" : 50,
          "activity" : [
             {
                "activity_id" : "1",
@@ -94,7 +94,7 @@
          "classid" : "8",
          "journalid" : "87325",
          "background" : null,
-         "duration" : "50",
+         "duration" : 50,
          "classname" : "3rd Grade Math",
          "framework_id" : "9400",
          "frameworktitle" : "2.  Solve word problems that call for addition of three whole numbers  whose sum is less than or equal to 20, e.g., by using objects, drawings,  and equations with a symbol for the unknown number to represent the  problem. ",
@@ -106,7 +106,7 @@
          "classid" : "8",
          "journalid" : "87326",
          "background" : "0",
-         "duration" : "0",
+         "duration" : 0,
          "classname" : "3rd Grade Math",
          "framework_id" : "10205",
          "frameworktitle" : "No Math Taught",
@@ -118,7 +118,7 @@
          "classid" : "8",
          "journalid" : "87323",
          "background" : "0",
-         "duration" : "0",
+         "duration" : 0,
          "classname" : "3rd Grade Math",
          "framework_id" : "10205",
          "frameworktitle" : "No Math Taught",
@@ -128,7 +128,7 @@
       },
       {
          "materialid" : "7102",
-         "classid" : "8",
+         "classid" : 8,
          "journalid" : "87319",
          "background" : "3",
          "duration" : "150",
@@ -151,7 +151,7 @@
          "classid" : "8",
          "journalid" : "87318",
          "background" : "0",
-         "duration" : "25",
+         "duration" : 25,
          "activity" : [
             {
                "activity_id" : "2",
@@ -170,7 +170,7 @@
          "classid" : "8",
          "journalid" : "87318",
          "background" : null,
-         "duration" : "75",
+         "duration" : 75,
          "classname" : "3rd Grade Math",
          "framework_id" : "9477",
          "frameworktitle" : "3.  Multiply one-digit whole numbers by multiples of 10 in the range  1090 (e.g., 9  80, 5  60) using strategies based on place value and  properties of operations.  number and operationsfractions",
@@ -183,7 +183,7 @@
          "classid" : "8",
          "journalid" : "87316",
          "background" : "4",
-         "duration" : "50",
+         "duration" : 50,
          "activity" : [
             {
                "activity_id" : "2",
@@ -206,7 +206,7 @@
          "classid" : "8",
          "journalid" : "87316",
          "background" : null,
-         "duration" : "50",
+         "duration" : 50,
          "classname" : "3rd Grade Math",
          "framework_id" : "9464",
          "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
@@ -219,7 +219,7 @@
          "classid" : "8",
          "journalid" : "87313",
          "background" : "3",
-         "duration" : "100",
+         "duration" : 100,
          "activity" : [
             {
                "activity_id" : "2",
@@ -243,7 +243,7 @@
          "classid" : "8",
          "journalid" : "87305",
          "background" : "1",
-         "duration" : "25",
+         "duration" : 25,
          "classname" : "3rd Grade Math",
          "framework_id" : "9463",
          "frameworktitle" : "1.  Interpret products of whole numbers, e.g., interpret 5  7 as the total  number of objects in 5 groups of 7 objects each. For example, describe a context in which a total number of objects can be expressed as 5  7. ",
@@ -257,7 +257,7 @@
          "classid" : "8",
          "journalid" : "87305",
          "background" : null,
-         "duration" : "75",
+         "duration" : 75,
          "classname" : "3rd Grade Math",
          "framework_id" : "9464",
          "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
@@ -270,7 +270,7 @@
          "classid" : "8",
          "journalid" : "87304",
          "background" : "4",
-         "duration" : "100",
+         "duration" : 100,
          "activity" : [
             {
                "activity_id" : "4",
@@ -290,7 +290,7 @@
          "classid" : "8",
          "journalid" : "87297",
          "background" : "4",
-         "duration" : "10",
+         "duration" : 10,
          "activity" : [
             {
                "activity_id" : "4",
@@ -309,7 +309,7 @@
          "classid" : "8",
          "journalid" : "87297",
          "background" : null,
-         "duration" : "10",
+         "duration" : 10,
          "classname" : "3rd Grade Math",
          "framework_id" : "9464",
          "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
@@ -321,7 +321,7 @@
          "classid" : "8",
          "journalid" : "87297",
          "background" : null,
-         "duration" : "5",
+         "duration" : 5,
          "classname" : "3rd Grade Math",
          "framework_id" : "9465",
          "frameworktitle" : "3.  Use multiplication and division within 100 to solve word problems in  situations involving equal groups, arrays, and measurement quantities,  e.g., by using drawings and equations with a symbol for the unknown  number to represent the problem.",
@@ -334,7 +334,7 @@
          "classid" : "8",
          "journalid" : "87321",
          "background" : "4",
-         "duration" : "0",
+         "duration" : 0,
          "activity" : [
             {
                "activity_id" : "3",

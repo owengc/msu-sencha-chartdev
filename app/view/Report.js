@@ -5,6 +5,7 @@ Ext.define('ChartDev.view.Report', {
     requires: [
 	'Ext.Toolbar',
 	'Ext.form.Panel',
+	'Ext.form.FieldSet',
 	'Ext.field.Select',
 	'Ext.field.DatePicker'
     ],    

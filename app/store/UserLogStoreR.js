@@ -14,6 +14,6 @@ Ext.define("ChartDev.store.UserLogStoreR", {
 	    }
 	},
 	groupField: 'classname',
-	sorters: ['datetaught'],
-    }
+	sorters: ['datetaught', 'duration'],
+    },
 });
