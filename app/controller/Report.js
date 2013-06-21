@@ -275,7 +275,7 @@ Ext.define('ChartDev.controller.Report', {
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		innerPadding: {
 		    top: 40,
-		    left: 40,
+		    left: 0,
 		    right: 40,
 		    bottom: 40
 		},
@@ -314,34 +314,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'bar',
 			fill: true,
 			xField: params.tier,
-/*			xAxis: {
-                            type: 'category',
-                            position: 'left',
-                            fields: [
-				params.tier
-                            ],
-                            title: {
-				text: Ext.String.capitalize(params.tier),
-				fontSize: 14
-                            },
-                            grid: true
-			},*/
 			yField: 'duration',
-/*
-			yAxis: {
-			    type: 'numeric',
-			    position: 'bottom',
-			    fields: [
-				'duration'
-			    ],
-			    title: {
-				text: 'Time Spent (min)',
-			    },
-			    style: {
-
-			    },
-			    minimum: 0,
-			},*/
 			style: {
 			    fill: 'blue'
 			}
