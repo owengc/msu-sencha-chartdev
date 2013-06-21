@@ -217,7 +217,7 @@ Ext.define('ChartDev.view.Report', {
 	
 	//testing:
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
-            type: 'dot',
+            type: 'bar',
             tier: 'framework_id',
             fromDate: new Date('Apr 1 2013'),
             toDate: new Date('Jun 1 2013')

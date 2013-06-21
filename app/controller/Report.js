@@ -166,9 +166,55 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
         }
-        else if(params.type==='dot' || params.type==='bar'){
-	    if(params.type==='dot'){//dot
-		var series=[
+        else if(params.type==='dot'){
+	    content=Ext.create('Ext.chart.CartesianChart', {
+		itemId: 'report_content',
+		height: '100%',
+		animate: true,
+		hidden: true,
+		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
+                hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
+		innerPadding: {
+		    top: 40,
+		    left: 40,
+		    right: 40,
+		    bottom: 40
+		},
+                store: 'UserLogStore',
+                axes: [
+                    {
+                        type: 'category',
+                        position: 'left',
+                        fields: [
+                            params.tier
+                        ],
+                        title: {
+                            text: Ext.String.capitalize(params.tier),
+                            fontSize: 14
+                        },
+                        grid: true
+                    },
+		    {
+			type: 'time',
+			position: 'bottom',
+			fields: [
+                            'datetaught'
+			],
+			fromDate: params.fromDate,
+			toDate: params.toDate,
+			title: {
+                            text: '',
+			},
+			style: {
+
+			},
+			label: {
+                            rotate: 45
+			},
+			dateFormat: 'M d'
+		    }
+                ],
+		series: [
 		    {
 			type: 'scatter',
 			fill: true,
@@ -189,85 +235,7 @@ Ext.define('ChartDev.controller.Report', {
 			    lineWidth: 1
 			}
 		    }
-		];
-		var xAxis={
-                    type: 'time',
-                    position: 'bottom',
-                    fields: [
-                        'datetaught'
-                    ],
-                    fromDate: params.fromDate,
-                    toDate: params.toDate,
-                    title: {
-                        text: '',
-                    },
-                    style: {
-
-                    },
-                    label: {
-                        rotate: 45
-                    },
-                    dateFormat: 'M d'
-		};
-	    }
-	    else{//bar
-		var series=[
-		    {
-			type: 'bar',
-			fill: true,
-			xField: 'duration',
-			yField: params.tier,
-			style: {
-			    fill: 'darkblue'
-			}
-		    }
-		];
-		var xAxis={
-                    type: 'numeric',
-                    position: 'bottom',
-                    fields: [
-                        'duration'
-                    ],
-                    title: {
-                        text: 'Time Spent (min)',
-                    },
-                    style: {
-
-                    },
-		    minimum: 0
-		};
-	    }
-            content=Ext.create('Ext.chart.CartesianChart', {
-		itemId: 'report_content',
-		height: '100%',
-		animate: true,
-		hidden: true,
-		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
-                hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
-		innerPadding: {
-		    top: 40,
-		    left: 40,
-		    right: 40,
-		    bottom: 40
-		},
-		flipXY: (params.type==='dot')?false:true,
-                store: 'UserLogStore',
-                axes: [
-                    {
-                        type: 'category',
-                        position: 'left',
-                        fields: [
-                            params.tier
-                        ],
-                        title: {
-                            text: Ext.String.capitalize(params.tier),
-                            fontSize: 14
-                        },
-                        grid: true
-                    },
-		    xAxis
-                ],
-		series: series,
+		],
 		interactions: [
 		    {
 			type: 'panzoom',
@@ -297,6 +265,117 @@ Ext.define('ChartDev.controller.Report', {
 		]
             });
         }
+	else if(params.type==='bar'){
+            content=Ext.create('Ext.chart.CartesianChart', {
+		itemId: 'report_content',
+		height: '100%',
+		animate: true,
+		hidden: true,
+		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
+                hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
+		innerPadding: {
+		    top: 40,
+		    left: 40,
+		    right: 40,
+		    bottom: 40
+		},
+		flipXY: true,
+                store: 'UserLogStore',
+                axes: [
+		    {
+			type: 'numeric',
+			position: 'bottom',
+			fields: [
+                            'duration'
+			],
+			title: {
+                            text: 'Time Spent (min)',
+			},
+			style: {
+
+			},
+			minimum: 0,
+		    },
+		    {
+                        type: 'category',
+                        position: 'left',
+                        fields: [
+                            params.tier
+                        ],
+                        title: {
+                            text: Ext.String.capitalize(params.tier),
+                            fontSize: 14
+                        },
+                        grid: true
+                    }
+                ],
+		series: [
+		    {
+			type: 'bar',
+			fill: true,
+			xField: params.tier,
+/*			xAxis: {
+                            type: 'category',
+                            position: 'left',
+                            fields: [
+				params.tier
+                            ],
+                            title: {
+				text: Ext.String.capitalize(params.tier),
+				fontSize: 14
+                            },
+                            grid: true
+			},*/
+			yField: 'duration',
+/*
+			yAxis: {
+			    type: 'numeric',
+			    position: 'bottom',
+			    fields: [
+				'duration'
+			    ],
+			    title: {
+				text: 'Time Spent (min)',
+			    },
+			    style: {
+
+			    },
+			    minimum: 0,
+			},*/
+			style: {
+			    fill: 'blue'
+			}
+		    }
+		]/*,
+		interactions: [
+		    {
+			type: 'panzoom',
+			axes: {
+			    bottom: {
+				maxZoom: 5,
+				allowPan: true
+			    },
+			    left: false
+			}
+		    },
+		    {
+			type: 'iteminfo',
+			listeners: {
+			    show: function(scope, item, panel){
+				var outString=('<div><h3>'+item.record.get('classname')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
+				outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
+				outString+=(item.record.get('frameworktitle'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('frameworktitle')+'</div>'):'';
+				outString+=(item.record.get('journalid'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journalid')+'</div>'):'';
+				panel.setHtml(outString);
+			    }
+			}
+		    },
+		    {
+			type: 'itemhighlight'
+		    }
+		]*/
+            });
+	}
 	else{
             console.log('invalid report type');
 	    return false;
