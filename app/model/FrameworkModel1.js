@@ -1,6 +1,5 @@
 Ext.define('ChartDev.model.FrameworkModel1', {
-    extend: 'Ext.data.Model',
-    
+    extend: 'Ext.data.Model',    
     config: {
        
         fields: [

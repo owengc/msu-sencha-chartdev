@@ -25,6 +25,8 @@ Ext.define('ChartDev.controller.Report', {
 	    toolbar: '#report #report_toolbar',
 	    toolbarButton: '#report_toolbar #report_toolbarButton',
 	    menu: '#report #report_menu',
+	    filter: '#report_menu #report_filter',
+	    filterSwitch: '#report_menu #report_filterSwitch',
 	    content: '#report #report_content'
 	},
 	control: {
@@ -33,6 +35,9 @@ Ext.define('ChartDev.controller.Report', {
 	    },
 	    toolbarButton: {
 		tap: 'toggleMenu'
+	    },
+	    filterSwitch: {
+		change: 'toggleFilter'
 	    }
 	}
     },
@@ -94,17 +99,28 @@ Ext.define('ChartDev.controller.Report', {
 	}
         return true;
     },
+    toggleFilter: function(scope, s, t, newValue, oldValue){
+	var filter=this.getFilter();
+	if(newValue==1){
+	    filter.enable();
+	    filter.show();
+	}
+	else{
+	    filter.disable();
+	    filter.hide();
+	}
+    },
     updateContent: function(params){
 	console.log('controller: updateContent');
         var report=this.getReport(),
 	content=this.getContent(),
-	store=Ext.getStore('UserLogStore');
+	userLogStore=Ext.getStore('UserLogStore');
 	if(content){
 	    report.remove(content, true);
-	    store.clearFilter();
+	    userLogStore.clearFilter();
 	}
 	if(params.fromDate && params.toDate){
-	    store.filterBy(function(rec, id){
+	    userLogStore.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
 		if(date>=params.fromDate || date<=params.toDate){
 		    return true;
@@ -114,6 +130,105 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
 	}
+	var genericFields = [
+	    {name: 'journal_id', type: 'string'},
+	    {name: 'framework_id', type: 'string'},
+	    {name: 'class_name', type: 'string'},
+	    {name: 'grade', type: 'string'},
+	    {name: 'duration', type: 'int'},
+	    {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
+	],
+	reportData=[],
+	logs=userLogStore.getData().items,
+	numLogs=logs.length,
+	i=0;
+	//	    framework=Ext.getStore(';
+	if(params.tier==='standard'){
+	    var reportFields=genericFields.concat([
+		{name: 'standard', type: 'string'},
+		{name: 'standard_title', type: 'string'},
+		{name: 'standard_desc', type: 'string'}
+	    ]);
+	    for(;i<numLogs;i++){
+		var logData=logs[i].getData(),
+		standards=logs[i].standardsStore.getData().items,
+		numStandards=standards.length,
+		j=0;
+		for(;j<numStandards;j++){
+		    var standardData=standards[j].getData();
+		    reportData.push({
+			journal_id: logData.journalid,
+			framework_id: standardData.framework_id,
+			class_name: logData.classname,
+			grade: standardData.grade,
+			duration: logData.duration,//this needs to change
+			datetaught: logData.datetaught,
+			standard: standardData.fullcode,
+			standard_title: standardData.frameworktitle,
+			//standard_desc: 
+		    });
+		}
+	    }
+	}
+	else if(params.tier==='cluster'){
+	    var reportFields=genericFields.concat([
+		{name: 'cluster_id', type: 'string'},
+		{name: 'cluster_title', type: 'string'},
+		{name: 'cluster_desc', type: 'string'}
+	    ]);
+	}
+	else if(params.tier==='domain'){
+	    var reportFields=genericFields.concat([
+		{name: 'domain_id', type: 'string'},
+		{name: 'domain', type: 'string'},
+		{name: 'domain_title', type: 'string'},
+		{name: 'domain_desc', type: 'string'}
+	    ]);
+	    for(;i<numLogs;i++){
+		var logData=logs[i].getData(),
+		domainMemo={},
+		standards=logs[i].standardsStore.getData().items,
+		numStandards=standards.length,
+		j=0;
+		for(;j<numStandards;j++){
+		    var standardData=standards[j].getData();
+		    if(!domainMemo[standardData.domain]){
+			domainMemo[standardData.domain]={
+			    journal_id: logData.journalid,
+			    framework_id: [standardData.framework_id],
+			    class_name: logData.classname,
+			    grade: standardData.grade,
+			    duration: logData.duration,//this needs to change
+			    datetaught: logData.datetaught,
+			    domain: standardData.domain,
+			    duration: logData.duration
+			}
+		    }
+		    else{
+			domainMemo[standardData.domain].duration+=logData.duration;//this needs to change
+			domainMemo[standardData.domain].framework_id.push(standardData.framework_id);
+		    }
+		}
+		for(uniqueDomainRecord in domainMemo){
+		    domainMemo[uniqueDomainRecord].framework_id=domainMemo[uniqueDomainRecord].framework_id.toString();
+		    reportData.push(domainMemo[uniqueDomainRecord]);
+		}
+	    }
+	}
+	Ext.define('ReportModel', {
+	    extend: 'Ext.data.Model',
+	    config: {
+		fields: reportFields
+	    }
+	});
+	console.log(reportData);
+	var reportStore=Ext.create('Ext.data.Store', {
+	    storeId: 'ReportStore',
+	    model: 'ReportModel',
+	    data: reportData,
+	    groupField: 'class_name'
+	});
+
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -122,7 +237,7 @@ Ext.define('ChartDev.controller.Report', {
 		hidden: true,
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
-		store: 'UserLogStore',
+		store: 'ReportStore',
 		itemTpl: ('<div style="float:top"><b>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {'+params.tier+'}</div>'),
 		itemHeight: 75,
 		grouped: true,
@@ -130,9 +245,9 @@ Ext.define('ChartDev.controller.Report', {
 		listeners: {
 		    disclose: function(scope, record, target, index){
 			scope.select(record, false, false);
-			var outString=(record.data.framework_id)?('<div style="float:top"><b>Frameword Id:</b> '+record.data.framework_id+'</div>'):'';
-			outString+=(record.data.frameworktitle)?('<div style="float:top"><b>Frameword Title:</b> '+record.data.frameworktitle+'</div>'):'';
-			outString+=(record.data.journalid)?('<div style="float:top"><b>Journal Id:</b> '+record.data.journalid+'</div>'):'';/*
+			var outString=(record.data.standard)?('<div style="float:top"><b>Fullcode:</b> '+record.data.standard+'</div>'):'';
+			outString+=(record.data.standard_title)?('<div style="float:top"><b>Standard Title:</b> '+record.data.standard_title+'</div>'):'';
+			outString+=(record.data.journal_id)?('<div style="float:top"><b>Journal Id:</b> '+record.data.journal_id+'</div>'):'';/*
             {name: 'framework_id', type: 'string'},
             {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
             {name: 'classid', type: 'string'},
@@ -151,7 +266,7 @@ Ext.define('ChartDev.controller.Report', {
             {name: 'standards'},
             {name: 'math_practices'},*/
 			Ext.Msg.show({
-			    title: ('<div>'+record.data.classname+' '+Ext.Date.format(record.data.datetaught, 'm/d/Y')+'</div>'), 
+			    title: ('<div>'+record.data.class_name+' '+Ext.Date.format(record.data.datetaught, 'm/d/Y')+'</div>'), 
 			    message: outString, 
 			    scrollable: {
 				direction: 'vertical',
@@ -180,7 +295,7 @@ Ext.define('ChartDev.controller.Report', {
 		    right: 40,
 		    bottom: 40
 		},
-                store: 'UserLogStore',
+                store: 'ReportStore',
                 axes: [
                     {
                         type: 'category',
@@ -251,10 +366,10 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'iteminfo',
 			listeners: {
 			    show: function(scope, item, panel){
-				var outString=('<div><h3>'+item.record.get('classname')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
+				var outString=('<div><h3>'+item.record.get('class_name')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
 				outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
-				outString+=(item.record.get('frameworktitle'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('frameworktitle')+'</div>'):'';
-				outString+=(item.record.get('journalid'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journalid')+'</div>'):'';
+				outString+=(item.record.get('standard_title'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('standard_title')+'</div>'):'';
+				outString+=(item.record.get('journal_id'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journal_id')+'</div>'):'';
 				panel.setHtml(outString);
 			    }
 			}

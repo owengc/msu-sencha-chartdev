@@ -1,6 +1,6 @@
 Ext.define("ChartDev.store.UserLogStoreR", {
     extend: "Ext.data.Store",
-    requires: ['ChartDev.model.UserLogModelR'],
+    requires: ['ChartDev.model.UserLogModelR', 'ChartDev.model.StandardModelR'],
     config: {
         model: 'ChartDev.model.UserLogModelR',
 	storeId: 'UserLogStore',

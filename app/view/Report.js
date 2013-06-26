@@ -7,7 +7,8 @@ Ext.define('ChartDev.view.Report', {
 	'Ext.form.Panel',
 	'Ext.form.FieldSet',
 	'Ext.field.Select',
-	'Ext.field.DatePicker'
+	'Ext.field.DatePicker',
+	'Ext.field.Toggle'
     ],    
     config: {
 	itemId: 'report',
@@ -35,12 +36,13 @@ Ext.define('ChartDev.view.Report', {
 	    {
 		xtype: 'formpanel',
 		itemId: 'report_menu',
-		height: 311,
+		height: '100%',//311,
 		showAnimation: {type: 'slideIn', direction: 'down', duration: 250},
 		hideAnimation: {type: 'slideOut', direction: 'up', duration: 250},
 		items: [
 		    {
 			xtype: 'fieldset',
+			title: 'Configure Report:',
 			defaults: {
 			    minHeight: 75,
 			    labelWidth: '15%'
@@ -183,6 +185,149 @@ Ext.define('ChartDev.view.Report', {
 				    height: '33%',
 				    toolbar: {
 					title: 'Select Report End Date:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				}
+			    },
+			    {
+				xtype: 'togglefield',
+				itemId: 'report_filterSwitch',
+				name: 'filterSwitch',
+				label: 'Filter:',
+				value: 0,
+			    }
+			]
+		    },
+		    {
+			xtype: 'fieldset',
+			title: 'Configure Filter:',
+			itemId: 'report_filter',
+			hidden: true,
+			showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
+			hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
+			defaults: {
+			    minHeight: 75,
+			    labelWidth: '15%',
+			},	
+			items: [			    
+			    {
+				xtype: 'selectfield',
+				itemId: 'report_filter_type',
+				name: 'filterType',
+				label: 'Filter Type:',
+				usePicker: true,
+				options: [
+				    {text: 'Include records', value: 'include'},
+				    {text: 'Exclude records', value: 'exclude'}
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Filter Type:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				}
+			    },
+			    {
+				xtype: 'selectfield',
+				itemId: 'report_filter_tier',
+				name: 'filterTier',
+				label: 'where',
+				usePicker: true,
+				options: [
+				    {text: 'Standard', value: 'standard'},
+				    {text: 'Cluster', value: 'cluster'},
+				    {text: 'Domain', value: 'domain'}
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Filter Tier:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				}
+			    },
+			    {
+				xtype: 'selectfield',
+				itemId: 'report_filter_detail',
+				name: 'filterDetail',
+				label: 'is',
+				usePicker: false,
+				options: [
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Filter Detail:',
 					height: 75
 				    },
 				    cancelButton: false/*{

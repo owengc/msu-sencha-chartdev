@@ -23,9 +23,14 @@ Ext.define('ChartDev.model.UserLogModelR', {
             {name: 'standards'},
             {name: 'math_practices'}
         ],
-        hasMany:[{model:'ULActivityModel', name:'activity'},
-                {model:'FrameworkModel1', name:'standards'},
-                {model:'ULMathPracticesModel', name:'math_practices'}]
+	hasMany: {
+	    model: 'ChartDev.model.StandardModelR',
+	    name: 'standards',
+	    associationKey: 'standards'
+	}
+/*        hasMany:[{model:'ULActivityModel', name:'activity'},
+                {model:'StandardModelR', name:'standards'},
+                {model:'ULMathPracticesModel', name:'math_practices'}]*/
         
     }
 });

@@ -1,358 +1,204 @@
 {
    "userlog" : [
       {
-         "classid" : "8",
-         "journalid" : "87331",
+         "classid" : "28",
+         "journalid" : "103465",
          "background" : "0",
-         "duration" : 0,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "10205",
-         "frameworktitle" : "No Math Taught",
-         "notes" : "",
-         "datetaught" : "2013-05-24",
-         "pages" : ""
-      },
-      {
-         "materialid" : "7077",
-         "classid" : "8",
-         "journalid" : "87330",
-         "background" : "1",
-         "duration" : 88,
-         "activity" : [
-            {
-               "activity_id" : "2",
-               "activity_name" : "Develop/Illustrate concepts"
-            }
-         ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9998",
-         "frameworktitle" : "7.  (+) Analyze decisions and strategies using probability concepts (e.g.,  product testing, medical testing, pulling a hockey goalie at the end of  a game).",
-         "notes" : "",
-         "datetaught" : "2013-05-23",
-         "pages" : "14",
-         "materialname" : "Accentuate the Negative - CMP2 (7)"
-      },
-      {
-         "materialid" : "7077",
-         "classid" : "8",
-         "journalid" : "87329",
-         "background" : "3",
-         "duration" : 50,
+         "duration" : "0",
          "activity" : [
             {
                "activity_id" : "1",
                "activity_name" : "Introduction"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9497",
-         "frameworktitle" : "1.  Understand that shapes in different categories (e.g., rhombuses,  rectangles, and others) may share attributes (e.g., having four sides),  and that the shared attributes can define a larger category (e.g.,  quadrilaterals). Recognize rhombuses, rectangles, and squares as  examples of quadrilaterals, and draw examples of quadrilaterals that  do not belong to any of these subcategories. ",
-         "notes" : "x",
-         "usermaterials" : "1",
-         "datetaught" : "2013-05-16",
-         "pages" : "1",
-         "materialname" : "Accentuate the Negative - CMP2 (7)"
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87328",
-         "background" : "0",
-         "duration" : 0,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "10205",
-         "frameworktitle" : "No Math Taught",
+         "classname" : "Algebra I",
+         "standards" : [
+            {
+               "fullcode" : "",
+               "frameworktitle" : "School Vacation/Weekend",
+               "percent" : "10",
+               "framework_id" : "10109"
+            }
+         ],
          "notes" : "",
-         "datetaught" : "2013-05-14",
-         "pages" : ""
+         "activitycsv" : "1",
+         "pages" : "",
+         "datetaught" : "2013-05-17"
       },
       {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87325",
+         "materialid" : "7069",
+         "classid" : "4",
+         "journalid" : "16274",
          "background" : "3",
-         "duration" : 50,
+         "duration" : "20",
+         "activity" : [
+            {
+               "activity_id" : "2",
+               "activity_name" : "Develop/Illustrate concepts"
+            }
+         ],
+         "classname" : "Kindergarten Math",
+         "notes" : "",
+         "standards" : [
+            {
+               "fullcode" : "K.CC.1 ",
+               "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+               "percent" : "10",
+               "framework_id" : "9368"
+            },
+            {
+               "fullcode" : "Other Math Topics",
+               "frameworktitle" : "Other Content Topics",
+               "percent" : "10",
+               "framework_id" : "10201"
+            }
+         ],
+         "activitycsv" : "2",
+         "datetaught" : "2012-01-13",
+         "pages" : "45",
+         "materialname" : "Everyday Math"
+      },
+      {
+         "materialid" : "7063",
+         "classid" : "4",
+         "journalid" : "15852",
+         "background" : "3",
+         "duration" : "20",
          "activity" : [
             {
                "activity_id" : "1",
                "activity_name" : "Introduction"
-            },
-            {
-               "activity_id" : "2",
-               "activity_name" : "Develop/Illustrate concepts"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9399",
-         "frameworktitle" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
-         "notes" : "No comment.",
-         "usermaterials" : "Worksheet",
-         "datetaught" : "2013-05-13",
-         "pages" : "14-22",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87325",
-         "background" : null,
-         "duration" : 50,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9400",
-         "frameworktitle" : "2.  Solve word problems that call for addition of three whole numbers  whose sum is less than or equal to 20, e.g., by using objects, drawings,  and equations with a symbol for the unknown number to represent the  problem. ",
-         "notes" : null,
-         "datetaught" : "2013-05-13",
-         "pages" : null
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87326",
-         "background" : "0",
-         "duration" : 0,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "10205",
-         "frameworktitle" : "No Math Taught",
+         "classname" : "Kindergarten Math",
          "notes" : "",
-         "datetaught" : "2013-05-12",
-         "pages" : ""
+         "standards" : [
+            {
+               "fullcode" : "K.CC.1 ",
+               "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+               "percent" : "10",
+               "framework_id" : "9368"
+            },
+            {
+               "fullcode" : "Other Math Topics",
+               "frameworktitle" : "Other Content Topics",
+               "percent" : "10",
+               "framework_id" : "10201"
+            }
+         ],
+         "activitycsv" : "1",
+         "datetaught" : "2012-01-12",
+         "pages" : "78",
+         "materialname" : "Holt Algebra I"
       },
       {
-         "classid" : "8",
-         "journalid" : "87323",
-         "background" : "0",
-         "duration" : 0,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "10205",
-         "frameworktitle" : "No Math Taught",
-         "notes" : "",
-         "datetaught" : "2013-05-08",
-         "pages" : ""
-      },
-      {
-         "materialid" : "7102",
-         "classid" : 8,
-         "journalid" : "87319",
+         "materialid" : "7069",
+         "classid" : "4",
+         "journalid" : "11627",
          "background" : "3",
-         "duration" : "150",
+         "duration" : "10",
          "activity" : [
             {
-               "activity_id" : "2",
-               "activity_name" : "Develop/Illustrate concepts"
+               "activity_id" : "1",
+               "activity_name" : "Introduction"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9562",
-         "frameworktitle" : "3.  Generate two numerical patterns using two given rules. Identify  apparent relationships between corresponding terms. Form ordered  pairs consisting of corresponding terms from the two patterns, and  graph the ordered pairs on a coordinate plane. For example, given the rule Add 3 and the starting number 0, and given the rule Add 6 and the starting number 0, generate terms in the resulting sequences, and observe that the terms in one sequence are twice the corresponding terms in the other sequence. Explain informally why this is so. ",
+         "classname" : "Kindergarten Math",
          "notes" : "",
-         "datetaught" : "2013-05-07",
-         "pages" : "no pages",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
-      },
-      {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87318",
-         "background" : "0",
-         "duration" : 25,
-         "activity" : [
+         "standards" : [
             {
-               "activity_id" : "2",
-               "activity_name" : "Develop/Illustrate concepts"
+               "fullcode" : "K.CC.1 ",
+               "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+               "percent" : "10",
+               "framework_id" : "9368"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9475",
-         "frameworktitle" : "1.  Use place value understanding to round whole numbers to the nearest  10 or 100. ",
-         "notes" : "",
-         "datetaught" : "2013-05-06",
-         "pages" : "45-55",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
+         "activitycsv" : "1",
+         "datetaught" : "2012-01-08",
+         "pages" : "Ty",
+         "materialname" : "Everyday Math"
       },
       {
-         "classid" : "8",
-         "journalid" : "87318",
-         "background" : null,
-         "duration" : 75,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9477",
-         "frameworktitle" : "3.  Multiply one-digit whole numbers by multiples of 10 in the range  1090 (e.g., 9  80, 5  60) using strategies based on place value and  properties of operations.  number and operationsfractions",
-         "notes" : null,
-         "datetaught" : "2013-05-06",
-         "pages" : null
-      },
-      {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87316",
+         "materialid" : "7064",
+         "classid" : "4",
+         "journalid" : "10592",
          "background" : "4",
-         "duration" : 50,
+         "duration" : "10",
          "activity" : [
             {
-               "activity_id" : "2",
-               "activity_name" : "Develop/Illustrate concepts"
-            },
-            {
-               "activity_id" : "3",
-               "activity_name" : "Review"
+               "activity_id" : "1",
+               "activity_name" : "Introduction"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9463",
-         "frameworktitle" : "1.  Interpret products of whole numbers, e.g., interpret 5  7 as the total  number of objects in 5 groups of 7 objects each. For example, describe a context in which a total number of objects can be expressed as 5  7. ",
+         "classname" : "Kindergarten Math",
          "notes" : "",
-         "datetaught" : "2013-05-03",
-         "pages" : "23-29, 30-31",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
+         "standards" : [
+            {
+               "fullcode" : "1.OA.1",
+               "frameworktitle" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
+               "percent" : "10",
+               "framework_id" : "9399"
+            }
+         ],
+         "activitycsv" : "1",
+         "datetaught" : "2012-01-07",
+         "pages" : "23",
+         "materialname" : "Holt Albegra II"
       },
       {
-         "classid" : "8",
-         "journalid" : "87316",
-         "background" : null,
-         "duration" : 50,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9464",
-         "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
-         "notes" : null,
-         "datetaught" : "2013-05-03",
-         "pages" : null
-      },
-      {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87313",
+         "materialid" : "7063",
+         "classid" : "4",
+         "journalid" : "14065",
          "background" : "3",
-         "duration" : 100,
+         "duration" : "10",
          "activity" : [
             {
                "activity_id" : "2",
                "activity_name" : "Develop/Illustrate concepts"
-            },
-            {
-               "activity_id" : "3",
-               "activity_name" : "Review"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9468",
-         "frameworktitle" : "5.  Apply properties of operations as strategies to multiply and  divide.2 Examples: If 6  4 = 24 is known, then 4  6 = 24 is also known. (Commutative property of multiplication.) 3  5  2 can be found by 3  5 = 15, then 15  2 = 30, or by 5  2 = 10, then 3  10 = 30. (Associative property of multiplication.) Knowing that 8  5 = 40 and 8  2 = 16, one can find 8  7 as 8  (5 + 2) = (8  5) + (8  2) = 40 + 16 = 56. (Distributive property.) ",
-         "notes" : "",
-         "datetaught" : "2013-05-02",
-         "pages" : "34-36",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
+         "classname" : "Kindergarten Math",
+         "notes" : "many",
+         "standards" : [
+            {
+               "fullcode" : "K.CC.1 ",
+               "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+               "percent" : "10",
+               "framework_id" : "9368"
+            }
+         ],
+         "activitycsv" : "2",
+         "datetaught" : "2011-12-22",
+         "pages" : "33",
+         "materialname" : "Holt Algebra I"
       },
       {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87305",
-         "background" : "1",
-         "duration" : 25,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9463",
-         "frameworktitle" : "1.  Interpret products of whole numbers, e.g., interpret 5  7 as the total  number of objects in 5 groups of 7 objects each. For example, describe a context in which a total number of objects can be expressed as 5  7. ",
-         "notes" : "",
-         "usermaterials" : "Worksheet",
-         "datetaught" : "2013-05-01",
-         "pages" : "45-60",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87305",
-         "background" : null,
-         "duration" : 75,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9464",
-         "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
-         "notes" : null,
-         "datetaught" : "2013-05-01",
-         "pages" : null
-      },
-      {
-         "materialid" : "7072",
-         "classid" : "8",
-         "journalid" : "87304",
-         "background" : "4",
-         "duration" : 100,
+         "materialid" : "7064",
+         "classid" : "4",
+         "journalid" : "14064",
+         "background" : "3",
+         "duration" : "10",
          "activity" : [
             {
-               "activity_id" : "4",
-               "activity_name" : "Assess"
+               "activity_id" : "1",
+               "activity_name" : "Introduction"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9473",
-         "frameworktitle" : "9.  Identify arithmetic patterns (including patterns in the addition table or  multiplication table), and explain them using properties of operations.  For example, observe that 4 times a number is always even, and explain  why 4 times a number can be decomposed into two equal addends. ",
-         "notes" : "",
-         "datetaught" : "2013-04-30",
-         "pages" : "430",
-         "materialname" : "Bits and Pieces II - CMP2 (6)"
-      },
-      {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87297",
-         "background" : "4",
-         "duration" : 10,
-         "activity" : [
+         "classname" : "Kindergarten Math",
+         "notes" : "no comment",
+         "usermaterials" : "Triangle",
+         "standards" : [
             {
-               "activity_id" : "4",
-               "activity_name" : "Assess"
+               "fullcode" : "1.OA.1",
+               "frameworktitle" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
+               "percent" : "10",
+               "framework_id" : "9399"
             }
          ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9463",
-         "frameworktitle" : "1.  Interpret products of whole numbers, e.g., interpret 5  7 as the total  number of objects in 5 groups of 7 objects each. For example, describe a context in which a total number of objects can be expressed as 5  7. ",
-         "notes" : "",
-         "datetaught" : "2013-04-22",
-         "pages" : "40-50",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87297",
-         "background" : null,
-         "duration" : 10,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9464",
-         "frameworktitle" : "2.  Interpret whole-number quotients of whole numbers, e.g., interpret 56  8 as the number of objects in each share when 56 objects are partitioned equally into 8 shares, or as a number of shares when 56 objects are partitioned into equal shares of 8 objects each. For example, describe a context in which a number of shares or a number of groups can be expressed as 56  8. ",
-         "notes" : null,
-         "datetaught" : "2013-04-22",
-         "pages" : null
-      },
-      {
-         "classid" : "8",
-         "journalid" : "87297",
-         "background" : null,
-         "duration" : 5,
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9465",
-         "frameworktitle" : "3.  Use multiplication and division within 100 to solve word problems in  situations involving equal groups, arrays, and measurement quantities,  e.g., by using drawings and equations with a symbol for the unknown  number to represent the problem.",
-         "notes" : null,
-         "datetaught" : "2013-04-22",
-         "pages" : null
-      },
-      {
-         "materialid" : "7102",
-         "classid" : "8",
-         "journalid" : "87321",
-         "background" : "4",
-         "duration" : 0,
-         "activity" : [
-            {
-               "activity_id" : "3",
-               "activity_name" : "Review"
-            },
-            {
-               "activity_id" : "4",
-               "activity_name" : "Assess"
-            }
-         ],
-         "classname" : "3rd Grade Math",
-         "framework_id" : "9463",
-         "frameworktitle" : "1.  Interpret products of whole numbers, e.g., interpret 5  7 as the total  number of objects in 5 groups of 7 objects each. For example, describe a context in which a total number of objects can be expressed as 5  7. ",
-         "notes" : "",
-         "usermaterials" : "teacher prepared assessment",
-         "datetaught" : "2013-04-19",
-         "pages" : "12-30",
-         "materialname" : "Bits and Pieces I - CMP2 (6)"
+         "activitycsv" : "1",
+         "datetaught" : "2011-12-21",
+         "pages" : "34",
+         "materialname" : "Holt Albegra II"
       }
    ]
 }

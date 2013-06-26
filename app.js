@@ -1,4 +1,4 @@
-/*
+    /*
     This file is generated and updated by Sencha Cmd. You can edit this file as
     needed for your application, but these edits will have to be merged by
     Sencha Cmd when it performs code generation tasks such as generating new
@@ -21,8 +21,8 @@ Ext.Loader.setPath({
 
 Ext.application({
     name: 'ChartDev',
-    models: ['UserLogModelR'],
-    stores: ['UserLogStoreR'],
+    models: ['UserLogModelR', 'FrameworkModelR'/*, 'ReportModelR'*/],
+    stores: ['UserLogStoreR', 'FrameworkStoreR'/*, 'ReportStoreR'*/],
     requires: [
         'Ext.MessageBox',
 	'ChartDev.store.UserLogStoreR'
