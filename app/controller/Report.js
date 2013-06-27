@@ -226,7 +226,8 @@ Ext.define('ChartDev.controller.Report', {
 	    storeId: 'ReportStore',
 	    model: 'ReportModel',
 	    data: reportData,
-	    groupField: 'class_name'
+	    groupField: 'class_name',
+	    sorters: ['datetaught', params.tier]
 	});
 
 	if(params.type==='list'){
