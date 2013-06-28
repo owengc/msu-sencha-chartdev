@@ -8,7 +8,20 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
     config: {
 	itemId: 'report_filter_detailList',
 	fullscreen: true,
-	title: 'Filter Selection',
+	toolbar: {
+	    docked: 'top',
+	    ui: 'light',
+	    inline: 'true',
+	    items: [
+		{
+		    id: 'report_filter_detailListButton',
+		    ui: 'confirm',
+		    text: 'Done',
+		    align: 'right'
+		}
+	    ]
+	},
+	bubbleEvents: 'done',
 	displayField: 'text',
 	store: 'CCStore',
 	targetDepth: '',
@@ -66,6 +79,8 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
     },
     initialize: function(){
 	this.callParent();
+	this.setTitle('Filter Selection');
+
 	this.setSelectedLeaves({});
 	this.setBranchesWithSelections({});
 	this.setBranchId(null);

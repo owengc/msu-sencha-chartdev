@@ -30,6 +30,7 @@ Ext.define('ChartDev.controller.Report', {
 	    filterSwitch: '#report_menu #report_filterSwitch',
 	    filterDetail: '#report_menu #report_filter_detail',
 	    filterDetailList: '#report_filter_detailList',
+	    filterDetailListButton: '#report_filter_detailListButton',
 	    content: '#report #report_content'
 	},
 	control: {
@@ -44,6 +45,9 @@ Ext.define('ChartDev.controller.Report', {
 	    },
 	    filterDetail: {
 		'tap': 'showFilterDetailList'
+	    },
+	    filterDetailListButton: {
+		tap: 'hideFilterDetailList'
 	    }
 	}
     },
@@ -123,22 +127,16 @@ Ext.define('ChartDev.controller.Report', {
 	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
 		targetDepth: 2
 	    }));
-/*		//            hidden: true,
-		itemId: 'report_filter_detailList',
-		name: 'filterDetailList',
-		fullscreen: true,
-		//height: 1000,
-		zIndex: 999,
-		title: 'Filter Selection',
-		displayField: 'text',
-		store: 'CCStore'
-            }));*/
 	    filterDetailList=this.getFilterDetailList();
 	}
 	else{
 	    console.log('found detailList');
 	}
-	Ext.Viewport.animateActiveItem('#'+filterDetailList.getItemId(), {type: 'fade', duration: 250});
+	Ext.Viewport.animateActiveItem('#report_filter_detailList', {type: 'fade', duration: 250});
+    },
+    hideFilterDetailList: function(){
+	//TODO: load selections from list into form
+	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
     },
     updateContent: function(params){
 	console.log('controller: updateContent');
