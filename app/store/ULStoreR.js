@@ -1,9 +1,9 @@
-Ext.define("ChartDev.store.UserLogStoreR", {
+Ext.define("ChartDev.store.ULStoreR", {
     extend: "Ext.data.Store",
-    requires: ['ChartDev.model.UserLogModelR', 'ChartDev.model.StandardModelR'],
+    requires: ['ChartDev.model.ULModelR', 'ChartDev.model.ULStandardModelR'],
     config: {
-        model: 'ChartDev.model.UserLogModelR',
-	storeId: 'UserLogStore',
+        model: 'ChartDev.model.ULModelR',
+	storeId: 'ULStore',
 	autoLoad: true,
         proxy: {
 	    type: 'ajax',

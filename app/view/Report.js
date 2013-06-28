@@ -8,7 +8,8 @@ Ext.define('ChartDev.view.Report', {
 	'Ext.form.FieldSet',
 	'Ext.field.Select',
 	'Ext.field.DatePicker',
-	'Ext.field.Toggle'
+	'Ext.field.Toggle',
+	'Ext.dataview.NestedList'
     ],    
     config: {
 	itemId: 'report',
@@ -316,37 +317,11 @@ Ext.define('ChartDev.view.Report', {
 				itemId: 'report_filter_detail',
 				name: 'filterDetail',
 				label: 'is',
-				usePicker: false,
-				options: [
-				],
-				defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
-				    toolbar: {
-					title: 'Select Filter Detail:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*/,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
+				readOnly: true,
+				listeners: {
+				    element: 'element',
+				    tap: function(){
+					this.fireEvent('tap');
 				    }
 				}
 			    }

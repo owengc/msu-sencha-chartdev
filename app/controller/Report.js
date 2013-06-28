@@ -1,7 +1,8 @@
 Ext.define('ChartDev.controller.Report', {
     extend: 'Ext.app.Controller',
     requires: [
-        'ChartDev.store.UserLogStoreR',
+        'ChartDev.store.ULStoreR',
+	'ChartDev.view.component.FilterDetailList',
 	'Ext.data.Store',
 	'Ext.List',
         'Ext.draw.Color',
@@ -27,6 +28,8 @@ Ext.define('ChartDev.controller.Report', {
 	    menu: '#report #report_menu',
 	    filter: '#report_menu #report_filter',
 	    filterSwitch: '#report_menu #report_filterSwitch',
+	    filterDetail: '#report_menu #report_filter_detail',
+	    filterDetailList: '#report_filter_detailList',
 	    content: '#report #report_content'
 	},
 	control: {
@@ -38,6 +41,9 @@ Ext.define('ChartDev.controller.Report', {
 	    },
 	    filterSwitch: {
 		change: 'toggleFilter'
+	    },
+	    filterDetail: {
+		'tap': 'showFilterDetailList'
 	    }
 	}
     },
@@ -110,11 +116,35 @@ Ext.define('ChartDev.controller.Report', {
 	    filter.hide();
 	}
     },
+    showFilterDetailList: function(){
+	var report=this.getReport(),
+	filterDetailList=this.getFilterDetailList() || null;
+	if(filterDetailList===null){
+	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
+		targetDepth: 2
+	    }));
+/*		//            hidden: true,
+		itemId: 'report_filter_detailList',
+		name: 'filterDetailList',
+		fullscreen: true,
+		//height: 1000,
+		zIndex: 999,
+		title: 'Filter Selection',
+		displayField: 'text',
+		store: 'CCStore'
+            }));*/
+	    filterDetailList=this.getFilterDetailList();
+	}
+	else{
+	    console.log('found detailList');
+	}
+	Ext.Viewport.animateActiveItem('#'+filterDetailList.getItemId(), {type: 'fade', duration: 250});
+    },
     updateContent: function(params){
 	console.log('controller: updateContent');
         var report=this.getReport(),
 	content=this.getContent(),
-	userLogStore=Ext.getStore('UserLogStore');
+	userLogStore=Ext.getStore('ULStore');
 	if(content){
 	    report.remove(content, true);
 	    userLogStore.clearFilter();
@@ -396,7 +426,7 @@ Ext.define('ChartDev.controller.Report', {
 		    bottom: 40
 		},
 		flipXY: true,
-                store: 'UserLogStore',
+                store: 'ULStore',
                 axes: [
 		    {
 			type: 'numeric',

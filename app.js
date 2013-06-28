@@ -21,11 +21,11 @@ Ext.Loader.setPath({
 
 Ext.application({
     name: 'ChartDev',
-    models: ['UserLogModelR', 'FrameworkModelR'/*, 'ReportModelR'*/],
-    stores: ['UserLogStoreR', 'FrameworkStoreR'/*, 'ReportStoreR'*/],
+    models: ['ULModelR', 'CCModelR'/*, 'ReportModelR'*/],
+    stores: ['ULStoreR', 'CCStoreR'/*, 'ReportStoreR'*/],
     requires: [
         'Ext.MessageBox',
-	'ChartDev.store.UserLogStoreR'
+//	'ChartDev.store.ULStoreR'
     ],
     controllers: [
 	'Report'
@@ -53,7 +53,6 @@ Ext.application({
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
-
 	Ext.Viewport.add(Ext.create('ChartDev.view.Report', {}));
     },
     onUpdated: function() {
