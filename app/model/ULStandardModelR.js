@@ -8,6 +8,12 @@ Ext.define('ChartDev.model.ULStandardModelR', {
 		 return fullCode;
 	     }
 	    },
+	    {name: 'code', type: 'string',
+		convert: function(value, record){
+		    var fullCode=record.get('fullcode');
+		    return fullCode;
+		}
+	    },
             {name: 'frameworktitle', type: 'string', 
 	     convert: function(value, record){
 		 var title=value.replace(/^\s+|\s+$/g, '');

@@ -28,6 +28,7 @@ Ext.define('ChartDev.controller.Report', {
 	    menu: '#report #report_menu',
 	    filter: '#report_menu #report_filter',
 	    filterSwitch: '#report_menu #report_filterSwitch',
+//	    filterType: '#report_
 	    filterDetail: '#report_menu #report_filter_detail',
 	    filterDetailList: '#report_filter_detailList',
 	    filterDetailListButton: '#report_filter_detailListButton',
@@ -135,7 +136,20 @@ Ext.define('ChartDev.controller.Report', {
 	Ext.Viewport.animateActiveItem('#report_filter_detailList', {type: 'fade', duration: 250});
     },
     hideFilterDetailList: function(){
-	//TODO: load selections from list into form
+	var filterDetail=this.getFilterDetail(),
+	filterDetailList=this.getFilterDetailList(),
+	selections=filterDetailList.getSelectedItems(),
+	option={},
+	text='';
+	for(item in selections){
+	    if(text!=''){
+		text+=' or ';
+	    }
+	    data=selections[item].getData();
+	    text+=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
+	}
+	option.text=text;
+	filterDetail.setOptions([option]);
 	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
     },
     updateContent: function(params){

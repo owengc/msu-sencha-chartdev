@@ -25,7 +25,7 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 	displayField: 'text',
 	store: 'CCStore',
 	targetDepth: '',
-	selectedLeaves: {},
+	selectedItems: {},
 	branchesWithSelections: {},
 	branchId: null,
 	branch: null,
@@ -49,14 +49,14 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 		}
 	    },
 	    leafitemtap: function(scope, list, target, record){
-		var selectedLeaves=this.getSelectedLeaves(),
+		var selectedItems=this.getSelectedItems(),
 		branchesWithSelections=this.getBranchesWithSelections(),
 		branchId=this.getBranchId(),
 		leaf=this.getActiveItem().getStore().getData().items[target],
 		leafId=leaf.getId();
 		
-		if(selectedLeaves[leafId]){//deselecting
-		    delete selectedLeaves[leafId];//remove record of selectedLeaf
+		if(selectedItems[leafId]){//deselecting
+		    delete selectedItems[leafId];//remove record of selectedLeaf
 		    var branchSelections=branchesWithSelections[branchId];
 		    branchSelections.splice(branchSelections.indexOf(target), 1);
 		    if(branchSelections.length==0){//remove record of branchWithSelection
@@ -64,7 +64,7 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 		    }
 		}
 		else{//selecting
-		    selectedLeaves[leafId]=leaf;//add data for selectedLeaf
+		    selectedItems[leafId]=leaf;//add data for selectedLeaf
 
 		    //add leaf index to branchWithSelection
 		    if(branchesWithSelections[branchId]){//additional selection in branch
@@ -81,7 +81,7 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 	this.callParent();
 	this.setTitle('Filter Selection');
 
-	this.setSelectedLeaves({});
+	this.setSelectedItems({});
 	this.setBranchesWithSelections({});
 	this.setBranchId(null);
 	this.setBranch(null);
