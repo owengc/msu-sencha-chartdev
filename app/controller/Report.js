@@ -28,7 +28,8 @@ Ext.define('ChartDev.controller.Report', {
 	    menu: '#report #report_menu',
 	    filter: '#report_menu #report_filter',
 	    filterSwitch: '#report_menu #report_filterSwitch',
-//	    filterType: '#report_
+	    filterType: '#report_menu #report_filter_type',
+	    filterTier: '#report_menu #report_filter_tier',
 	    filterDetail: '#report_menu #report_filter_detail',
 	    filterDetailList: '#report_filter_detailList',
 	    filterDetailListButton: '#report_filter_detailListButton',
@@ -43,6 +44,9 @@ Ext.define('ChartDev.controller.Report', {
 	    },
 	    filterSwitch: {
 		change: 'toggleFilter'
+	    },
+	    filterTier: {
+		change: 'updateFilterDetailListDepth'
 	    },
 	    filterDetail: {
 		'tap': 'showFilterDetailList'
@@ -61,7 +65,6 @@ Ext.define('ChartDev.controller.Report', {
 		content.hide();
 		setTimeout(function(){menu.show();}, 250);
 		setTimeout(function(){toolbarButton.setIconCls('arrow_up');}, 500);
-		console.log('chart hidden')
 	    }
 	    else{
 		menu.show();
@@ -79,13 +82,10 @@ Ext.define('ChartDev.controller.Report', {
         }
     },
     submitMenu: function(){
-	console.log('controller: menu submitted');
         var values=this.getMenu().getValues(true, true);
       	if(this.validateMenuForm(values)){
-	    console.log('controller: menu validated');
 	    var report=this.getReport();
 	    if(JSON.stringify(values)!=JSON.stringify(report.getMenuState())){
-		console.log('view: menu changed');
 		this.updateContent(values);
 		report.setMenuState(values);
             }
@@ -97,7 +97,7 @@ Ext.define('ChartDev.controller.Report', {
     },
     validateMenuForm: function(values){
         for(value in values){
-            if(values[value]==null){
+            if(values[value]===null){
                 Ext.Msg.alert("Oops!", "Please make selections for all menu items to generate report.", Ext.emptyFn);
                 return false;
             }
@@ -123,15 +123,13 @@ Ext.define('ChartDev.controller.Report', {
     },
     showFilterDetailList: function(){
 	var report=this.getReport(),
+	filterTier=this.getFilterTier(),
 	filterDetailList=this.getFilterDetailList() || null;
 	if(filterDetailList===null){
 	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
-		targetDepth: 2
+		targetDepth: filterTier.getValue()
 	    }));
 	    filterDetailList=this.getFilterDetailList();
-	}
-	else{
-	    console.log('found detailList');
 	}
 	Ext.Viewport.animateActiveItem('#report_filter_detailList', {type: 'fade', duration: 250});
     },
@@ -139,21 +137,31 @@ Ext.define('ChartDev.controller.Report', {
 	var filterDetail=this.getFilterDetail(),
 	filterDetailList=this.getFilterDetailList(),
 	selections=filterDetailList.getSelectedItems(),
-	option={},
+	option={value: null},
 	text='';
 	for(item in selections){
 	    if(text!=''){
 		text+=' or ';
 	    }
-	    data=selections[item].getData();
+	    var data=selections[item].getData();
 	    text+=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
 	}
-	option.text=text;
-	filterDetail.setOptions([option]);
+	if(text!=''){
+	    option.value=1;
+	    option.text=text;
+	    filterDetail.setOptions([option]);
+	}
 	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
     },
+    updateFilterDetailListDepth: function(){
+	var filterTier=this.getFilterTier(),
+	filterDetail=this.getFilterDetail(),
+	filterDetailList=this.getFilterDetailList();
+	filterDetail.setOptions([{text:'', value: null}]);
+	filterDetailList.clearSelections();
+	filterDetailList.setTargetDepth(filterTier.getValue());
+    },
     updateContent: function(params){
-	console.log('controller: updateContent');
         var report=this.getReport(),
 	content=this.getContent(),
 	userLogStore=Ext.getStore('ULStore');
@@ -172,25 +180,22 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
 	}
-	var genericFields = [
+	
+	var reportFields = [
 	    {name: 'journal_id', type: 'string'},
 	    {name: 'framework_id', type: 'string'},
 	    {name: 'class_name', type: 'string'},
 	    {name: 'grade', type: 'string'},
 	    {name: 'duration', type: 'int'},
 	    {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
+	    {name: 'code', type: 'string'},
+	    {name: 'description', type: 'string'}
 	],
 	reportData=[],
 	logs=userLogStore.getData().items,
 	numLogs=logs.length,
 	i=0;
-	//	    framework=Ext.getStore(';
 	if(params.tier==='standard'){
-	    var reportFields=genericFields.concat([
-		{name: 'standard', type: 'string'},
-		{name: 'standard_title', type: 'string'},
-		{name: 'standard_desc', type: 'string'}
-	    ]);
 	    for(;i<numLogs;i++){
 		var logData=logs[i].getData(),
 		standards=logs[i].standardsStore.getData().items,
@@ -205,55 +210,43 @@ Ext.define('ChartDev.controller.Report', {
 			grade: standardData.grade,
 			duration: logData.duration,//this needs to change
 			datetaught: logData.datetaught,
-			standard: standardData.fullcode,
-			standard_title: standardData.frameworktitle,
-			//standard_desc: 
+			code: standardData.fullcode,
+			description: standardData.frameworktitle,
 		    });
 		}
 	    }
 	}
-	else if(params.tier==='cluster'){
-	    var reportFields=genericFields.concat([
-		{name: 'cluster_id', type: 'string'},
-		{name: 'cluster_title', type: 'string'},
-		{name: 'cluster_desc', type: 'string'}
-	    ]);
-	}
-	else if(params.tier==='domain'){
-	    var reportFields=genericFields.concat([
-		{name: 'domain_id', type: 'string'},
-		{name: 'domain', type: 'string'},
-		{name: 'domain_title', type: 'string'},
-		{name: 'domain_desc', type: 'string'}
-	    ]);
+	else if(params.tier==='domain' || params.tier==='cluster'){
+	    var framework=Ext.getStore('CCStoreR');	    
 	    for(;i<numLogs;i++){
 		var logData=logs[i].getData(),
-		domainMemo={},
+		itemHash={},
+		itemKey=params.tier,
 		standards=logs[i].standardsStore.getData().items,
 		numStandards=standards.length,
 		j=0;
 		for(;j<numStandards;j++){
 		    var standardData=standards[j].getData();
-		    if(!domainMemo[standardData.domain]){
-			domainMemo[standardData.domain]={
+		    if(!itemHash[standardData[itemKey]]){
+			itemHash[standardData[itemKey]]={
 			    journal_id: logData.journalid,
 			    framework_id: [standardData.framework_id],
 			    class_name: logData.classname,
 			    grade: standardData.grade,
 			    duration: logData.duration,//this needs to change
 			    datetaught: logData.datetaught,
-			    domain: standardData.domain,
-			    duration: logData.duration
-			}
+			    code: standardData[itemKey],
+			    description: framework.find(itemKey+'_id', standardData[itemKey]).description
+			};
 		    }
 		    else{
-			domainMemo[standardData.domain].duration+=logData.duration;//this needs to change
-			domainMemo[standardData.domain].framework_id.push(standardData.framework_id);
+			itemHash[standardData[itemKey]].duration+=logData.duration;//this needs to change
+			itemHash[standardData[itemKey]].framework_id.push(standardData.framework_id);
 		    }
 		}
-		for(uniqueDomainRecord in domainMemo){
-		    domainMemo[uniqueDomainRecord].framework_id=domainMemo[uniqueDomainRecord].framework_id.toString();
-		    reportData.push(domainMemo[uniqueDomainRecord]);
+		for(uniqueItemRecord in itemHash){
+		    itemHash[uniqueItemRecord].framework_id=itemHash[uniqueItemRecord].framework_id.toString();
+		    reportData.push(itemHash[uniqueItemRecord]);
 		}
 	    }
 	}
@@ -269,9 +262,9 @@ Ext.define('ChartDev.controller.Report', {
 	    model: 'ReportModel',
 	    data: reportData,
 	    groupField: 'class_name',
-	    sorters: ['datetaught', params.tier]
+	    sorters: ['datetaught', 'code']
 	});
-
+	reportStore.load();
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -281,15 +274,15 @@ Ext.define('ChartDev.controller.Report', {
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		store: 'ReportStore',
-		itemTpl: ('<div style="float:top"><b>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {'+params.tier+'}</div>'),
+		itemTpl: ('<div style="float:top"><b>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
 		itemHeight: 75,
 		grouped: true,
 		onItemDisclosure: true,
 		listeners: {
 		    disclose: function(scope, record, target, index){
 			scope.select(record, false, false);
-			var outString=(record.data.standard)?('<div style="float:top"><b>Fullcode:</b> '+record.data.standard+'</div>'):'';
-			outString+=(record.data.standard_title)?('<div style="float:top"><b>Standard Title:</b> '+record.data.standard_title+'</div>'):'';
+			var outString=(record.data.code)?('<div style="float:top"><b>Code:</b> '+record.data.code+'</div>'):'';
+			outString+=(record.data.description)?('<div style="float:top"><b>Description:</b> '+record.data.description+'</div>'):'';
 			outString+=(record.data.journal_id)?('<div style="float:top"><b>Journal Id:</b> '+record.data.journal_id+'</div>'):'';/*
             {name: 'framework_id', type: 'string'},
             {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
@@ -344,7 +337,7 @@ Ext.define('ChartDev.controller.Report', {
                         type: 'category',
                         position: 'left',
                         fields: [
-                            params.tier
+                            'code'
                         ],
                         title: {
                             text: Ext.String.capitalize(params.tier),
@@ -377,7 +370,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'scatter',
 			fill: true,
 			xField: 'datetaught',
-			yField: params.tier,
+			yField: 'code',
 			marker: {
 			    type: 'circle',
 			    fillStyle: 'darkblue',
@@ -411,7 +404,7 @@ Ext.define('ChartDev.controller.Report', {
 			    show: function(scope, item, panel){
 				var outString=('<div><h3>'+item.record.get('class_name')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
 				outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
-				outString+=(item.record.get('standard_title'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('standard_title')+'</div>'):'';
+				outString+=(item.record.get('description'))?('<div style="float:top"><b>Description:</b> '+item.record.get('description')+'</div>'):'';
 				outString+=(item.record.get('journal_id'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journal_id')+'</div>'):'';
 				panel.setHtml(outString);
 			    }
@@ -438,7 +431,7 @@ Ext.define('ChartDev.controller.Report', {
 		    bottom: 40
 		},
 		flipXY: true,
-                store: 'ULStore',
+                store: 'ReportStore',
                 axes: [
 		    {
 			type: 'numeric',
@@ -458,7 +451,7 @@ Ext.define('ChartDev.controller.Report', {
                         type: 'category',
                         position: 'left',
                         fields: [
-                            params.tier
+                            'code'
                         ],
                         title: {
                             text: Ext.String.capitalize(params.tier),
@@ -471,7 +464,7 @@ Ext.define('ChartDev.controller.Report', {
 		    {
 			type: 'bar',
 			fill: true,
-			xField: params.tier,
+			xField: 'code',
 			yField: 'duration',
 			style: {
 			    fill: 'blue'

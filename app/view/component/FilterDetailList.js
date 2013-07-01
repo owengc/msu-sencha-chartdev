@@ -22,13 +22,14 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 	    ]
 	},
 	bubbleEvents: 'done',
-	displayField: 'text',
+	displayField: 'description',
 	store: 'CCStore',
 	targetDepth: '',
 	selectedItems: {},
 	branchesWithSelections: {},
 	branchId: null,
 	branch: null,
+	root: null,
 	listeners: {
 	    listchange: function(scope, list){
 		list.setMode('MULTI');
@@ -74,6 +75,7 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 			branchesWithSelections[branchId]=[target];
 		    }
 		}
+		this.fireEvent('selectionchange', true);
 	    }
 	}
     },
@@ -81,6 +83,7 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 	this.callParent();
 	this.setTitle('Filter Selection');
 
+	this.setRoot();
 	this.setSelectedItems({});
 	this.setBranchesWithSelections({});
 	this.setBranchId(null);
@@ -112,5 +115,12 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 		}
 	    }
 	}
+    },
+    clearSelections: function(){
+	this.goToNode(this.getStore().getRoot());
+	this.setSelectedItems({});
+	this.setBranchesWithSelections({});
+	this.setBranchId(null);
+	this.setBranch(null);
     }
 });

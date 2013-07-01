@@ -4,7 +4,7 @@
     "children" : [
 	{
             "grade_id" : "0",
-            "text" : "Grade 0",
+            "text" : "Kindergarten",
             "children" : [
 		{
 		    "domain_id" : "CC",
@@ -211,7 +211,7 @@
 		    "children" : [
 			{
 			    "cluster_id" : "9384",
-			    "text" : "Work with numbers 1119 to gain foundations for place value.",
+			    "text" : "Work with numbers 11-19 to gain foundations for place value.",
 			    "children" : [
 				{
 				    "fullcode" : "K.NBT.1 ",
@@ -223,7 +223,7 @@
 				    "leaf" : "true"
 				}
 			    ],
-			    "description" : "Work with numbers 1119 to gain foundations for place value.",
+			    "description" : "Work with numbers 11-19 to gain foundations for place value.",
 			    "code" : "",
 			    "levelname" : "Cluster"
 			}
@@ -378,7 +378,7 @@
 		    "levelname" : "Domain"
 		}
             ],
-            "description" : "Grade 0",
+            "description" : "Kindergarten",
             "code" : "0",
             "levelname" : "Grade"
 	},

@@ -9,10 +9,18 @@ Ext.define('ChartDev.model.CCModelR', {
 	    {name: 'domain_id', type: 'string'},
 	    {name: 'cluster_id', type: 'string'},
 	    {name: 'framework_id', type: 'string'},
-	    {name: 'text', type: 'string'},
-            {name: 'description', type: 'string'},
+            {name: 'code', type: 'string'},
             {name: 'levelname', type: 'string'},
-            {name: 'code', type: 'string'}
+            {name: 'description', type: 'string'},
+	    {name: 'text', type: 'string'/*,
+	     convert: function(value, record){
+		 if(record.get('levelname')=='Domain'){
+		     return record.get('code');
+		 }
+		 else{
+		     return value;
+		 }
+	     }*/}
 	    //{name: 'children'}
         ]/*,
 	hasMany: {

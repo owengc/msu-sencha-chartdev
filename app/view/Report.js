@@ -100,8 +100,8 @@ Ext.define('ChartDev.view.Report', {
 				options: [
 				    {text: 'Standard', value: 'standard'},
 				    {text: 'Cluster', value: 'cluster'},
-				    {text: 'Domain', value: 'domain'},
-				    {text: 'Framework Id', value: 'framework_id'}
+				    {text: 'Domain', value: 'domain'}
+//				    {text: 'Framework Id', value: 'framework_id'}
 				],
 				defaultPhonePickerConfig: {
 				    usePicker: true,
@@ -227,6 +227,7 @@ Ext.define('ChartDev.view.Report', {
 			defaults: {
 			    minHeight: 75,
 			    labelWidth: '15%',
+			    disabled: true
 			},	
 			items: [			    
 			    {
@@ -277,9 +278,9 @@ Ext.define('ChartDev.view.Report', {
 				label: 'where',
 				usePicker: true,
 				options: [
-				    {text: 'Standard', value: 'standard'},
-				    {text: 'Cluster', value: 'cluster'},
-				    {text: 'Domain', value: 'domain'}
+				    {text: 'Standard', value: 4},
+				    {text: 'Cluster', value: 3},
+				    {text: 'Domain', value: 2}
 				],
 				defaultPhonePickerConfig: {
 				    usePicker: true,
@@ -334,6 +335,7 @@ Ext.define('ChartDev.view.Report', {
     initialize: function(){
 	this.callParent(); 
 	this.setInitialized(true);
+	
 	
 	//testing:
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
