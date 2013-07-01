@@ -5,7 +5,7 @@ Ext.define('ChartDev.model.ULStandardModelR', {
             {name: 'fullcode', type: 'string', 
 	     convert: function(value, record){
 		 var fullCode=value.replace(/^\s+|\s+$/g, '');
-		 return fullCode || 'Other';
+		 return fullCode || record.get('frameworktitle') || 'Other';
 	     }
 	    },
 	    {name: 'code', type: 'string',

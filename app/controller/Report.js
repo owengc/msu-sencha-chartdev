@@ -217,7 +217,9 @@ Ext.define('ChartDev.controller.Report', {
 	    }
 	}
 	else if(params.tier==='domain' || params.tier==='cluster'){
-	    var framework=Ext.getStore('CCStoreR');	    
+	    var framework=Ext.getStore('CCStore');
+	    framework.getNode();
+	    framework.clearFilter();
 	    for(;i<numLogs;i++){
 		var logData=logs[i].getData(),
 		itemHash={},
@@ -226,26 +228,28 @@ Ext.define('ChartDev.controller.Report', {
 		numStandards=standards.length,
 		j=0;
 		for(;j<numStandards;j++){
-		    var standardData=standards[j].getData();
+		    var standardData=standards[j].getData(),
+		    record=framework.findRecord(itemKey+'_id', standardData[itemKey]),
+		    description=(record!=null)?record.getData().description:standardData.frameworktitle;
 		    if(!itemHash[standardData[itemKey]]){
 			itemHash[standardData[itemKey]]={
 			    journal_id: logData.journalid,
-			    framework_id: [standardData.framework_id],
+			    framework_id: standardData.framework_id,
 			    class_name: logData.classname,
 			    grade: standardData.grade,
 			    duration: logData.duration,//this needs to change
 			    datetaught: logData.datetaught,
 			    code: standardData[itemKey],
-			    description: framework.find(itemKey+'_id', standardData[itemKey]).description
+			    description: description
 			};
 		    }
 		    else{
 			itemHash[standardData[itemKey]].duration+=logData.duration;//this needs to change
-			itemHash[standardData[itemKey]].framework_id.push(standardData.framework_id);
+			itemHash[standardData[itemKey]].framework_id+=(', '+standardData.framework_id);
+			itemHash[standardData[itemKey]].description+=(', '+description);
 		    }
 		}
 		for(uniqueItemRecord in itemHash){
-		    itemHash[uniqueItemRecord].framework_id=itemHash[uniqueItemRecord].framework_id.toString();
 		    reportData.push(itemHash[uniqueItemRecord]);
 		}
 	    }
