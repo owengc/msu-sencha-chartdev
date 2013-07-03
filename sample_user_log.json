@@ -4,7 +4,7 @@
          "classid" : "28",
          "journalid" : "103465",
          "background" : "0",
-         "duration" : "0",
+         "duration" : "60",
          "activity" : [
             {
                "activity_id" : "1",
@@ -150,7 +150,7 @@
          "classid" : "4",
          "journalid" : "14065",
          "background" : "3",
-         "duration" : "10",
+         "duration" : "30",
          "activity" : [
             {
                "activity_id" : "2",

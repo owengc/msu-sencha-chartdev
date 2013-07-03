@@ -278,9 +278,9 @@ Ext.define('ChartDev.view.Report', {
 				label: 'where',
 				usePicker: true,
 				options: [
-				    {text: 'Standard', value: 4},
-				    {text: 'Cluster', value: 3},
-				    {text: 'Domain', value: 2}
+				    {text: 'Standard', value: [4, 'standard']},
+				    {text: 'Cluster', value: [3, 'cluster']},
+				    {text: 'Domain', value: [2, 'domain']}
 				],
 				defaultPhonePickerConfig: {
 				    usePicker: true,
@@ -341,7 +341,7 @@ Ext.define('ChartDev.view.Report', {
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
             type: 'bar',
             tier: 'framework_id',
-            fromDate: new Date('Apr 1 2013'),
+            fromDate: new Date('Apr 1 2010'),
             toDate: new Date('Jun 1 2013')
         });
     }

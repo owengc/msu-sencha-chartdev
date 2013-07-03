@@ -18,7 +18,6 @@ Ext.define('ChartDev.controller.Report', {
         'Ext.chart.axis.Time',
         'Ext.chart.Legend',
         'Ext.Anim'
-
     ],
     config: {
 	refs: {
@@ -127,7 +126,7 @@ Ext.define('ChartDev.controller.Report', {
 	filterDetailList=this.getFilterDetailList() || null;
 	if(filterDetailList===null){
 	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
-		targetDepth: filterTier.getValue()
+		targetDepth: filterTier.getValue()[0]
 	    }));
 	    filterDetailList=this.getFilterDetailList();
 	}
@@ -138,17 +137,19 @@ Ext.define('ChartDev.controller.Report', {
 	filterDetailList=this.getFilterDetailList(),
 	selections=filterDetailList.getSelectedItems(),
 	option={value: null},
-	text='';
+	text='',
+	value=[];
 	for(item in selections){
 	    if(text!=''){
 		text+=' or ';
 	    }
 	    var data=selections[item].getData();
 	    text+=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
+	    value.push(data);
 	}
 	if(text!=''){
-	    option.value=1;
 	    option.text=text;
+	    option.value=value;
 	    filterDetail.setOptions([option]);
 	}
 	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
@@ -158,8 +159,10 @@ Ext.define('ChartDev.controller.Report', {
 	filterDetail=this.getFilterDetail(),
 	filterDetailList=this.getFilterDetailList();
 	filterDetail.setOptions([{text:'', value: null}]);
-	filterDetailList.clearSelections();
-	filterDetailList.setTargetDepth(filterTier.getValue());
+	if(filterDetailList){
+	    filterDetailList.clearSelections();
+	    filterDetailList.setTargetDepth(filterTier.getValue()[0]);
+	}
     },
     updateContent: function(params){
         var report=this.getReport(),
@@ -172,7 +175,7 @@ Ext.define('ChartDev.controller.Report', {
 	if(params.fromDate && params.toDate){
 	    userLogStore.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
-		if(date>=params.fromDate || date<=params.toDate){
+		if(date>=params.fromDate && date<=params.toDate){
 		    return true;
 		}
 		else{
@@ -180,48 +183,106 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
 	}
-	
-	var reportFields = [
+	//console.log(reportData);
+	var framework=Ext.getStore('CCStore');
+	framework=framework.getRoot();
+	var tier=params.tier, 
+	reportFields = [
 	    {name: 'journal_id', type: 'string'},
-	    {name: 'framework_id', type: 'string'},
 	    {name: 'class_name', type: 'string'},
-	    {name: 'grade', type: 'string'},
-	    {name: 'duration', type: 'int'},
 	    {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
+	    {name: 'materials', type: 'string'},
+	    {name: 'pages', type: 'string'},
+
+	    {name: 'framework_id'},
+	    {name: 'grade'},
+	    {name: 'domain'},
+	    {name: 'cluster'},
+	    {name: 'standard'},
 	    {name: 'code', type: 'string'},
-	    {name: 'description', type: 'string'}
+	    {name: 'description', type: 'string'},
+	    {name: 'timespent', type: 'int'}
 	],
 	reportData=[],
 	logs=userLogStore.getData().items,
 	numLogs=logs.length,
 	i=0;
-	if(params.tier==='standard'){
-	    for(;i<numLogs;i++){
-		var logData=logs[i].getData(),
-		standards=logs[i].standardsStore.getData().items,
-		numStandards=standards.length,
-		j=0;
-		for(;j<numStandards;j++){
-		    var standardData=standards[j].getData();
-		    reportData.push({
-			journal_id: logData.journalid,
-			framework_id: standardData.framework_id,
-			class_name: logData.classname,
-			grade: standardData.grade,
-			duration: logData.duration,//this needs to change
-			datetaught: logData.datetaught,
-			code: standardData.fullcode,
-			description: standardData.frameworktitle,
-		    });
+	for(;i<numLogs;i++){
+	    var ulData=logs[i].getData(),
+	    itemHash={},
+	    itemKey,
+	    standards=logs[i].standardsStore.getData().items,
+	    numStandards=standards.length,
+	    j=0;
+	    console.log('ulData: ', ulData);
+	    for(;j<numStandards;j++){
+		var ulStandardData=standards[j].getData();
+		console.log('searching for ', ulStandardData);
+		var record=framework.findChild('framework_id', ulStandardData.framework_id, true);
+		if(record){
+		    console.log('record found: ', record.getData());
+		    var standard=record.getData(),
+		    cluster=record.parentNode.getData(),
+		    domain=record.parentNode.parentNode.getData(),
+		    grade=record.parentNode.parentNode.parentNode.getData();
+		    itemKey=(tier==='standard')?standard.framework_id:(tier==='cluster')?cluster.cluster_id:domain.domain_id;
+		    targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
+		    if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
+			console.log('new key presented');
+			itemHash[itemKey]={
+			    journal_id: ulData.journalid,
+			    class_name: ulData.classname,
+			    datetaught: ulData.datetaught,
+			    materials: ulData.materials,
+			    pages: ulData.pages,
+
+			    timespent: Math.round(ulData.duration*(ulStandardData.percent/100)),//time spent on this standard/cluster/domain in the lesson
+
+			    grade: grade.code,
+			    domains:[{code: domain.code, description: domain.description}],
+			    clusters: [{code: cluster.code, description: cluster.description}],
+			    standards: [{code: standard.code, description: standard.description}],
+
+			    code: targetTier.code,
+			    description: targetTier.description
+			};
+			console.log('added ', itemKey, ' to hash: ', itemHash[itemKey]);
+		    }
+		    else{
+			var item=itemHash[itemKey],
+			tiers={
+			    'standards': {code: standard.code, description: standard.description},
+			    'clusters': {code: cluster.code, description: cluster.description},
+			    'domains': {code: domain.code, description: domain.description}
+			};
+			for(tier in tiers){
+			    var newEntry=true,
+			    tierArray=item[tier],
+			    count=tierArray.length,
+			    i=0;
+			    for(;i<count;i++){
+				if(JSON.stringify(tierArray[i])==JSON.stringify(tiers[tier])){
+				    newEntry=false;
+				}
+			    }
+			    if(newEntry){
+				category.push(tiers[tier]);
+			    }
+
+			}
+			item.timespent+=Math.round(ulData.duration*(ulStandardData.percent/100));
+		    }
 		}
 	    }
+	    for(item in itemHash){
+		reportData.push(itemHash[item]);
+	    }
 	}
-	else if(params.tier==='domain' || params.tier==='cluster'){
-	    var framework=Ext.getStore('CCStore');
-	    framework.getNode();
-	    framework.clearFilter();
-	    for(;i<numLogs;i++){
-		var logData=logs[i].getData(),
+
+//	}
+/*	else if(params.tier==='domain' || params.tier==='cluster'){//aggregating
+	    for(;i<numLogs;i++){,
+		var ulData=logs[i].getData(),
 		itemHash={},
 		itemKey=params.tier,
 		standards=logs[i].standardsStore.getData().items,
@@ -229,23 +290,29 @@ Ext.define('ChartDev.controller.Report', {
 		j=0;
 		for(;j<numStandards;j++){
 		    var standardData=standards[j].getData(),
-		    record=framework.findRecord(itemKey+'_id', standardData[itemKey]),
-		    description=(record!=null)?record.getData().description:standardData.frameworktitle;
+		    standard=framework.findRecord(itemKey+'_id', standardData[itemKey]),
+		    description=(standard!=null)?standard.getData().description:standardData.frameworktitle;
 		    if(!itemHash[standardData[itemKey]]){
 			itemHash[standardData[itemKey]]={
-			    journal_id: logData.journalid,
-			    framework_id: standardData.framework_id,
-			    class_name: logData.classname,
-			    grade: standardData.grade,
-			    duration: logData.duration,//this needs to change
-			    datetaught: logData.datetaught,
+			    journal_id: ulData.journalid,
+			    class_name: ulData.classname,
+			    datetaught: ulData.datetaught,
+
+
+			    framework_id: [standardData.framework_id],
+			    grade: [{code: standardData.grade}],
+			    domain: [{code: standardData.domain, description: ''}],
+			    cluster: [{code: standardData.cluster, description: ''}],
+			    standard: [{code: stadardData.standard, description: ''}],
+			    
 			    code: standardData[itemKey],
-			    description: description
+			    description: ,
+			    timespent: Math.round(ulData.duration*(standardData.percent/100)),
 			};
 		    }
 		    else{
-			itemHash[standardData[itemKey]].duration+=logData.duration;//this needs to change
-			itemHash[standardData[itemKey]].framework_id+=(', '+standardData.framework_id);
+			itemHash[standardData[itemKey]].duration+=ulData.duration;//this needs to change
+			itemHash[standardData[itemKey]].framework_id.push(standardData.framework_id);
 			itemHash[standardData[itemKey]].description+=(', '+description);
 		    }
 		}
@@ -253,22 +320,36 @@ Ext.define('ChartDev.controller.Report', {
 		    reportData.push(itemHash[uniqueItemRecord]);
 		}
 	    }
-	}
+	}*/
+	console.log(reportData);
 	Ext.define('ReportModel', {
 	    extend: 'Ext.data.Model',
 	    config: {
 		fields: reportFields
 	    }
 	});
-	console.log(reportData);
+	
 	var reportStore=Ext.create('Ext.data.Store', {
 	    storeId: 'ReportStore',
 	    model: 'ReportModel',
 	    data: reportData,
-	    groupField: 'class_name',
-	    sorters: ['datetaught', 'code']
+	    groupField: 'code',
+	    sorters: ['code', 'datetaught']
 	});
 	reportStore.load();
+	//TODO: implement filtering
+	reportStore.clearFilter();
+	var report=this.getReport(),	
+	values=this.getMenu().getValues(true, true);
+	/*TODO: 
+	  var filterType=values.filterType,
+	  filterTier=values.filterTier[1], 
+	  filterDetails=values.filterDetail,
+	  numDetails=filterDetails.length,
+	  i=0;
+	  LOOK AT BEST WAY TO BUILD FILTER FUNCTION (EXTRACT NEEDED INFO FROM OBJECTS STORES IN values.filterTier
+	*/
+	console.log('menu: ', values);
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -278,7 +359,7 @@ Ext.define('ChartDev.controller.Report', {
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		store: 'ReportStore',
-		itemTpl: ('<div style="float:top"><b>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
+		itemTpl: ('<div style="float:top"><b>{class_name}<br>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
 		itemHeight: 75,
 		grouped: true,
 		onItemDisclosure: true,
@@ -288,23 +369,23 @@ Ext.define('ChartDev.controller.Report', {
 			var outString=(record.data.code)?('<div style="float:top"><b>Code:</b> '+record.data.code+'</div>'):'';
 			outString+=(record.data.description)?('<div style="float:top"><b>Description:</b> '+record.data.description+'</div>'):'';
 			outString+=(record.data.journal_id)?('<div style="float:top"><b>Journal Id:</b> '+record.data.journal_id+'</div>'):'';/*
-            {name: 'framework_id', type: 'string'},
-            {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
-            {name: 'classid', type: 'string'},
-            {name: 'classname', type: 'string'},
-            {name: 'duration',    type: 'string'},
-            {name: 'activity', type: 'string'},
-            {name: 'materialid', type: 'int'},
-            {name: 'materialname', type:'string'},
-            {name: 'usermaterials', type: 'string'},
-            {name: 'pages', type: 'string'},
-            {name: 'background', type: 'string'},
-            {name: 'notes', type:'string'},
-            {name: 'activitycsv', type:'string'},
-            {name: 'practicescsv', type:'string'},
-            {name: 'activity'},
-            {name: 'standards'},
-            {name: 'math_practices'},*/
+																		{name: 'framework_id', type: 'string'},
+																		{name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
+																		{name: 'classid', type: 'string'},
+																		{name: 'classname', type: 'string'},
+																		{name: 'duration',    type: 'string'},
+																		{name: 'activity', type: 'string'},
+																		{name: 'materialid', type: 'int'},
+																		{name: 'materialname', type:'string'},
+																		{name: 'usermaterials', type: 'string'},
+																		{name: 'pages', type: 'string'},
+																		{name: 'background', type: 'string'},
+																		{name: 'notes', type:'string'},
+																		{name: 'activitycsv', type:'string'},
+																		{name: 'practicescsv', type:'string'},
+																		{name: 'activity'},
+																		{name: 'standards'},
+																		{name: 'math_practices'},*/
 			Ext.Msg.show({
 			    title: ('<div>'+record.data.class_name+' '+Ext.Date.format(record.data.datetaught, 'm/d/Y')+'</div>'), 
 			    message: outString, 
@@ -377,15 +458,15 @@ Ext.define('ChartDev.controller.Report', {
 			yField: 'code',
 			marker: {
 			    type: 'circle',
-			    fillStyle: 'darkblue',
-			    strokeStyle: 'blue',
+			    fillStyle: '#1e93e4',
+			    strokeStyle: '#11598c',
 			    radius: 10,
 			    lineWidth: 0
 			},
 			highlightCfg: {
 			    type: 'circle',
-			    fillStyle: 'green',
-			    strokeStyle: 'yellowgreen',
+			    fillStyle: '#75e41e',
+			    strokeStyle: '#428c11',
 			    radius: 15,
 			    lineWidth: 1
 			}
@@ -441,7 +522,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'numeric',
 			position: 'bottom',
 			fields: [
-                            'duration'
+                            'timespent'
 			],
 			title: {
                             text: 'Time Spent (min)',
@@ -469,39 +550,40 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'bar',
 			fill: true,
 			xField: 'code',
-			yField: 'duration',
+			yField: 'timespent',
 			style: {
-			    fill: 'blue'
+			    fill: '#1e93e4',
+			    stroke: '#11598c'
 			}
 		    }
 		]/*,
-		interactions: [
-		    {
-			type: 'panzoom',
-			axes: {
-			    bottom: {
-				maxZoom: 5,
-				allowPan: true
-			    },
-			    left: false
-			}
-		    },
-		    {
-			type: 'iteminfo',
-			listeners: {
-			    show: function(scope, item, panel){
-				var outString=('<div><h3>'+item.record.get('classname')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
-				outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
-				outString+=(item.record.get('frameworktitle'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('frameworktitle')+'</div>'):'';
-				outString+=(item.record.get('journalid'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journalid')+'</div>'):'';
-				panel.setHtml(outString);
-			    }
-			}
-		    },
-		    {
-			type: 'itemhighlight'
-		    }
-		]*/
+		   interactions: [
+		   {
+		   type: 'panzoom',
+		   axes: {
+		   bottom: {
+		   maxZoom: 5,
+		   allowPan: true
+		   },
+		   left: false
+		   }
+		   },
+		   {
+		   type: 'iteminfo',
+		   listeners: {
+		   show: function(scope, item, panel){
+		   var outString=('<div><h3>'+item.record.get('classname')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
+		   outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
+		   outString+=(item.record.get('frameworktitle'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('frameworktitle')+'</div>'):'';
+		   outString+=(item.record.get('journalid'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journalid')+'</div>'):'';
+		   panel.setHtml(outString);
+		   }
+		   }
+		   },
+		   {
+		   type: 'itemhighlight'
+		   }
+		   ]*/
             });
 	}
 	else{

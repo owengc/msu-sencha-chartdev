@@ -9,13 +9,6 @@ Ext.define("ChartDev.store.CCStoreR", {
         proxy: {
 	    type: 'ajax',
 	    url: 'framework.json',
-	    /*reader: {
-		type: 'json',
-		//root: 'children'
-	    },*/
-	    //rootProperty: 'children'
-	}/*,
-	groupField: 'classname',
-	sorters: ['datetaught', 'duration'],*/
-    },
+	}
+    }
 });
