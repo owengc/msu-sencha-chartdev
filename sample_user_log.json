@@ -1,10 +1,62 @@
 {
    "userlog" : [
       {
+         "classid" : "7",
+         "journalid" : "107422",
+         "background" : "3",
+         "duration" : "0",
+         "activity" : [
+            {
+               "activity_id" : "1",
+               "activity_name" : "Introduction"
+            }
+         ],
+         "classname" : "2nd Grade Math",
+         "standards" : [
+            {
+               "fullcode" : "K.CC.2",
+               "frameworktitle" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
+               "percent" : "15",
+               "duration_mask" : "",
+               "framework_id" : "9369"
+            }
+         ],
+         "notes" : "no comments",
+         "activitycsv" : "1",
+         "pages" : "10",
+         "datetaught" : "2013-06-20"
+      },
+      {
+         "classid" : "7",
+         "journalid" : "107423",
+         "background" : "3",
+         "duration" : "0",
+         "activity" : [
+            {
+               "activity_id" : "1",
+               "activity_name" : "Introduction"
+            }
+         ],
+         "classname" : "2nd Grade Math",
+         "standards" : [
+            {
+               "fullcode" : "K.CC.2",
+               "frameworktitle" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
+               "percent" : "15",
+               "duration_mask" : "11110000111100001111",
+               "framework_id" : "9369"
+            }
+         ],
+         "notes" : "no comments",
+         "activitycsv" : "1",
+         "datetaught" : "2013-06-19",
+         "pages" : "10"
+      },
+      {
          "classid" : "28",
          "journalid" : "103465",
          "background" : "0",
-         "duration" : "60",
+         "duration" : "0",
          "activity" : [
             {
                "activity_id" : "1",
@@ -17,13 +69,14 @@
                "fullcode" : "",
                "frameworktitle" : "School Vacation/Weekend",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "10109"
             }
          ],
          "notes" : "",
          "activitycsv" : "1",
-         "pages" : "",
-         "datetaught" : "2013-05-17"
+         "datetaught" : "2013-05-17",
+         "pages" : ""
       },
       {
          "materialid" : "7069",
@@ -44,12 +97,14 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9368"
             },
             {
                "fullcode" : "Other Math Topics",
                "frameworktitle" : "Other Content Topics",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "10201"
             }
          ],
@@ -77,12 +132,14 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9368"
             },
             {
                "fullcode" : "Other Math Topics",
                "frameworktitle" : "Other Content Topics",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "10201"
             }
          ],
@@ -110,6 +167,7 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9368"
             }
          ],
@@ -137,6 +195,7 @@
                "fullcode" : "1.OA.1",
                "frameworktitle" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9399"
             }
          ],
@@ -150,7 +209,7 @@
          "classid" : "4",
          "journalid" : "14065",
          "background" : "3",
-         "duration" : "30",
+         "duration" : "10",
          "activity" : [
             {
                "activity_id" : "2",
@@ -164,6 +223,7 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9368"
             }
          ],
@@ -192,6 +252,7 @@
                "fullcode" : "1.OA.1",
                "frameworktitle" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
                "percent" : "10",
+               "duration_mask" : "00000000000000000000",
                "framework_id" : "9399"
             }
          ],
