@@ -138,14 +138,15 @@ Ext.define('ChartDev.controller.Report', {
 	selections=filterDetailList.getSelectedItems(),
 	option={value: null},
 	text='',
-	value=[];
+	value={};
 	for(item in selections){
 	    if(text!=''){
 		text+=' or ';
 	    }
-	    var data=selections[item].getData();
-	    text+=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
-	    value.push(data);
+	    var data=selections[item].getData(),
+	    code=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
+	    text+=code;
+	    value[code]=data;
 	}
 	if(text!=''){
 	    option.text=text;
@@ -183,7 +184,6 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
 	}
-	//console.log(reportData);
 	var framework=Ext.getStore('CCStore');
 	framework=framework.getRoot();
 	var tier=params.tier, 
@@ -194,14 +194,15 @@ Ext.define('ChartDev.controller.Report', {
 	    {name: 'materials', type: 'string'},
 	    {name: 'pages', type: 'string'},
 
-	    {name: 'framework_id'},
+	    {name: 'timespent', type: 'int'},
+
 	    {name: 'grade'},
-	    {name: 'domain'},
-	    {name: 'cluster'},
-	    {name: 'standard'},
+	    {name: 'domains'},
+	    {name: 'clusters'},
+	    {name: 'standards'},
+
 	    {name: 'code', type: 'string'},
 	    {name: 'description', type: 'string'},
-	    {name: 'timespent', type: 'int'}
 	],
 	reportData=[],
 	logs=userLogStore.getData().items,
@@ -214,13 +215,10 @@ Ext.define('ChartDev.controller.Report', {
 	    standards=logs[i].standardsStore.getData().items,
 	    numStandards=standards.length,
 	    j=0;
-	    console.log('ulData: ', ulData);
 	    for(;j<numStandards;j++){
 		var ulStandardData=standards[j].getData();
-		console.log('searching for ', ulStandardData);
 		var record=framework.findChild('framework_id', ulStandardData.framework_id, true);
 		if(record){
-		    console.log('record found: ', record.getData());
 		    var standard=record.getData(),
 		    cluster=record.parentNode.getData(),
 		    domain=record.parentNode.parentNode.getData(),
@@ -228,7 +226,6 @@ Ext.define('ChartDev.controller.Report', {
 		    itemKey=(tier==='standard')?standard.framework_id:(tier==='cluster')?cluster.cluster_id:domain.domain_id;
 		    targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
 		    if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
-			console.log('new key presented');
 			itemHash[itemKey]={
 			    journal_id: ulData.journalid,
 			    class_name: ulData.classname,
@@ -246,7 +243,6 @@ Ext.define('ChartDev.controller.Report', {
 			    code: targetTier.code,
 			    description: targetTier.description
 			};
-			console.log('added ', itemKey, ' to hash: ', itemHash[itemKey]);
 		    }
 		    else{
 			var item=itemHash[itemKey],
@@ -266,7 +262,7 @@ Ext.define('ChartDev.controller.Report', {
 				}
 			    }
 			    if(newEntry){
-				category.push(tiers[tier]);
+				tierArray.push(tiers[tier]);
 			    }
 
 			}
@@ -278,50 +274,6 @@ Ext.define('ChartDev.controller.Report', {
 		reportData.push(itemHash[item]);
 	    }
 	}
-
-//	}
-/*	else if(params.tier==='domain' || params.tier==='cluster'){//aggregating
-	    for(;i<numLogs;i++){,
-		var ulData=logs[i].getData(),
-		itemHash={},
-		itemKey=params.tier,
-		standards=logs[i].standardsStore.getData().items,
-		numStandards=standards.length,
-		j=0;
-		for(;j<numStandards;j++){
-		    var standardData=standards[j].getData(),
-		    standard=framework.findRecord(itemKey+'_id', standardData[itemKey]),
-		    description=(standard!=null)?standard.getData().description:standardData.frameworktitle;
-		    if(!itemHash[standardData[itemKey]]){
-			itemHash[standardData[itemKey]]={
-			    journal_id: ulData.journalid,
-			    class_name: ulData.classname,
-			    datetaught: ulData.datetaught,
-
-
-			    framework_id: [standardData.framework_id],
-			    grade: [{code: standardData.grade}],
-			    domain: [{code: standardData.domain, description: ''}],
-			    cluster: [{code: standardData.cluster, description: ''}],
-			    standard: [{code: stadardData.standard, description: ''}],
-			    
-			    code: standardData[itemKey],
-			    description: ,
-			    timespent: Math.round(ulData.duration*(standardData.percent/100)),
-			};
-		    }
-		    else{
-			itemHash[standardData[itemKey]].duration+=ulData.duration;//this needs to change
-			itemHash[standardData[itemKey]].framework_id.push(standardData.framework_id);
-			itemHash[standardData[itemKey]].description+=(', '+description);
-		    }
-		}
-		for(uniqueItemRecord in itemHash){
-		    reportData.push(itemHash[uniqueItemRecord]);
-		}
-	    }
-	}*/
-	console.log(reportData);
 	Ext.define('ReportModel', {
 	    extend: 'Ext.data.Model',
 	    config: {
@@ -337,19 +289,31 @@ Ext.define('ChartDev.controller.Report', {
 	    sorters: ['code', 'datetaught']
 	});
 	reportStore.load();
-	//TODO: implement filtering
-	reportStore.clearFilter();
-	var report=this.getReport(),	
-	values=this.getMenu().getValues(true, true);
-	/*TODO: 
-	  var filterType=values.filterType,
-	  filterTier=values.filterTier[1], 
-	  filterDetails=values.filterDetail,
-	  numDetails=filterDetails.length,
-	  i=0;
-	  LOOK AT BEST WAY TO BUILD FILTER FUNCTION (EXTRACT NEEDED INFO FROM OBJECTS STORES IN values.filterTier
-	*/
-	console.log('menu: ', values);
+
+	var settings=this.getMenu().getValues(true, true);
+	if(settings.filterSwitch==1){
+	    var filterType=settings.filterType,
+	    filterTier=settings.filterTier[1], 
+	    filterDetails=settings.filterDetail;
+	    reportStore.filterBy(function(rec, id){
+		var tierArray=rec.get(filterTier+'s'),
+		numItems=tierArray.length,
+		i=0;
+		for(;i<numItems;i++){
+		    if(filterType=='include'){
+			if(filterDetails[tierArray[i].code]){
+			    return true;
+			}
+		    }
+		    else{
+			if(filterDetails[tierArray[i].code]){
+			    return false;
+			}
+		    }
+		}
+		return (filterType=='include')?false:true;
+	    });
+	}
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -501,8 +465,57 @@ Ext.define('ChartDev.controller.Report', {
 		]
             });
         }
-	else if(params.type==='bar'){
-            content=Ext.create('Ext.chart.CartesianChart', {
+	else if(params.type==='bar'){//must manually sum values
+	    var totalReportTime=reportStore.sum('timespent');
+	    barChartFields = [
+		{name: 'journals'},
+		{name: 'totaltime', type: 'int'},
+		{name: 'code', type: 'string'},
+		{name: 'description', type: 'string'},
+	    ],
+	    barChartData=[],
+	    itemHash={},
+	    items=reportStore.getData().items,
+	    numItems=items.length,
+	    i=0;
+	    for(;i<numItems;i++){
+		var record=reportStore.getAt(i);
+		recordData=record.getData(),
+		itemKey=recordData.code;
+		if(itemHash[itemKey]){
+		    var item=itemHash[itemKey];
+		    item.journals.push(recordData);
+		    item.totaltime+=recordData.timespent;
+		}
+		else{
+		    itemHash[itemKey]={
+			journals: [recordData],
+			totaltime: recordData.timespent,
+			code: recordData.code,
+			description: recordData.description
+		    };
+		}
+	    }
+	    for(item in itemHash){
+		barChartData.push(itemHash[item]);
+	    }
+
+	    Ext.define('BarChartModel', {
+		extend: 'Ext.data.Model',
+		config: {
+		    fields: barChartFields
+		}
+	    });
+	    var barChartStore=Ext.create('Ext.data.Store', {
+		storeId: 'BarChartStore',
+		model: 'BarChartModel',
+		data: barChartData,
+		groupField: 'code',
+		sorters: ['code', 'datetaught']
+	    });
+	    barChartStore.load();
+	    
+	    content=Ext.create('Ext.chart.CartesianChart', {
 		itemId: 'report_content',
 		height: '100%',
 		animate: true,
@@ -515,22 +528,20 @@ Ext.define('ChartDev.controller.Report', {
 		    right: 40,
 		    bottom: 40
 		},
+		stacked: true,
 		flipXY: true,
-                store: 'ReportStore',
+                store: 'BarChartStore',
                 axes: [
 		    {
 			type: 'numeric',
 			position: 'bottom',
 			fields: [
-                            'timespent'
+                            'totaltime'
 			],
 			title: {
-                            text: 'Time Spent (min)',
+                            text: ('Time spent (in minutes) per '+params.tier+' between '+Ext.Date.format(params.fromDate, 'M d, Y')+' and '+Ext.Date.format(params.toDate, 'M d, Y')),
 			},
-			style: {
-
-			},
-			minimum: 0,
+			minimum: 0
 		    },
 		    {
                         type: 'category',
@@ -550,7 +561,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'bar',
 			fill: true,
 			xField: 'code',
-			yField: 'timespent',
+			yField: 'totaltime',
 			style: {
 			    fill: '#1e93e4',
 			    stroke: '#11598c'
