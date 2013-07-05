@@ -13,15 +13,26 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
 	    ui: 'light',
 	    inline: 'true',
 	    items: [
+		
 		{
-		    id: 'report_filter_detailListButton',
+		    id: 'report_filter_detailListClearButton',
+		    ui: 'decline',
+		    text: 'Clear',
+		    align: 'right'
+		},
+		{
+		    xtype: 'spacer',
+		    width: 30,
+		    align: 'right'
+		},
+		{
+		    id: 'report_filter_detailListDoneButton',
 		    ui: 'confirm',
 		    text: 'Done',
 		    align: 'right'
 		}
 	    ]
 	},
-	bubbleEvents: 'done',
 	displayField: 'description',
 	store: 'CCStore',
 	targetDepth: '',
@@ -81,7 +92,6 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
     },
     initialize: function(){
 	this.callParent();
-	this.setTitle('Filter Selection');
 
 	this.setRoot();
 	this.setSelectedItems({});

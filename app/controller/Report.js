@@ -9,6 +9,7 @@ Ext.define('ChartDev.controller.Report', {
         'Ext.chart.axis.Numeric',
         'Ext.chart.series.Bar',
         'Ext.chart.interactions.PanZoom',
+        'Ext.chart.interactions.CrossZoom',
         'Ext.chart.interactions.ItemInfo',
 	'Ext.chart.interactions.ItemHighlight',
         'Ext.chart.CartesianChart',
@@ -17,7 +18,8 @@ Ext.define('ChartDev.controller.Report', {
         'Ext.chart.axis.Numeric',
         'Ext.chart.axis.Time',
         'Ext.chart.Legend',
-        'Ext.Anim'
+        'Ext.Anim',
+	'Ext.Spacer'
     ],
     config: {
 	refs: {
@@ -31,15 +33,17 @@ Ext.define('ChartDev.controller.Report', {
 	    filterTier: '#report_menu #report_filter_tier',
 	    filterDetail: '#report_menu #report_filter_detail',
 	    filterDetailList: '#report_filter_detailList',
-	    filterDetailListButton: '#report_filter_detailListButton',
-	    content: '#report #report_content'
+	    filterDetailListClearButton: '#report_filter_detailListClearButton',
+	    filterDetailListDoneButton: '#report_filter_detailListDoneButton',
+	    content: '#report #report_content',
+	    panZoomButton: '#report_toolbar #report_panZoomButton'
 	},
 	control: {
-	    toolbar: {
-		tap: 'toggleMenu'
-	    },
 	    toolbarButton: {
 		tap: 'toggleMenu'
+	    },
+	    toolbarSubmitButton: {
+		tap: 'submitMenu'
 	    },
 	    filterSwitch: {
 		change: 'toggleFilter'
@@ -48,34 +52,60 @@ Ext.define('ChartDev.controller.Report', {
 		change: 'updateFilterDetailListDepth'
 	    },
 	    filterDetail: {
-		'tap': 'showFilterDetailList'
+		'tap': 'showFilterDetailList',
+		'swipe': 'clearFilterDetailList'
 	    },
-	    filterDetailListButton: {
+	    filterDetailListClearButton: {
+		tap:'clearFilterDetailList'
+	    },
+	    filterDetailListDoneButton: {
 		tap: 'hideFilterDetailList'
+	    },
+	    content: {
+		doubletap: 'resetPanZoom'
 	    }
 	}
     },
     toggleMenu: function(e){
 	var menu=this.getMenu(),
         toolbarButton=this.getToolbarButton(),
-	content=this.getContent();
+	content=this.getContent(),
+	panZoomButton=this.getPanZoomButton();
 	if(menu.isHidden()){
 	    if(content){
 		content.hide();
+		if(panZoomButton){
+		    panZoomButton.hide();
+		}
 		setTimeout(function(){menu.show();}, 250);
-		setTimeout(function(){toolbarButton.setIconCls('arrow_up');}, 500);
+		setTimeout(function(){
+		    toolbarButton.setIconCls('arrow_up');
+		    toolbarButton.setText('View Report');
+		    toolbarButton.setUi('confirm');
+		}, 500);
 	    }
 	    else{
 		menu.show();
-		setTimeout(function(){toolbarButton.setIconCls('arrow_up');}, 250);
+		setTimeout(function(){
+		    toolbarButton.setIconCls('arrow_up');
+		    toolbarButton.setText('View Report');
+		    toolbarButton.setUi('confirm');
+		}, 250);
 	    }
         }
         else{
 	    if(this.submitMenu()==true){
 		menu.hide();		
-		setTimeout(function(){toolbarButton.setIconCls('arrow_down');}, 500);
+		setTimeout(function(){
+		    toolbarButton.setIconCls('arrow_down');
+		    toolbarButton.setText('View Menu');
+		    toolbarButton.setUi('normal');
+		}, 500);
 		if(content){
 		    setTimeout(function(){content.show();}, 250);
+		    if(panZoomButton){
+			setTimeout(function(){panZoomButton.show();}, 500);
+		    }
 		}
 	    }
         }
@@ -126,6 +156,7 @@ Ext.define('ChartDev.controller.Report', {
 	filterDetailList=this.getFilterDetailList() || null;
 	if(filterDetailList===null){
 	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
+		title: 'Filter Selection',
 		targetDepth: filterTier.getValue()[0]
 	    }));
 	    filterDetailList=this.getFilterDetailList();
@@ -144,7 +175,7 @@ Ext.define('ChartDev.controller.Report', {
 		text+=' or ';
 	    }
 	    var data=selections[item].getData(),
-	    code=(data.levelname=='Domain')?data.domain_id:(data.levelname=='Cluster')?data.cluster_id:(data.levelname=='Standard')?data.fullcode:null;
+	    code=data.code;
 	    text+=code;
 	    value[code]=data;
 	}
@@ -154,6 +185,12 @@ Ext.define('ChartDev.controller.Report', {
 	    filterDetail.setOptions([option]);
 	}
 	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+    },
+    clearFilterDetailList: function(){
+	if(this.getFilterDetailList()){
+	    this.updateFilterDetailListDepth();
+	    Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+	}
     },
     updateFilterDetailListDepth: function(){
 	var filterTier=this.getFilterTier(),
@@ -217,13 +254,13 @@ Ext.define('ChartDev.controller.Report', {
 	    j=0;
 	    for(;j<numStandards;j++){
 		var ulStandardData=standards[j].getData();
-		var record=framework.findChild('framework_id', ulStandardData.framework_id, true);
+		var record=framework.findChild('standard_id', ulStandardData.framework_id, true);
 		if(record){
 		    var standard=record.getData(),
 		    cluster=record.parentNode.getData(),
 		    domain=record.parentNode.parentNode.getData(),
 		    grade=record.parentNode.parentNode.parentNode.getData();
-		    itemKey=(tier==='standard')?standard.framework_id:(tier==='cluster')?cluster.cluster_id:domain.domain_id;
+		    itemKey=(tier+'_id');
 		    targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
 		    if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
 			itemHash[itemKey]={
@@ -393,7 +430,7 @@ Ext.define('ChartDev.controller.Report', {
                             fontSize: 14
                         },
                         grid: true
-                    },
+		    },
 		    {
 			type: 'time',
 			position: 'bottom',
@@ -403,7 +440,7 @@ Ext.define('ChartDev.controller.Report', {
 			fromDate: params.fromDate,
 			toDate: params.toDate,
 			title: {
-                            text: '',
+                            text: ('Log entries by '+params.tier+' between '+Ext.Date.format(params.fromDate, 'F j, Y')+' and '+Ext.Date.format(params.toDate, 'F j, Y')),
 			},
 			style: {
 
@@ -433,18 +470,26 @@ Ext.define('ChartDev.controller.Report', {
 			    strokeStyle: '#428c11',
 			    radius: 15,
 			    lineWidth: 1
-			}
+			},
 		    }
 		],
 		interactions: [
 		    {
 			type: 'panzoom',
 			axes: {
-			    bottom: {
-				maxZoom: 5,
+			    left: {
+				minZoom: 1,
+				maxZoom: 100,
 				allowPan: true
 			    },
-			    left: false
+			    bottom: {
+				minZoom: 1,
+				maxZoom: 100,
+				allowPan: true
+			    }
+			},
+			modeToggleButton: {
+			    cls: ['x-panzoom-toggle', 'x-zooming'], iconCls: 'expand'
 			}
 		    },
 		    {
@@ -452,7 +497,7 @@ Ext.define('ChartDev.controller.Report', {
 			listeners: {
 			    show: function(scope, item, panel){
 				var outString=('<div><h3>'+item.record.get('class_name')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
-				outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
+				outString+=(item.record.get('code'))?('<div style="float:top"><b>'+params.tier+':</b> '+item.record.get('code')+'</div>'):'';
 				outString+=(item.record.get('description'))?('<div style="float:top"><b>Description:</b> '+item.record.get('description')+'</div>'):'';
 				outString+=(item.record.get('journal_id'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journal_id')+'</div>'):'';
 				panel.setHtml(outString);
@@ -462,9 +507,39 @@ Ext.define('ChartDev.controller.Report', {
 		    {
 			type: 'itemhighlight'
 		    }
-		]
-            });
-        }
+		],
+		listeners: {
+		    initialize: function(){
+			if(Ext.os.deviceType=='Desktop'){
+			    var panzoom=this.getInteractions()[0],
+			    modeToggleButton=panzoom.getModeToggleButton(),
+			    toolbar=Ext.ComponentQuery.query('#report_toolbar')[0],
+			    spacer=Ext.create('Ext.Spacer', {
+				flex: 1
+			    });
+			    modeToggleButton.setItemId('report_panZoomButton');
+			    toolbar.add(spacer);
+			    toolbar.add(modeToggleButton);
+			    panzoom.setZoomOnPanGesture(true);
+			}
+		    },
+		    doubletap: function(){//not sure why 'this' does not refer to the chart with this event
+			var chart=Ext.ComponentQuery.query('#report_content')[0];
+//			this.fireEvent('doubletap');
+			var axes=chart.getAxes(),
+			panzoom=chart.getInteractions()[0];
+			panzoom.transformAxesBy(axes, 0, 0, 0, 0);
+			chart.redraw();
+		    }
+		}/*,
+		   painted: function(){
+		   console.log('set grid');
+		   var grid=this.getAxes()[0].gridSurface;
+		   grid.setTop(50);
+		   grid.setZIndex(2);
+		   }*/
+	    });
+	}
 	else if(params.type==='bar'){//must manually sum values
 	    var totalReportTime=reportStore.sum('timespent');
 	    barChartFields = [
@@ -511,7 +586,7 @@ Ext.define('ChartDev.controller.Report', {
 		model: 'BarChartModel',
 		data: barChartData,
 		groupField: 'code',
-		sorters: ['code', 'datetaught']
+		sorters: ['totaltime', 'code']
 	    });
 	    barChartStore.load();
 	    
@@ -521,7 +596,7 @@ Ext.define('ChartDev.controller.Report', {
 		animate: true,
 		hidden: true,
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
-                hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
+		hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		innerPadding: {
 		    top: 40,
 		    left: 0,
@@ -530,8 +605,8 @@ Ext.define('ChartDev.controller.Report', {
 		},
 		stacked: true,
 		flipXY: true,
-                store: 'BarChartStore',
-                axes: [
+		store: 'BarChartStore',
+		axes: [
 		    {
 			type: 'numeric',
 			position: 'bottom',
@@ -539,23 +614,23 @@ Ext.define('ChartDev.controller.Report', {
                             'totaltime'
 			],
 			title: {
-                            text: ('Time spent (in minutes) per '+params.tier+' between '+Ext.Date.format(params.fromDate, 'M d, Y')+' and '+Ext.Date.format(params.toDate, 'M d, Y')),
+                            text: ('Time spent (in minutes) by '+params.tier+' between '+Ext.Date.format(params.fromDate, 'F j, Y')+' and '+Ext.Date.format(params.toDate, 'F j, Y')),
 			},
 			minimum: 0
 		    },
 		    {
-                        type: 'category',
-                        position: 'left',
-                        fields: [
+			type: 'category',
+			position: 'left',
+			fields: [
                             'code'
-                        ],
-                        title: {
+			],
+			title: {
                             text: Ext.String.capitalize(params.tier),
                             fontSize: 14
-                        },
-                        grid: true
+			},
+			grid: true
                     }
-                ],
+		],
 		series: [
 		    {
 			type: 'bar',
@@ -567,7 +642,7 @@ Ext.define('ChartDev.controller.Report', {
 			    stroke: '#11598c'
 			}
 		    }
-		]/*,
+		],/*,
 		   interactions: [
 		   {
 		   type: 'panzoom',
@@ -595,20 +670,48 @@ Ext.define('ChartDev.controller.Report', {
 		   type: 'itemhighlight'
 		   }
 		   ]*/
+
+		listeners: {
+		    initialize: function(){
+			if(Ext.os.deviceType=='Desktop'){
+			    var panzoom=this.getInteractions()[0],
+			    modeToggleButton=panzoom.getModeToggleButton(),
+			    toolbar=Ext.ComponentQuery.query('#report_toolbar')[0],
+			    spacer=Ext.create('Ext.Spacer', {
+				flex: 1
+			    });
+			    modeToggleButton.setItemId('report_panZoomButton');
+			    toolbar.add(spacer);
+			    toolbar.add(modeToggleButton);
+			    panzoom.setZoomOnPanGesture(true);
+			}
+		    },
+		    doubletap: function(){//not sure why 'this' does not refer to the chart with this event
+			var chart=Ext.ComponentQuery.query('#report_content')[0];
+//			this.fireEvent('doubletap');
+			var axes=chart.getAxes(),
+			panzoom=chart.getInteractions()[0];
+			panzoom.transformAxesBy(axes, 0, 0, 0, 0);
+			chart.redraw();
+		    }
+		}
             });
 	}
 	else{
             console.log('invalid report type');
 	    return false;
-        }
+	}
 	report.add(content);
-	content.show();
+	content.show();	
     },
-    updateChartX: function(me, The, slot, eOpts){
-	console.log(me.id, ' picked (X-axis)');
-    },
-    updateChartY: function(me, The, slot, eOpts){
-	console.log(me.id, ' picked (Y-axis)');
+    resetPanZoom: function(){
+	var chart=this.getContent();
+	if(chart.isXType('chart')){
+	    var axes=chart.getAxes(),
+	    panzoom=chart.getInteractions()[0];
+	    panzoom.transformAxesBy(axes, 0, 0, 0, 0);
+	    chart.redraw();
+	}
     }
 });
 

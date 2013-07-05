@@ -28,9 +28,5 @@ Ext.define('ChartDev.model.ULModelR', {
 	    name: 'standards',
 	    associationKey: 'standards'
 	}
-/*        hasMany:[{model:'ULActivityModel', name:'activity'},
-                {model:'StandardModelR', name:'standards'},
-                {model:'ULMathPracticesModel', name:'math_practices'}]*/
-        
     }
 });
