@@ -21,16 +21,10 @@ Ext.Loader.setPath({
 
 Ext.application({
     name: 'ChartDev',
-    models: ['ULModelR', 'CCModelR'],
-    stores: ['ULStoreR', 'CCStoreR'],
     requires: [
         'Ext.MessageBox',
     ],
     controllers: [
-	'Report'
-    ],
-    views: [
-        'Main',
 	'Report'
     ],
     icon: {

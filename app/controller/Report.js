@@ -22,6 +22,9 @@ Ext.define('ChartDev.controller.Report', {
 	'Ext.Spacer'
     ],
     config: {
+	models: ['ULModelR', 'CCModelR'],
+	stores: ['ULStoreR', 'CCStoreR'],
+	views: ['Main', 'Report'],
 	refs: {
 	    report: '#report',
 	    toolbar: '#report #report_toolbar',
@@ -33,8 +36,8 @@ Ext.define('ChartDev.controller.Report', {
 	    filterTier: '#report_menu #report_filter_tier',
 	    filterDetail: '#report_menu #report_filter_detail',
 	    filterDetailList: '#report_filter_detailList',
-	    filterDetailListClearButton: '#report_filter_detailListClearButton',
-	    filterDetailListDoneButton: '#report_filter_detailListDoneButton',
+	    filterDetailListClearButton: '#report_filter_detailList #report_filter_detailListClearButton',
+	    filterDetailListDoneButton: '#report_filter_detailList #report_filter_detailListDoneButton',
 	    content: '#report #report_content',
 	    panZoomButton: '#report_toolbar #report_panZoomButton'
 	},

@@ -7,7 +7,26 @@ Ext.define('ChartDev.view.component.MultiSelectNestedList', {
 	toolbar: {
 	    docked: 'top',
 	    ui: 'light',
-	    inline: 'true'
+	    inline: 'true',
+	    items: [
+		{
+		    itemId: '',
+		    ui: 'decline',
+		    text: 'Clear',
+		    align: 'right'
+		},
+		{
+		    xtype: 'spacer',
+		    width: 30,
+		    align: 'right'
+		},
+		{
+		    itemId: '',
+		    ui: 'confirm',
+		    text: 'Done',
+		    align: 'right'
+		}
+	    ]
 	},
 	store: '',	
 	itemId: '',
@@ -73,27 +92,8 @@ Ext.define('ChartDev.view.component.MultiSelectNestedList', {
 
 	this.setStore(this.config.store);
 	this.setItemId(this.config.itemId);
-	this.getToolbar().setItems([
-	    {
-		id: (this.config.itemId+'ClearButton'),
-		ui: 'decline',
-		text: 'Clear',
-		align: 'right'
-	    },
-	    {
-		xtype: 'spacer',
-		width: 30,
-		align: 'right'
-	    },
-	    {
-		id: (this.config.itemId+'DoneButton'),
-		ui: 'confirm',
-		text: 'Done',
-		align: 'right'
-	    }
-
-	]);
-	this.setName(this.config.name);
+	this.getToolbar().getItems().items[2].getItems().items[0].setItemId(this.config.itemId+'ClearButton');
+	this.getToolbar().getItems().items[2].getItems().items[2].setItemId((this.config.itemId+'DoneButton'));
 	this.setTitle(this.config.title);
 	this.setDisplayField(this.config.displayField);
 	this.setTargetDepth(this.config.targetDepth);
