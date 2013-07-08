@@ -233,11 +233,13 @@ Ext.define('ChartDev.controller.Report', {
 	reportFields = [
 	    {name: 'journal_id', type: 'string'},
 	    {name: 'class_name', type: 'string'},
-	    {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
+	    {name: 'date_taught', type: 'date', dateFormat: 'Y-m-d'},
+	    {name: 'activities'},
 	    {name: 'materials', type: 'string'},
 	    {name: 'pages', type: 'string'},
+	    {name: 'notes', type: 'string'},
 
-	    {name: 'timespent', type: 'int'},
+	    {name: 'time_spent', type: 'int'},
 
 	    {name: 'grade'},
 	    {name: 'domains'},
@@ -272,11 +274,13 @@ Ext.define('ChartDev.controller.Report', {
 			itemHash[itemKey]={
 			    journal_id: ulData.journalid,
 			    class_name: ulData.classname,
-			    datetaught: ulData.datetaught,
-			    materials: ulData.materials,
+			    date_taught: ulData.datetaught,
+			    activities: ulData.activity,
+			    materials: ulData.materialname,
 			    pages: ulData.pages,
+			    notes: ulData.notes,
 
-			    timespent: Math.round(ulData.duration*(ulStandardData.percent/100)),//time spent on this standard/cluster/domain in the lesson
+			    time_spent: Math.round(ulData.duration*(ulStandardData.percent/100)),//time spent on this standard/cluster/domain in the lesson
 
 			    grade: grade.code,
 			    domains:[{code: domain.code, description: domain.description}],
@@ -309,7 +313,7 @@ Ext.define('ChartDev.controller.Report', {
 			    }
 
 			}
-			item.timespent+=Math.round(ulData.duration*(ulStandardData.percent/100));
+			item.time_spent+=Math.round(ulData.duration*(ulStandardData.percent/100));
 		    }
 		}
 	    }
@@ -329,7 +333,7 @@ Ext.define('ChartDev.controller.Report', {
 	    model: 'ReportModel',
 	    data: reportData,
 	    groupField: 'code',
-	    sorters: ['code', 'datetaught']
+	    sorters: ['code', 'date_taught']
 	});
 	reportStore.load();
 
@@ -366,45 +370,41 @@ Ext.define('ChartDev.controller.Report', {
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		store: 'ReportStore',
-		itemTpl: ('<div style="float:top"><b>{class_name}<br>{datetaught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
+		itemTpl: ('<div style="float:top"><b>{class_name}<br>{date_taught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
 		itemHeight: 75,
 		grouped: true,
 		onItemDisclosure: true,
 		listeners: {
 		    disclose: function(scope, record, target, index){
 			scope.select(record, false, false);
-			var outString=(record.data.code)?('<div style="float:top"><b>Code:</b> '+record.data.code+'</div>'):'';
-			outString+=(record.data.description)?('<div style="float:top"><b>Description:</b> '+record.data.description+'</div>'):'';
-			outString+=(record.data.journal_id)?('<div style="float:top"><b>Journal Id:</b> '+record.data.journal_id+'</div>'):'';/*
-																		{name: 'framework_id', type: 'string'},
-																		{name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
-																		{name: 'classid', type: 'string'},
-																		{name: 'classname', type: 'string'},
-																		{name: 'duration',    type: 'string'},
-																		{name: 'activity', type: 'string'},
-																		{name: 'materialid', type: 'int'},
-																		{name: 'materialname', type:'string'},
-																		{name: 'usermaterials', type: 'string'},
-																		{name: 'pages', type: 'string'},
-																		{name: 'background', type: 'string'},
-																		{name: 'notes', type:'string'},
-																		{name: 'activitycsv', type:'string'},
-																		{name: 'practicescsv', type:'string'},
-																		{name: 'activity'},
-																		{name: 'standards'},
-																		{name: 'math_practices'},*/
-			Ext.Msg.show({
-			    title: ('<div>'+record.data.class_name+' '+Ext.Date.format(record.data.datetaught, 'm/d/Y')+'</div>'), 
-			    message: outString, 
-			    scrollable: {
-				direction: 'vertical',
-				directionLock: true
-			    },
-			    width: '100%',
-			    height: '100%',
-			    hideOnMaskTap: true,
-			    fn: Ext.emptyFn
-			});
+			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []}),
+			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+record.data.class_name+'</h2>'):'';
+			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'm/d/Y')+'</h3>'):'';
+			outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
+			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+':</h4> '+record.data.code+'<br/>'):'';
+			outString+=(record.data.description)?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+record.data.description+'<br/>'):'';
+			outString+=(record.data.time_spent)?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+record.data.time_spent+' minutes<br/>'):'';
+
+			var materials=record.data.materials,
+			pages=record.data.pages,
+			activities=record.data.activities;
+			outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
+			if(materials && pages){
+			    outString+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
+			}
+			outString+=(materials)?'<br/>':'';
+			if(activities.length>0){
+			    var listString='';
+			    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
+			    for(index in activities){
+				listString+=(listString!='')?', ':'';
+				listString+=activities[index].activity_name;
+			    }
+			    outString+=(listString+'<br/>');
+			}
+			outString+=(record.data.notes)?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+record.data.notes+'<br/>':'';
+			panel.setHtml(outString);
+			panel.show();
 		    }
 		}
 	    });
@@ -441,7 +441,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'time',
 			position: 'bottom',
 			fields: [
-                            'datetaught'
+                            'date_taught'
 			],
 			fromDate: params.fromDate,
 			toDate: params.toDate,
@@ -461,22 +461,22 @@ Ext.define('ChartDev.controller.Report', {
 		    {
 			type: 'scatter',
 			fill: true,
-			xField: 'datetaught',
+			xField: 'date_taught',
 			yField: 'code',
 			marker: {
 			    type: 'circle',
 			    fillStyle: '#1e93e4',
 			    strokeStyle: '#11598c',
 			    radius: 10,
-			    lineWidth: 0
+			    lineWidth: 1
 			},
 			highlightCfg: {
 			    type: 'circle',
 			    fillStyle: '#75e41e',
 			    strokeStyle: '#428c11',
-			    radius: 15,
-			    lineWidth: 1
-			},
+			    radius: 20,
+			    lineWidth: 2
+			}
 		    }
 		],
 		interactions: [
@@ -500,12 +500,35 @@ Ext.define('ChartDev.controller.Report', {
 		    },
 		    {
 			type: 'iteminfo',
+			panel: {width: 600, height: 300, items: []},
 			listeners: {
 			    show: function(scope, item, panel){
-				var outString=('<div><h3>'+item.record.get('class_name')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
-				outString+=(item.record.get('code'))?('<div style="float:top"><b>'+params.tier+':</b> '+item.record.get('code')+'</div>'):'';
-				outString+=(item.record.get('description'))?('<div style="float:top"><b>Description:</b> '+item.record.get('description')+'</div>'):'';
-				outString+=(item.record.get('journal_id'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journal_id')+'</div>'):'';
+				panel.removeAt(0);//get rid of default toolbar
+				var outString=(item.record.get('class_name'))?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+item.record.get('class_name')+'</h2>'):'';
+				outString+=(item.record.get('date_taught'))?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(item.record.get('date_taught'), 'm/d/Y')+'</h3>'):'';
+				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
+				outString+=(item.record.get('code'))?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+':</h4> '+item.record.get('code')+'<br/>'):'';
+				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
+				outString+=(item.record.get('time_spent'))?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+item.record.get('time_spent')+' minutes<br/>'):'';
+
+				var materials=item.record.get('materials'),
+				pages=item.record.get('pages'),
+				activities=item.record.get('activities');
+				outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
+				if(materials && pages){
+				    outString+=(isNaN(pages))?(' (pages '+pages+')'):(' (page '+pages+')');
+				}
+				outString+=(materials)?'<br/>':'';
+				if(activities.length>0){
+				    var listString='';
+				    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
+				    for(i in activities){
+					listString+=(listString!='')?', ':'';
+					listString+=activities[i].activity_name;
+				    }
+				    outString+=(listString+'<br/>');
+				}
+				outString+=(item.record.get('notes'))?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+item.record.get('notes')+'<br/>':'';
 				panel.setHtml(outString);
 			    }
 			}
@@ -515,28 +538,8 @@ Ext.define('ChartDev.controller.Report', {
 		    }
 		],
 		listeners: {
-		    initialize: function(){
-			if(Ext.os.deviceType=='Desktop'){
-			    var panzoom=this.getInteractions()[0],
-			    modeToggleButton=panzoom.getModeToggleButton(),
-			    toolbar=Ext.ComponentQuery.query('#report_toolbar')[0],
-			    spacer=Ext.create('Ext.Spacer', {
-				flex: 1
-			    });
-			    modeToggleButton.setItemId('report_panZoomButton');
-			    toolbar.add(spacer);
-			    toolbar.add(modeToggleButton);
-			    panzoom.setZoomOnPanGesture(true);
-			}
-		    },
-		    doubletap: function(){//not sure why 'this' does not refer to the chart with this event
-			var chart=Ext.ComponentQuery.query('#report_content')[0];
-//			this.fireEvent('doubletap');
-			var axes=chart.getAxes(),
-			panzoom=chart.getInteractions()[0];
-			panzoom.transformAxesBy(axes, 0, 0, 0, 0);
-			chart.redraw();
-		    }
+		    initialize:  this.initPanZoom,
+		    doubletap: this.resetPanZoom
 		}/*,
 		   painted: function(){
 		   console.log('set grid');
@@ -547,10 +550,10 @@ Ext.define('ChartDev.controller.Report', {
 	    });
 	}
 	else if(params.type==='bar'){//must manually sum values
-	    var totalReportTime=reportStore.sum('timespent');
+	    var totalReportTime=reportStore.sum('time_spent');
 	    barChartFields = [
 		{name: 'journals'},
-		{name: 'totaltime', type: 'int'},
+		{name: 'total_time', type: 'int'},
 		{name: 'code', type: 'string'},
 		{name: 'description', type: 'string'},
 	    ],
@@ -566,12 +569,12 @@ Ext.define('ChartDev.controller.Report', {
 		if(itemHash[itemKey]){
 		    var item=itemHash[itemKey];
 		    item.journals.push(recordData);
-		    item.totaltime+=recordData.timespent;
+		    item.total_time+=recordData.time_spent;
 		}
 		else{
 		    itemHash[itemKey]={
 			journals: [recordData],
-			totaltime: recordData.timespent,
+			total_time: recordData.time_spent,
 			code: recordData.code,
 			description: recordData.description
 		    };
@@ -592,7 +595,7 @@ Ext.define('ChartDev.controller.Report', {
 		model: 'BarChartModel',
 		data: barChartData,
 		groupField: 'code',
-		sorters: ['totaltime', 'code']
+		sorters: ['total_time', 'code']
 	    });
 	    barChartStore.load();
 	    
@@ -617,7 +620,7 @@ Ext.define('ChartDev.controller.Report', {
 			type: 'numeric',
 			position: 'bottom',
 			fields: [
-                            'totaltime'
+                            'total_time'
 			],
 			title: {
                             text: ('Time spent (in minutes) by '+params.tier+' between '+Ext.Date.format(params.fromDate, 'F j, Y')+' and '+Ext.Date.format(params.toDate, 'F j, Y')),
@@ -640,66 +643,91 @@ Ext.define('ChartDev.controller.Report', {
 		series: [
 		    {
 			type: 'bar',
-			fill: true,
 			xField: 'code',
-			yField: 'totaltime',
+			yField: 'total_time',
 			style: {
 			    fill: '#1e93e4',
-			    stroke: '#11598c'
+			    stroke: '#11598c',
+			    lineWidth: 1
+			},
+			highlightCfg: {
+			    fill: '#75e41e',
+			    stroke: '#428c11',
+			    lineWidth: 2
 			}
 		    }
-		],/*,
-		   interactions: [
-		   {
-		   type: 'panzoom',
-		   axes: {
-		   bottom: {
-		   maxZoom: 5,
-		   allowPan: true
-		   },
-		   left: false
-		   }
-		   },
-		   {
-		   type: 'iteminfo',
-		   listeners: {
-		   show: function(scope, item, panel){
-		   var outString=('<div><h3>'+item.record.get('classname')+' '+Ext.Date.format(item.record.get('datetaught'), 'm/d/Y')+'</h3></div>');
-		   outString+=(item.record.get('framework_id'))?('<div style="float:top"><b>Frameword Id:</b> '+item.record.get('framework_id')+'</div>'):'';
-		   outString+=(item.record.get('frameworktitle'))?('<div style="float:top"><b>Frameword Title:</b> '+item.record.get('frameworktitle')+'</div>'):'';
-		   outString+=(item.record.get('journalid'))?('<div style="float:top"><b>Journal Id:</b> '+item.record.get('journalid')+'</div>'):'';
-		   panel.setHtml(outString);
-		   }
-		   }
-		   },
-		   {
-		   type: 'itemhighlight'
-		   }
-		   ]*/
-
-		listeners: {
-		    initialize: function(){
-			if(Ext.os.deviceType=='Desktop'){
-			    var panzoom=this.getInteractions()[0],
-			    modeToggleButton=panzoom.getModeToggleButton(),
-			    toolbar=Ext.ComponentQuery.query('#report_toolbar')[0],
-			    spacer=Ext.create('Ext.Spacer', {
-				flex: 1
-			    });
-			    modeToggleButton.setItemId('report_panZoomButton');
-			    toolbar.add(spacer);
-			    toolbar.add(modeToggleButton);
-			    panzoom.setZoomOnPanGesture(true);
+		],
+		interactions: [
+		    {
+			type: 'panzoom',
+			axes: {
+			    left: {
+				minZoom: 1,
+				maxZoom: 100,
+				allowPan: true
+			    },
+			    bottom: {
+				minZoom: 1,
+				maxZoom: 100,
+				allowPan: true
+			    }
+			},
+			modeToggleButton: {
+			    cls: ['x-panzoom-toggle', 'x-zooming'], iconCls: 'expand'
 			}
 		    },
-		    doubletap: function(){//not sure why 'this' does not refer to the chart with this event
-			var chart=Ext.ComponentQuery.query('#report_content')[0];
-//			this.fireEvent('doubletap');
-			var axes=chart.getAxes(),
-			panzoom=chart.getInteractions()[0];
-			panzoom.transformAxesBy(axes, 0, 0, 0, 0);
-			chart.redraw();
+		    {
+			type: 'iteminfo',
+			panel: {width: 600, height: 300, items: []},
+			listeners: {
+			    show: function(scope, item, panel){
+				panel.removeAt(0);//get rid of default toolbar
+				var outString=(item.record.get('code'))?('<h2 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+': '+item.record.get('code')+'</h2><br/>'):'';
+				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:3px solid black;"></div>'):'';
+				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
+				outString+=(item.record.get('total_time'))?('<h4 style="font-weight:bold;display:inline">Total Time Spent:</h4> '+item.record.get('total_time')+' minutes<br/>'):'';
+				var journals=item.record.get('journals')
+				if(journals.length>0){
+				    outString+='<br/><h3 style="font-weight:bold;display:inline">Journal Entries:</h3><br/>';
+				    outString+='<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div><br/>';
+				    for(j in journals){
+					outString+='<div style="border-bottom: 1px solid lightgrey">';
+					outString+=(journals[j].class_name)?('<span style="font-size:18px;font-weight:bold;float:left;text-align:left;display:inline">'+journals[j].class_name+'</span>'):'';
+					outString+=(journals[j].date_taught)?('<span style="font-size:16px;float:right;text-align:right;display:inline">'+Ext.Date.format(journals[j].date_taught, 'm/d/Y')+'</span>'):'';
+					outString+=(journals[j].class_name || journals[j].date_taught)?('<div style="float:top;clear:both;width:100%;border-bottom:1px solid black;"></div>'):'';
+					outString+=(journals[j].time_spent)?('<span style="font-weight:bold;display:inline">Time Spent on '+item.record.get('code')+':</span> '+journals[j].time_spent+' minutes<br/>'):'';
+					var materials=journals[j].materials,
+					pages=journals[j].pages,
+					activities=journals[j].activities;
+					outString+=(materials)?('<span style="font-weight:bold;display:inline">Lesson Materials:</span> '+materials):'';
+					if(materials && pages){
+					    outString+=(isNaN(pages))?(' (pages '+pages+')'):(' (page '+pages+')');
+					}
+					outString+=(materials)?'<br/>':'';
+					if(activities.length>0){
+					    var listString='';
+					    outString+='<span style="font-weight:bold;display:inline">Lesson Activities:</span> ';
+					    for(i in activities){
+						listString+=(listString!='')?', ':'';
+						listString+=activities[i].activity_name;
+					    }
+					    outString+=(listString+'<br/>');
+					}
+					outString+=(journals[j].notes)?'<span style="font-weight:bold;display:inline">Notes:</span> '+journals[j].notes+'<br/>':'';
+					outString+='<br/></div><br/>';
+				    }
+				}
+				panel.setHtml(outString);
+			    }
+			}
+		    },
+		    {
+			type: 'itemhighlight'
 		    }
+		],
+		listeners: {
+		    initialize: this.initPanZoom,
+		    doubletap: this.resetPanZoom
 		}
             });
 	}
@@ -710,14 +738,27 @@ Ext.define('ChartDev.controller.Report', {
 	report.add(content);
 	content.show();	
     },
-    resetPanZoom: function(){
-	var chart=this.getContent();
-	if(chart.isXType('chart')){
-	    var axes=chart.getAxes(),
-	    panzoom=chart.getInteractions()[0];
-	    panzoom.transformAxesBy(axes, 0, 0, 0, 0);
-	    chart.redraw();
+    initPanZoom: function(){
+	if(Ext.os.deviceType=='Desktop'){
+	    var panzoom=Ext.ComponentQuery.query('#report_content')[0].getInteractions()[0],
+	    modeToggleButton=panzoom.getModeToggleButton(),
+	    toolbar=Ext.ComponentQuery.query('#report_toolbar')[0],
+	    spacer=Ext.create('Ext.Spacer', {
+		flex: 1
+	    });
+	    modeToggleButton.setItemId('report_panZoomButton');
+	    toolbar.add(spacer);
+	    toolbar.add(modeToggleButton);
+	    panzoom.setZoomOnPanGesture(true);
 	}
+    },
+    resetPanZoom: function(){
+	var chart=Ext.ComponentQuery.query('#report_content')[0];
+	var axes=chart.getAxes(),
+	panzoom=chart.getInteractions()[0];
+	panzoom.transformAxesBy(axes, 0, 0, 0, 0);
+	panzoom.setZoomOnPanGesture(true);
+	chart.redraw();
     }
 });
 
