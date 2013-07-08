@@ -1,40 +1,18 @@
-//var parentBranch,sublist,item;
-//var changedTo;
-Ext.define('ChartDev.view.component.FilterDetailList', {
+Ext.define('ChartDev.view.component.MultiSelectNestedList', {
     extend: 'Ext.NestedList',
-    alias: 'report_filter_detailList',
-    xtype: 'filterdetaillist',
-    name: 'filterDetailList',
+    alias: 'widget.multiselectnestedlist',
+    xtype: 'multiselectnestedlist',
     config: {
-	itemId: 'report_filter_detailList',
 	fullscreen: true,
 	toolbar: {
 	    docked: 'top',
 	    ui: 'light',
-	    inline: 'true',
-	    items: [
-		
-		{
-		    id: 'report_filter_detailListClearButton',
-		    ui: 'decline',
-		    text: 'Clear',
-		    align: 'right'
-		},
-		{
-		    xtype: 'spacer',
-		    width: 30,
-		    align: 'right'
-		},
-		{
-		    id: 'report_filter_detailListDoneButton',
-		    ui: 'confirm',
-		    text: 'Done',
-		    align: 'right'
-		}
-	    ]
+	    inline: 'true'
 	},
-	displayField: 'description',
-	store: 'CCStore',
+	store: '',	
+	itemId: '',
+	title: '',
+	displayField: '',
 	targetDepth: '',
 	selectedItems: {},
 	branchesWithSelections: {},
@@ -93,12 +71,38 @@ Ext.define('ChartDev.view.component.FilterDetailList', {
     initialize: function(){
 	this.callParent();
 
+	this.setStore(this.config.store);
+	this.setItemId(this.config.itemId);
+	this.getToolbar().setItems([
+	    {
+		id: (this.config.itemId+'ClearButton'),
+		ui: 'decline',
+		text: 'Clear',
+		align: 'right'
+	    },
+	    {
+		xtype: 'spacer',
+		width: 30,
+		align: 'right'
+	    },
+	    {
+		id: (this.config.itemId+'DoneButton'),
+		ui: 'confirm',
+		text: 'Done',
+		align: 'right'
+	    }
+
+	]);
+	this.setName(this.config.name);
+	this.setTitle(this.config.title);
+	this.setDisplayField(this.config.displayField);
+	this.setTargetDepth(this.config.targetDepth);
+
 	this.setRoot();
 	this.setSelectedItems({});
 	this.setBranchesWithSelections({});
 	this.setBranchId(null);
 	this.setBranch(null);
-	this.setTargetDepth(this.config.targetDepth || 2);//default to 'domain' for testing
     },
     limitDepth: function(){
 	if(this.getActiveItem()){

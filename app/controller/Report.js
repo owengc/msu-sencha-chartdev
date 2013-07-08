@@ -2,7 +2,7 @@ Ext.define('ChartDev.controller.Report', {
     extend: 'Ext.app.Controller',
     requires: [
         'ChartDev.store.ULStoreR',
-	'ChartDev.view.component.FilterDetailList',
+	'ChartDev.view.component.MultiSelectNestedList',
 	'Ext.data.Store',
 	'Ext.List',
         'Ext.draw.Color',
@@ -155,8 +155,11 @@ Ext.define('ChartDev.controller.Report', {
 	filterTier=this.getFilterTier(),
 	filterDetailList=this.getFilterDetailList() || null;
 	if(filterDetailList===null){
-	    Ext.Viewport.add(Ext.create('ChartDev.view.component.FilterDetailList', {
+	    Ext.Viewport.add(Ext.create('ChartDev.view.component.MultiSelectNestedList', {
+		store: 'CCStore',
+		itemId: 'report_filter_detailList',
 		title: 'Filter Selection',
+		displayField: 'description',
 		targetDepth: filterTier.getValue()[0]
 	    }));
 	    filterDetailList=this.getFilterDetailList();
