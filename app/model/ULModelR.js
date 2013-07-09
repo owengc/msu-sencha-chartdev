@@ -4,8 +4,6 @@ Ext.define('ChartDev.model.ULModelR', {
     config: {       
         fields: [
             {name: 'journalid', type: 'string'},
-            {name: 'framework_id', type: 'string'},
-            {name: 'frameworktitle', type: 'string'},
             {name: 'datetaught', type: 'date', dateFormat: 'Y-m-d'},
             {name: 'classid', type: 'string'},
             {name: 'classname', type: 'string'},

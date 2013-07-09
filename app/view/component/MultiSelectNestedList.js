@@ -93,7 +93,7 @@ Ext.define('ChartDev.view.component.MultiSelectNestedList', {
 	this.setStore(this.config.store);
 	this.setItemId(this.config.itemId);
 	this.getToolbar().getItems().items[2].getItems().items[0].setItemId(this.config.itemId+'ClearButton');
-	this.getToolbar().getItems().items[2].getItems().items[2].setItemId((this.config.itemId+'DoneButton'));
+	this.getToolbar().getItems().items[2].getItems().items[2].setItemId(this.config.itemId+'DoneButton');
 	this.setTitle(this.config.title);
 	this.setDisplayField(this.config.displayField);
 	this.setTargetDepth(this.config.targetDepth);

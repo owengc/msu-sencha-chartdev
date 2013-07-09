@@ -69,7 +69,7 @@ Ext.define('ChartDev.controller.Report', {
 	    }
 	}
     },
-    toggleMenu: function(e){
+    toggleMenu: function(){
 	var menu=this.getMenu(),
         toolbarButton=this.getToolbarButton(),
 	content=this.getContent(),
@@ -97,13 +97,15 @@ Ext.define('ChartDev.controller.Report', {
 	    }
         }
         else{
-	    if(this.submitMenu()==true){
+	    if(this.submitMenu()){
+		console.log('menu submitted');
 		menu.hide();		
 		setTimeout(function(){
 		    toolbarButton.setIconCls('arrow_down');
 		    toolbarButton.setText('View Menu');
 		    toolbarButton.setUi('normal');
 		}, 500);
+		content=this.getContent();
 		if(content){
 		    setTimeout(function(){content.show();}, 250);
 		    if(panZoomButton){
@@ -118,18 +120,37 @@ Ext.define('ChartDev.controller.Report', {
       	if(this.validateMenuForm(values)){
 	    var report=this.getReport();
 	    if(JSON.stringify(values)!=JSON.stringify(report.getMenuState())){
-		this.updateContent(values);
+		report.setMenuState(values);	
+		console.log('attempting to create report');
+		if(this.updateContent(values)){
+		    console.log('report created');
+		    return true;
+		}
+		else{
+		    console.log('empty result');
+		    Ext.Msg.alert("Oops!", "These settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
+                    return false;
+		}
+	    }
+	    else{
 		report.setMenuState(values);
             }
-	    return true;
+	    if(this.updateContent(values)==false){
+		console.log('empty result');
+		Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
+                return false;
+	    }
+	    else{
+		return true;
+	    }
 	}
 	else{
 	    return false;
 	}
     },
     validateMenuForm: function(values){
-        for(value in values){
-            if(values[value]===null){
+        for(i in values){
+            if(values[i]===null){
                 Ext.Msg.alert("Oops!", "Please make selections for all menu items to generate report.", Ext.emptyFn);
                 return false;
             }
@@ -140,6 +161,7 @@ Ext.define('ChartDev.controller.Report', {
 		return false;
 	    }
 	}
+	console.log('form validated');
         return true;
     },
     toggleFilter: function(scope, s, t, newValue, oldValue){
@@ -253,6 +275,10 @@ Ext.define('ChartDev.controller.Report', {
 	logs=userLogStore.getData().items,
 	numLogs=logs.length,
 	i=0;
+	if(numLogs==0){
+	    console.log('no UL records found');
+	    return false;
+	}
 	for(;i<numLogs;i++){
 	    var ulData=logs[i].getData(),
 	    itemHash={},
@@ -268,59 +294,66 @@ Ext.define('ChartDev.controller.Report', {
 		    cluster=record.parentNode.getData(),
 		    domain=record.parentNode.parentNode.getData(),
 		    grade=record.parentNode.parentNode.parentNode.getData();
-		    itemKey=(tier+'_id');
-		    targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
-		    if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
-			itemHash[itemKey]={
-			    journal_id: ulData.journalid,
-			    class_name: ulData.classname,
-			    date_taught: ulData.datetaught,
-			    activities: ulData.activity,
-			    materials: ulData.materialname,
-			    pages: ulData.pages,
-			    notes: ulData.notes,
+		}
+		else{
+		    var standard={code: ulStandardData.code, description: ulStandardData.description},
+		    cluster={code: 'Other', description: 'NA'},
+		    domain={code: 'Other', description: 'NA'},
+		    grade={code: 'Other'};
+		}
+		itemKey=(tier+'_id');
+		targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
+		if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
+		    itemHash[itemKey]={
+			journal_id: ulData.journalid,
+			class_name: ulData.classname,
+			date_taught: ulData.datetaught,
+			activities: ulData.activity,
+			materials: ulData.materialname,
+			pages: ulData.pages,
+			notes: ulData.notes,
 
-			    time_spent: Math.round(ulData.duration*(ulStandardData.percent/100)),//time spent on this standard/cluster/domain in the lesson
+			time_spent: Math.round(ulData.duration*(ulStandardData.percent/100)),//time spent on this standard/cluster/domain in the lesson
 
-			    grade: grade.code,
-			    domains:[{code: domain.code, description: domain.description}],
-			    clusters: [{code: cluster.code, description: cluster.description}],
-			    standards: [{code: standard.code, description: standard.description}],
+			grade: grade.code,
+			domains:[{code: domain.code, description: domain.description}],
+			clusters: [{code: cluster.code, description: cluster.description}],
+			standards: [{code: standard.code, description: standard.description}],
 
-			    code: targetTier.code,
-			    description: targetTier.description
-			};
-		    }
-		    else{
-			var item=itemHash[itemKey],
-			tiers={
-			    'standards': {code: standard.code, description: standard.description},
-			    'clusters': {code: cluster.code, description: cluster.description},
-			    'domains': {code: domain.code, description: domain.description}
-			};
-			for(tier in tiers){
-			    var newEntry=true,
-			    tierArray=item[tier],
-			    count=tierArray.length,
-			    i=0;
-			    for(;i<count;i++){
-				if(JSON.stringify(tierArray[i])==JSON.stringify(tiers[tier])){
-				    newEntry=false;
-				}
+			code: targetTier.code,
+			description: targetTier.description
+		    };
+		}
+		else{
+		    var item=itemHash[itemKey],
+		    tiers={
+			'standards': {code: standard.code, description: standard.description},
+			'clusters': {code: cluster.code, description: cluster.description},
+			'domains': {code: domain.code, description: domain.description}
+		    };
+		    for(tier in tiers){
+			var newEntry=true,
+			tierArray=item[tier],
+			count=tierArray.length,
+			i=0;
+			for(;i<count;i++){
+			    if(JSON.stringify(tierArray[i])==JSON.stringify(tiers[tier])){
+				newEntry=false;
 			    }
-			    if(newEntry){
-				tierArray.push(tiers[tier]);
-			    }
-
 			}
-			item.time_spent+=Math.round(ulData.duration*(ulStandardData.percent/100));
+			if(newEntry){
+			    tierArray.push(tiers[tier]);
+			}
+
 		    }
+		    item.time_spent+=Math.round(ulData.duration*(ulStandardData.percent/100));
 		}
 	    }
-	    for(item in itemHash){
-		reportData.push(itemHash[item]);
-	    }
 	}
+	for(item in itemHash){
+	    reportData.push(itemHash[item]);
+	}
+	
 	Ext.define('ReportModel', {
 	    extend: 'Ext.data.Model',
 	    config: {
@@ -360,6 +393,10 @@ Ext.define('ChartDev.controller.Report', {
 		}
 		return (filterType=='include')?false:true;
 	    });
+	    if(reportStore.getData().items.length==0){
+		console.log('filters resulted in 0 records');
+		return false;
+	    }
 	}
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
@@ -404,6 +441,7 @@ Ext.define('ChartDev.controller.Report', {
 			}
 			outString+=(record.data.notes)?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+record.data.notes+'<br/>':'';
 			panel.setHtml(outString);
+			Ext.Viewport.add(panel);
 			panel.show();
 		    }
 		}
@@ -736,7 +774,9 @@ Ext.define('ChartDev.controller.Report', {
 	    return false;
 	}
 	report.add(content);
-	content.show();	
+	content.show();
+	console.log('report created');
+	return true;
     },
     initPanZoom: function(){
 	if(Ext.os.deviceType=='Desktop'){
@@ -761,5 +801,3 @@ Ext.define('ChartDev.controller.Report', {
 	chart.redraw();
     }
 });
-
-
