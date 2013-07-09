@@ -26,7 +26,12 @@ Ext.define('ChartDev.model.ULStandardModelR', {
 	     }
 	    },
             {name: 'percent', type: 'int'},
-            {name: 'framework_id', type: 'int'}
+            {name: 'framework_id', type: 'int'},
+	    {name: 'standard_id', type: 'int',
+	     convert: function(value, record){
+		 return record.get('framework_id');
+	     }
+	    }
         ]
     }
 });

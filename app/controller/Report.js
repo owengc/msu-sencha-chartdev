@@ -98,7 +98,6 @@ Ext.define('ChartDev.controller.Report', {
         }
         else{
 	    if(this.submitMenu()){
-		console.log('menu submitted');
 		menu.hide();		
 		setTimeout(function(){
 		    toolbarButton.setIconCls('arrow_down');
@@ -116,29 +115,18 @@ Ext.define('ChartDev.controller.Report', {
         }
     },
     submitMenu: function(){
-        var values=this.getMenu().getValues(true, true);
-      	if(this.validateMenuForm(values)){
+        var settings=this.getMenu().getValues(true, false);
+      	if(this.validateMenuForm(settings)){
 	    var report=this.getReport();
-	    if(JSON.stringify(values)!=JSON.stringify(report.getMenuState())){
-		report.setMenuState(values);	
-		console.log('attempting to create report');
-		if(this.updateContent(values)){
-		    console.log('report created');
+	    if(JSON.stringify(settings)!=JSON.stringify(report.getMenuState())){
+		report.setMenuState(settings);
+		if(this.updateContent(settings)){
 		    return true;
 		}
 		else{
-		    console.log('empty result');
-		    Ext.Msg.alert("Oops!", "These settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
+		    Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
                     return false;
 		}
-	    }
-	    else{
-		report.setMenuState(values);
-            }
-	    if(this.updateContent(values)==false){
-		console.log('empty result');
-		Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
-                return false;
 	    }
 	    else{
 		return true;
@@ -148,20 +136,19 @@ Ext.define('ChartDev.controller.Report', {
 	    return false;
 	}
     },
-    validateMenuForm: function(values){
-        for(i in values){
-            if(values[i]===null){
+    validateMenuForm: function(settings){
+        for(i in settings){
+            if(settings[i]===null){
                 Ext.Msg.alert("Oops!", "Please make selections for all menu items to generate report.", Ext.emptyFn);
                 return false;
             }
         }
-	if(values.fromDate && values.toDate){
-	    if(values.fromDate>values.toDate){
+	if(settings.fromDate && settings.toDate){
+	    if(settings.fromDate>settings.toDate){
 		Ext.Msg.alert("Oops!", "Please make sure the From Date is not later than the To Date", Ext.emptyFn);
 		return false;
 	    }
 	}
-	console.log('form validated');
         return true;
     },
     toggleFilter: function(scope, s, t, newValue, oldValue){
@@ -234,10 +221,11 @@ Ext.define('ChartDev.controller.Report', {
         var report=this.getReport(),
 	content=this.getContent(),
 	userLogStore=Ext.getStore('ULStore');
+	userLogStore.clearFilter();
 	if(content){
 	    report.remove(content, true);
-	    userLogStore.clearFilter();
 	}
+
 	if(params.fromDate && params.toDate){
 	    userLogStore.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
@@ -249,6 +237,7 @@ Ext.define('ChartDev.controller.Report', {
 		}
 	    });
 	}
+
 	var framework=Ext.getStore('CCStore');
 	framework=framework.getRoot();
 	var tier=params.tier, 
@@ -276,7 +265,6 @@ Ext.define('ChartDev.controller.Report', {
 	numLogs=logs.length,
 	i=0;
 	if(numLogs==0){
-	    console.log('no UL records found');
 	    return false;
 	}
 	for(;i<numLogs;i++){
@@ -288,7 +276,7 @@ Ext.define('ChartDev.controller.Report', {
 	    j=0;
 	    for(;j<numStandards;j++){
 		var ulStandardData=standards[j].getData();
-		var record=framework.findChild('standard_id', ulStandardData.framework_id, true);
+		var record=framework.findChild('standard_id', ulStandardData.standard_id, true);
 		if(record){
 		    var standard=record.getData(),
 		    cluster=record.parentNode.getData(),
@@ -296,13 +284,13 @@ Ext.define('ChartDev.controller.Report', {
 		    grade=record.parentNode.parentNode.parentNode.getData();
 		}
 		else{
-		    var standard={code: ulStandardData.code, description: ulStandardData.description},
-		    cluster={code: 'Other', description: 'NA'},
-		    domain={code: 'Other', description: 'NA'},
-		    grade={code: 'Other'};
+		    var standard={standard_id: ulStandardData.standard_id, code: ulStandardData.code, description: ulStandardData.description},
+		    cluster={cluster_id: -1, code: 'Other', description: 'NA'},
+		    domain={domain_id: -1, code: 'Other', description: 'NA'},
+		    grade={grade_id: -1, code: 'Other'};
 		}
-		itemKey=(tier+'_id');
 		targetTier=(tier==='standard')?standard:(tier==='cluster')?cluster:domain;
+		itemKey=targetTier[(tier+'_id')];
 		if(!itemHash[itemKey]){//hash table: keys are domain/cluster/framework_ids, values are objects representing data points
 		    itemHash[itemKey]={
 			journal_id: ulData.journalid,
@@ -349,18 +337,17 @@ Ext.define('ChartDev.controller.Report', {
 		    item.time_spent+=Math.round(ulData.duration*(ulStandardData.percent/100));
 		}
 	    }
+	    for(item in itemHash){
+		reportData.push(itemHash[item]);
+	    }
 	}
-	for(item in itemHash){
-	    reportData.push(itemHash[item]);
-	}
-	
+
 	Ext.define('ReportModel', {
 	    extend: 'Ext.data.Model',
 	    config: {
 		fields: reportFields
 	    }
 	});
-	
 	var reportStore=Ext.create('Ext.data.Store', {
 	    storeId: 'ReportStore',
 	    model: 'ReportModel',
@@ -394,10 +381,10 @@ Ext.define('ChartDev.controller.Report', {
 		return (filterType=='include')?false:true;
 	    });
 	    if(reportStore.getData().items.length==0){
-		console.log('filters resulted in 0 records');
 		return false;
 	    }
 	}
+
 	if(params.type==='list'){
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -512,7 +499,7 @@ Ext.define('ChartDev.controller.Report', {
 			    type: 'circle',
 			    fillStyle: '#75e41e',
 			    strokeStyle: '#428c11',
-			    radius: 20,
+			    radius: 15,
 			    lineWidth: 2
 			}
 		    }
@@ -774,8 +761,6 @@ Ext.define('ChartDev.controller.Report', {
 	    return false;
 	}
 	report.add(content);
-	content.show();
-	console.log('report created');
 	return true;
     },
     initPanZoom: function(){
