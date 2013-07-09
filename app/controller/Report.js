@@ -370,7 +370,7 @@ Ext.define('ChartDev.controller.Report', {
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		store: 'ReportStore',
-		itemTpl: ('<div style="float:top"><b>{class_name}<br>{date_taught:date("m/d/Y")}</b></div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
+		itemTpl: ('<div style="float:top"><b>{class_name}</b><br>{date_taught:date("m/d/Y")}</div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
 		itemHeight: 75,
 		grouped: true,
 		onItemDisclosure: true,
