@@ -96,13 +96,31 @@ Ext.define('ChartDev.view.Report', {
 					},
 					ui: 'confirm'
 				    }
+				},
+				listeners: {
+				    change: function(me, newValue, oldValue, eOpts){
+					var groupField=me.getParent().down('#report_groupField');
+					if(newValue=='list'){
+					    groupOptions=groupField.getOptions();
+					    if(groupOptions[2].text=='Code'){
+						groupOptions[2].text=Ext.String.capitalize(me.getParent().down('#report_tier').getValue());
+						groupField.updateOptions(groupOptions);
+					    }
+					    groupField.setDisabled(false);
+					    groupField.show();
+					}
+					else{
+					    groupField.setDisabled(true);
+					    groupField.hide();
+					}
+				    }
 				}
 			    },
 			    {
 				xtype: 'selectfield',
 				itemId: 'report_tier',
 				name: 'tier',
-				label: 'View By:',
+				label: 'Present By:',
 				usePicker: true,
 				options: [
 				    {text: 'Standard', value: 'standard'},
@@ -117,7 +135,59 @@ Ext.define('ChartDev.view.Report', {
 				    hideAnimation: {type: 'fadeOut', duration: 250},
 				    height: '33%',
 				    toolbar: {
-					title: 'Select Report Tier:',
+					title: 'Select Report Presentation Tier:',
+					height: 75
+				    },
+				    cancelButton: false/*{
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					//ui: 'decline'
+				    }*/,
+				    doneButton: {
+					margin: '0 5',
+					height: 60,
+					width: 150,
+					style: {
+					    'font-size': '1.5em'
+					},
+					ui: 'confirm'
+				    }
+				},
+				listeners: {
+				    change: function(me, newValue, oldValue, eOpts){
+					var groupField=me.getParent().down('#report_groupField'),
+					groupOptions=groupField.getOptions();
+					groupOptions[2].text=Ext.String.capitalize(newValue);
+					groupField.updateOptions(groupOptions);
+				    }
+				}
+			    },
+			    {
+				xtype: 'selectfield',
+				itemId: 'report_groupField',
+				name: 'groupField',
+				label: 'Group By:',
+				usePicker: true,
+				hidden: true,
+				disabled: true,
+				options: [
+				    {text: 'Course', value: 'class_name'},
+				    {text: 'Date', value: 'date_taught'},
+				    {text: 'Code', value: 'code'}
+				],
+				defaultPhonePickerConfig: {
+				    usePicker: true,
+				    hideOnMaskTap: true,
+				    stretchY: true,
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    height: '33%',
+				    toolbar: {
+					title: 'Select Grouping Parameter:',
 					height: 75
 				    },
 				    cancelButton: false/*{
@@ -146,6 +216,7 @@ Ext.define('ChartDev.view.Report', {
 				name: 'fromDate',
 				label: 'From:',
 				placeHolder: '-select-',
+				dateFormat: 'F j, Y',
 				picker: {
 				    yearFrom: 2010,
 				    hideOnMaskTap: true,
@@ -183,6 +254,7 @@ Ext.define('ChartDev.view.Report', {
 				name: 'toDate',
 				label: 'To:',
 				placeHolder: '-select-',
+				dateFormat: 'F j, Y',
 				picker: {
 				    yearFrom: 2010,
 				    hideOnMaskTap: true,

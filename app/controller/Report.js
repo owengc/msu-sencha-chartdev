@@ -217,7 +217,7 @@ Ext.define('ChartDev.controller.Report', {
 	    filterDetailList.setTargetDepth(filterTier.getValue()[0]);
 	}
     },
-    updateContent: function(params){
+    updateContent: function(settings){
         var report=this.getReport(),
 	content=this.getContent(),
 	userLogStore=Ext.getStore('ULStore');
@@ -226,10 +226,10 @@ Ext.define('ChartDev.controller.Report', {
 	    report.remove(content, true);
 	}
 
-	if(params.fromDate && params.toDate){
+	if(settings.fromDate && settings.toDate){
 	    userLogStore.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
-		if(date>=params.fromDate && date<=params.toDate){
+		if(date>=settings.fromDate && date<=settings.toDate){
 		    return true;
 		}
 		else{
@@ -240,7 +240,7 @@ Ext.define('ChartDev.controller.Report', {
 
 	var framework=Ext.getStore('CCStore');
 	framework=framework.getRoot();
-	var tier=params.tier, 
+	var tier=settings.tier, 
 	reportFields = [
 	    {name: 'journal_id', type: 'string'},
 	    {name: 'class_name', type: 'string'},
@@ -352,12 +352,11 @@ Ext.define('ChartDev.controller.Report', {
 	    storeId: 'ReportStore',
 	    model: 'ReportModel',
 	    data: reportData,
-	    groupField: 'code',
-	    sorters: ['code', 'date_taught']
+	    //sorters: (settings.type=='list')?['date_taught']:['code']
 	});
 	reportStore.load();
+	//reportStore.sort();
 
-	var settings=this.getMenu().getValues(true, true);
 	if(settings.filterSwitch==1){
 	    var filterType=settings.filterType,
 	    filterTier=settings.filterTier[1], 
@@ -385,7 +384,21 @@ Ext.define('ChartDev.controller.Report', {
 	    }
 	}
 
-	if(params.type==='list'){
+	if(settings.type==='list'){
+	    reportStore.setGroupField(settings.groupField);
+	    if(settings.groupField=='date_taught'){
+		reportStore.setGrouper({
+		    sortProperty: 'date_taught',
+		    groupFn: function(record){
+			if(record && record.data.date_taught){
+			    return Ext.Date.format(record.data.date_taught, 'D M j, Y');
+			}
+			else{
+			    return '';
+			}
+		    }});
+		reportStore.setGroupDir('ASC').sort();
+	    }
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
 		height: '100%',
@@ -394,18 +407,18 @@ Ext.define('ChartDev.controller.Report', {
 		showAnimation: {type: 'slideIn', direction: 'up', duration: 250},
                 hideAnimation: {type: 'slideOut', direction: 'down', duration: 250},
 		store: 'ReportStore',
-		itemTpl: ('<div style="float:top"><b>{class_name}</b><br>{date_taught:date("m/d/Y")}</div><div style="float:top">'+Ext.String.capitalize(params.tier)+': {code}</div>'),
-		itemHeight: 75,
 		grouped: true,
-		onItemDisclosure: true,
+		itemTpl: ('<div style="float:top"><h4 style="font-weight:bold;display:inline">{class_name}&nbsp;{date_taught:date("n/j/Y")}</h4></div><div style="float:top">'+Ext.String.capitalize(settings.tier)+': {code}</div>'),
+		itemHeight: 50,
+		pinHeader: true,
+//		onItemDisclosure: true,
 		listeners: {
-		    disclose: function(scope, record, target, index){
-			scope.select(record, false, false);
-			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []}),
+		    itemtap: function(list, index, target, record, e, eOpts){
+			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: [], listeners: {hide: function(){list.deselect(record);}}}),
 			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+record.data.class_name+'</h2>'):'';
-			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'm/d/Y')+'</h3>'):'';
+			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
 			outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
-			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+':</h4> '+record.data.code+'<br/>'):'';
+			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+record.data.code+'<br/>'):'';
 			outString+=(record.data.description)?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+record.data.description+'<br/>'):'';
 			outString+=(record.data.time_spent)?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+record.data.time_spent+' minutes<br/>'):'';
 
@@ -430,11 +443,44 @@ Ext.define('ChartDev.controller.Report', {
 			panel.setHtml(outString);
 			Ext.Viewport.add(panel);
 			panel.show();
+		    },
+		    disclose: function(list, record, target, index){
+			console.log('disclose: ',record);
+			/*
+			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: [], listeners: {hide: function(){list.deselect(record);}}}),
+			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+record.data.class_name+'</h2>'):'';
+			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
+			outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
+			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+record.data.code+'<br/>'):'';
+			outString+=(record.data.description)?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+record.data.description+'<br/>'):'';
+			outString+=(record.data.time_spent)?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+record.data.time_spent+' minutes<br/>'):'';
+
+			var materials=record.data.materials,
+			pages=record.data.pages,
+			activities=record.data.activities;
+			outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
+			if(materials && pages){
+			    outString+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
+			}
+			outString+=(materials)?'<br/>':'';
+			if(activities.length>0){
+			    var listString='';
+			    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
+			    for(index in activities){
+				listString+=(listString!='')?', ':'';
+				listString+=activities[index].activity_name;
+			    }
+			    outString+=(listString+'<br/>');
+			}
+			outString+=(record.data.notes)?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+record.data.notes+'<br/>':'';
+			panel.setHtml(outString);
+			Ext.Viewport.add(panel);
+			panel.show();*/
 		    }
 		}
 	    });
         }
-        else if(params.type==='dot'){
+        else if(settings.type==='dot'){
 	    content=Ext.create('Ext.chart.CartesianChart', {
 		itemId: 'report_content',
 		height: '100%',
@@ -457,7 +503,7 @@ Ext.define('ChartDev.controller.Report', {
                             'code'
                         ],
                         title: {
-                            text: Ext.String.capitalize(params.tier),
+                            text: Ext.String.capitalize(settings.tier),
                             fontSize: 14
                         },
                         grid: true
@@ -468,10 +514,10 @@ Ext.define('ChartDev.controller.Report', {
 			fields: [
                             'date_taught'
 			],
-			fromDate: params.fromDate,
-			toDate: params.toDate,
+			fromDate: settings.fromDate,
+			toDate: settings.toDate,
 			title: {
-                            text: ('Log entries by '+params.tier+' between '+Ext.Date.format(params.fromDate, 'F j, Y')+' and '+Ext.Date.format(params.toDate, 'F j, Y')),
+                            text: ('Log entries by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y')),
 			},
 			style: {
 
@@ -530,9 +576,9 @@ Ext.define('ChartDev.controller.Report', {
 			    show: function(scope, item, panel){
 				panel.removeAt(0);//get rid of default toolbar
 				var outString=(item.record.get('class_name'))?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+item.record.get('class_name')+'</h2>'):'';
-				outString+=(item.record.get('date_taught'))?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(item.record.get('date_taught'), 'm/d/Y')+'</h3>'):'';
+				outString+=(item.record.get('date_taught'))?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(item.record.get('date_taught'), 'n/j/Y')+'</h3>'):'';
 				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
-				outString+=(item.record.get('code'))?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+':</h4> '+item.record.get('code')+'<br/>'):'';
+				outString+=(item.record.get('code'))?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+item.record.get('code')+'<br/>'):'';
 				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
 				outString+=(item.record.get('time_spent'))?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+item.record.get('time_spent')+' minutes<br/>'):'';
 
@@ -574,7 +620,7 @@ Ext.define('ChartDev.controller.Report', {
 		   }*/
 	    });
 	}
-	else if(params.type==='bar'){//must manually sum values
+	else if(settings.type==='bar'){//must manually sum values
 	    var totalReportTime=reportStore.sum('time_spent');
 	    barChartFields = [
 		{name: 'journals'},
@@ -648,7 +694,7 @@ Ext.define('ChartDev.controller.Report', {
                             'total_time'
 			],
 			title: {
-                            text: ('Time spent (in minutes) by '+params.tier+' between '+Ext.Date.format(params.fromDate, 'F j, Y')+' and '+Ext.Date.format(params.toDate, 'F j, Y')),
+                            text: ('Time spent (in minutes) by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y')),
 			},
 			minimum: 0
 		    },
@@ -659,7 +705,7 @@ Ext.define('ChartDev.controller.Report', {
                             'code'
 			],
 			title: {
-                            text: Ext.String.capitalize(params.tier),
+                            text: Ext.String.capitalize(settings.tier),
                             fontSize: 14
 			},
 			grid: true
@@ -707,7 +753,7 @@ Ext.define('ChartDev.controller.Report', {
 			listeners: {
 			    show: function(scope, item, panel){
 				panel.removeAt(0);//get rid of default toolbar
-				var outString=(item.record.get('code'))?('<h2 style="font-weight:bold;display:inline">'+Ext.String.capitalize(params.tier)+': '+item.record.get('code')+'</h2><br/>'):'';
+				var outString=(item.record.get('code'))?('<h2 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+': '+item.record.get('code')+'</h2><br/>'):'';
 				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:3px solid black;"></div>'):'';
 				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
 				outString+=(item.record.get('total_time'))?('<h4 style="font-weight:bold;display:inline">Total Time Spent:</h4> '+item.record.get('total_time')+' minutes<br/>'):'';
@@ -718,7 +764,7 @@ Ext.define('ChartDev.controller.Report', {
 				    for(j in journals){
 					outString+='<div style="border-bottom: 1px solid lightgrey">';
 					outString+=(journals[j].class_name)?('<span style="font-size:18px;font-weight:bold;float:left;text-align:left;display:inline">'+journals[j].class_name+'</span>'):'';
-					outString+=(journals[j].date_taught)?('<span style="font-size:16px;float:right;text-align:right;display:inline">'+Ext.Date.format(journals[j].date_taught, 'm/d/Y')+'</span>'):'';
+					outString+=(journals[j].date_taught)?('<span style="font-size:16px;float:right;text-align:right;display:inline">'+Ext.Date.format(journals[j].date_taught, 'n/j/Y')+'</span>'):'';
 					outString+=(journals[j].class_name || journals[j].date_taught)?('<div style="float:top;clear:both;width:100%;border-bottom:1px solid black;"></div>'):'';
 					outString+=(journals[j].time_spent)?('<span style="font-weight:bold;display:inline">Time Spent on '+item.record.get('code')+':</span> '+journals[j].time_spent+' minutes<br/>'):'';
 					var materials=journals[j].materials,
@@ -739,8 +785,7 @@ Ext.define('ChartDev.controller.Report', {
 					    outString+=(listString+'<br/>');
 					}
 					outString+=(journals[j].notes)?'<span style="font-weight:bold;display:inline">Notes:</span> '+journals[j].notes+'<br/>':'';
-					outString+='<br/></div><br/>';
-				    }
+					outString+='<br/></div><br/>';				    }
 				}
 				panel.setHtml(outString);
 			    }
