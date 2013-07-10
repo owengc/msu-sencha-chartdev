@@ -26,15 +26,32 @@ Ext.define('app.view.ReportView', {
 		items: [
 		    {
 			xtype: 'button',
-			id: 'report_toolbarButton',
+			id: 'report_menuButton',
 			text: 'View Report',
 			margin: '0 5',
-			width: 175,
+			width: 185,
 			style: {
 			    'font-size': '1.25em'
 			},
 			ui: 'confirm',
-			iconCls: 'arrow_up'
+			iconCls: 'arrow_up',
+			zIndex: 3
+		    },
+		    {
+			xtype: 'button',
+			hidden: true,
+			id: 'report_exportButton',
+			text: 'Export Report',
+			margin: '0 5',
+			width: 185,
+			style: {
+			    'font-size': '1.25em'
+			},
+			ui: 'confirm',
+			iconCls: 'reply',		
+			showAnimation: {type: 'slideIn', direction: 'right', duration: 250},
+			hideAnimation: {type: 'slideOut', direction: 'left', duration: 250},
+			zIndex: 2
 		    }
 		],
 		initialize: function(){

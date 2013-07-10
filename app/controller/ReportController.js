@@ -28,7 +28,8 @@ Ext.define('app.controller.ReportController', {
 	refs: {
 	    report: '#report',
 	    toolbar: '#report #report_toolbar',
-	    toolbarButton: '#report_toolbar #report_toolbarButton',
+	    menuButton: '#report_toolbar #report_menuButton',
+	    exportButton: '#report_toolbar #report_exportButton',
 	    menu: '#report #report_menu',
 	    filter: '#report_menu #report_filter',
 	    filterSwitch: '#report_menu #report_filterSwitch',
@@ -42,7 +43,7 @@ Ext.define('app.controller.ReportController', {
 	    panZoomButton: '#report_toolbar #report_panZoomButton'
 	},
 	control: {
-	    toolbarButton: {
+	    menuButton: {
 		tap: 'toggleMenu'
 	    },
 	    toolbarSubmitButton: {
@@ -76,7 +77,8 @@ Ext.define('app.controller.ReportController', {
     },
     toggleMenu: function(){
 	var menu=this.getMenu(),
-        toolbarButton=this.getToolbarButton(),
+        menuButton=this.getMenuButton(),
+	exportButton=this.getExportButton(),
 	content=this.getContent(),
 	panZoomButton=this.getPanZoomButton();
 	if(menu.isHidden()){
@@ -85,19 +87,23 @@ Ext.define('app.controller.ReportController', {
 		if(panZoomButton){
 		    panZoomButton.hide();
 		}
-		setTimeout(function(){menu.show();}, 250);
 		setTimeout(function(){
-		    toolbarButton.setIconCls('arrow_up');
-		    toolbarButton.setText('View Report');
-		    toolbarButton.setUi('confirm');
+		    exportButton.setUi('normal');
+		    exportButton.hide();
+		    menu.show();
+		}, 250);
+		setTimeout(function(){
+		    menuButton.setIconCls('arrow_up');
+		    menuButton.setText('View Report');
+		    menuButton.setUi('confirm');
 		}, 500);
 	    }
 	    else{
 		menu.show();
 		setTimeout(function(){
-		    toolbarButton.setIconCls('arrow_up');
-		    toolbarButton.setText('View Report');
-		    toolbarButton.setUi('confirm');
+		    menuButton.setIconCls('arrow_up');
+		    menuButton.setText('View Report');
+		    menuButton.setUi('confirm');
 		}, 250);
 	    }
         }
@@ -105,13 +111,13 @@ Ext.define('app.controller.ReportController', {
 	    if(this.submitMenu()){
 		menu.hide();		
 		setTimeout(function(){
-		    toolbarButton.setIconCls('arrow_down');
-		    toolbarButton.setText('View Menu');
-		    toolbarButton.setUi('normal');
+		    menuButton.setIconCls('arrow_down');
+		    menuButton.setText('View Menu');
+		    menuButton.setUi('normal');
 		}, 500);
 		content=this.getContent();
 		if(content){
-		    setTimeout(function(){content.show();}, 250);
+		    setTimeout(function(){content.show();exportButton.setUi('confirm');exportButton.show();}, 250);
 		    if(panZoomButton){
 			setTimeout(function(){panZoomButton.show();}, 500);
 		    }
@@ -373,10 +379,9 @@ Ext.define('app.controller.ReportController', {
 	    storeId: 'ReportStoreR',
 	    model: 'ReportModelR',
 	    data: reportData,
-	    //sorters: (settings.type=='list')?['date_taught']:['code']
+	    sorters: (settings.type=='list')?['date_taught']:['code']
 	});
 	reportStore.load();
-	//reportStore.sort();
 
 	if(settings.filterSwitch==1){
 	    var filterType=settings.filterType,
@@ -418,7 +423,6 @@ Ext.define('app.controller.ReportController', {
 			    return '';
 			}
 		    }});
-		reportStore.setGroupDir('ASC').sort();
 	    }
 	    content=Ext.create('Ext.List', {
 		itemId: 'report_content',
@@ -806,7 +810,8 @@ Ext.define('app.controller.ReportController', {
 					    outString+=(listString+'<br/>');
 					}
 					outString+=(journals[j].notes)?'<span style="font-weight:bold;display:inline">Notes:</span> '+journals[j].notes+'<br/>':'';
-					outString+='<br/></div><br/>';				    }
+					outString+='<br/></div><br/>';				    
+				    }
 				}
 				panel.setHtml(outString);
 			    }
@@ -850,5 +855,9 @@ Ext.define('app.controller.ReportController', {
 	panzoom.transformAxesBy(axes, 0, 0, 0, 0);
 	panzoom.setZoomOnPanGesture(true);
 	chart.redraw();
+    },
+    printReport: function(){
+	var report=this.getReport();
+//	if(TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
     }
 });
