@@ -129,8 +129,8 @@ Ext.define('app.controller.ReportController', {
         var settings=this.getMenu().getValues(true, false);
       	if(this.validateMenuForm(settings)){
 	    var report=this.getReport();
-	    if(JSON.stringify(settings)!=JSON.stringify(report.getMenuState())){
-		report.setMenuState(settings);
+	    if(JSON.stringify(settings)!=JSON.stringify(report.getSettings())){
+		report.setSettings(settings);
 		if(this.updateContent(settings)){
 		    return true;
 		}
@@ -857,7 +857,16 @@ Ext.define('app.controller.ReportController', {
 	chart.redraw();
     },
     printReport: function(){
-	var report=this.getReport();
-//	if(TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
+	//TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
+	var settings=this.getReport().getSettings(),
+	content=this.getContent(),
+	doc=new jsPDF(),
+	html='';
+	if(settings.type=='list'){
+	    
+	}
+	else{
+
+	}
     }
 });

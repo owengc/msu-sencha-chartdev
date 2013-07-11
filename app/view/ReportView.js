@@ -15,7 +15,7 @@ Ext.define('app.view.ReportView', {
 	itemId: 'report',
 	layout: 'vbox',
 	initialized: false,
-	menuState: {},
+	settings: {},
 	items: [
 	    { 
 		xtype: 'toolbar',
