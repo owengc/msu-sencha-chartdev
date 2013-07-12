@@ -20,12 +20,12 @@ Ext.Loader.setPath({
 //</debug>
 
 Ext.application({
-    name: 'ChartDev',
+    name: 'app',
     requires: [
         'Ext.MessageBox',
     ],
     controllers: [
-	'Report'
+	'ReportController'
     ],
     icon: {
         '57': 'resources/icons/Icon.png',
@@ -46,7 +46,7 @@ Ext.application({
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
-	Ext.Viewport.add(Ext.create('ChartDev.view.Report', {}));
+	Ext.Viewport.add(Ext.create('app.view.ReportView', {}));
     },
     onUpdated: function() {
         Ext.Msg.confirm(

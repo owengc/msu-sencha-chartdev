@@ -1,13 +1,14 @@
-Ext.define("ChartDev.store.ULStoreR", {
+Ext.define("app.store.ULStoreR", {
     extend: "Ext.data.Store",
-    requires: ['ChartDev.model.ULModelR', 'ChartDev.model.ULStandardModelR'],
+    requires: ['app.model.ULModelR', 'app.model.ULStandardModelR'],
     config: {
-        model: 'ChartDev.model.ULModelR',
-	storeId: 'ULStore',
-	autoLoad: true,
+        model: 'app.model.ULModelR',
+	storeId: 'ULStoreR',
+	autoLoad: false,
         proxy: {
 	    type: 'ajax',
 	    url: 'sample_user_log.json',
+//	    url: '../promse/journal?action=getuserlog14',
 	    reader: {
 		type: 'json',
 		rootProperty: 'userlog'

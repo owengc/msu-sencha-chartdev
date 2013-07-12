@@ -1,4 +1,4 @@
-Ext.define('ChartDev.view.Main', {
+Ext.define('app.view.Main', {
     extend: 'Ext.tab.Panel',
     xtype: 'main',
     requires: [

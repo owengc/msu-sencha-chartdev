@@ -1,4 +1,4 @@
-Ext.define('ChartDev.view.component.MultiSelectNestedList', {
+Ext.define('app.view.component.MultiSelectNestedList', {
     extend: 'Ext.NestedList',
     alias: 'widget.multiselectnestedlist',
     xtype: 'multiselectnestedlist',
@@ -43,6 +43,7 @@ Ext.define('ChartDev.view.component.MultiSelectNestedList', {
 		list.setMode('MULTI');
 		list.setDeselectOnContainerClick(false);
 		this.limitDepth();
+		console.log(list, list.getStore().getData().items);
 		var branchId=list.getStore().getData().items[0].parentNode.getId(),
 		branchesWithSelections=this.getBranchesWithSelections();
 		if(branchId){

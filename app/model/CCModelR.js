@@ -1,4 +1,4 @@
-Ext.define('ChartDev.model.CCModelR', {
+Ext.define('app.model.CCModelR', {
     extend: 'Ext.data.Model',
     config: {
 	idProperty: 'id',

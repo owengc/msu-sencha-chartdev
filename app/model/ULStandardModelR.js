@@ -1,4 +1,4 @@
-Ext.define('ChartDev.model.ULStandardModelR', {
+Ext.define('app.model.ULStandardModelR', {
     extend: 'Ext.data.Model',
     config: {
         fields: [

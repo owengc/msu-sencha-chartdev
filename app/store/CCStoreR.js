@@ -1,9 +1,9 @@
-Ext.define("ChartDev.store.CCStoreR", {
+Ext.define("app.store.CCStoreR", {
     extend: "Ext.data.TreeStore",
-    requires: ['ChartDev.model.CCModelR'],
+    requires: ['app.model.CCModelR'],
     config: {
-        model: 'ChartDev.model.CCModelR',
-	storeId: 'CCStore',
+        model: 'app.model.CCModelR',
+	storeId: 'CCStoreR',
 	defaultRootProperty: 'children',
 	autoLoad: true,
         proxy: {

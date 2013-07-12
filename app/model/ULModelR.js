@@ -1,4 +1,4 @@
-Ext.define('ChartDev.model.ULModelR', {
+Ext.define('app.model.ULModelR', {
     extend: 'Ext.data.Model',
     
     config: {       
@@ -22,7 +22,7 @@ Ext.define('ChartDev.model.ULModelR', {
             {name: 'math_practices'}
         ],
 	hasMany: {
-	    model: 'ChartDev.model.ULStandardModelR',
+	    model: 'app.model.ULStandardModelR',
 	    name: 'standards',
 	    associationKey: 'standards'
 	}
