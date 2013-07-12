@@ -7,8 +7,7 @@ Ext.define("app.store.ULStoreR", {
 	autoLoad: false,
         proxy: {
 	    type: 'ajax',
-	    url: 'sample_user_log.json',
-//	    url: '../promse/journal?action=getuserlog14',
+	    url: 'sample_user_log.json',//gets changed automatically in live deployment
 	    reader: {
 		type: 'json',
 		rootProperty: 'userlog'
