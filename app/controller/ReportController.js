@@ -46,6 +46,9 @@ Ext.define('app.controller.ReportController', {
 	    menuButton: {
 		tap: 'toggleMenu'
 	    },
+	    exportButton: {
+		tap: 'exportReport'
+	    },
 	    toolbarSubmitButton: {
 		tap: 'submitMenu'
 	    },
@@ -436,71 +439,39 @@ Ext.define('app.controller.ReportController', {
 		itemTpl: ('<div style="float:top"><h4 style="font-weight:bold;display:inline">{class_name}&nbsp;{date_taught:date("n/j/Y")}</h4></div><div style="float:top">'+Ext.String.capitalize(settings.tier)+': {code}</div>'),
 		itemHeight: 50,
 		pinHeader: true,
-//		onItemDisclosure: true,
 		listeners: {
 		    itemtap: function(list, index, target, record, e, eOpts){
 			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: [], listeners: {hide: function(){list.deselect(record);}}}),
-			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+record.data.class_name+'</h2>'):'';
-			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
+			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+record.data.class_name+'</h2>'):'';
+			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline;margin-bottom:0;">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
 			outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
-			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+record.data.code+'<br/>'):'';
-			outString+=(record.data.description)?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+record.data.description+'<br/>'):'';
-			outString+=(record.data.time_spent)?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+record.data.time_spent+' minutes<br/>'):'';
+			outString+='<p style="font-size:larger;">';
+			outString+=(record.data.code)?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+record.data.code+'<br/>'):'';
+			outString+=(record.data.description)?('<strong>Description:</strong> '+record.data.description+'<br/>'):'';
+			outString+=(record.data.time_spent)?('<strong>Time Spent:</strong> '+record.data.time_spent+' minutes<br/>'):'';
 
 			var materials=record.data.materials,
 			pages=record.data.pages,
 			activities=record.data.activities;
-			outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
+			outString+=(materials)?('<strong>Lesson Materials:</strong> '+materials):'';
 			if(materials && pages){
 			    outString+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
 			}
 			outString+=(materials)?'<br/>':'';
 			if(activities.length>0){
 			    var listString='';
-			    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
+			    outString+='<strong>Lesson Activities:</strong> ';
 			    for(index in activities){
 				listString+=(listString!='')?', ':'';
 				listString+=activities[index].activity_name;
 			    }
 			    outString+=(listString+'<br/>');
 			}
-			outString+=(record.data.notes)?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+record.data.notes+'<br/>':'';
+			outString+=(record.data.notes)?'<strong>Notes:</strong> '+record.data.notes+'<br/>':'';
+			outString+='</p>';
 			panel.setHtml(outString);
 			Ext.Viewport.add(panel);
 			panel.show();
-		    },
-		    disclose: function(list, record, target, index){
-			console.log('disclose: ',record);
-			/*
-			var panel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 300, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: [], listeners: {hide: function(){list.deselect(record);}}}),
-			outString=(record.data.class_name)?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+record.data.class_name+'</h2>'):'';
-			outString+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
-			outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
-			outString+=(record.data.code)?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+record.data.code+'<br/>'):'';
-			outString+=(record.data.description)?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+record.data.description+'<br/>'):'';
-			outString+=(record.data.time_spent)?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+record.data.time_spent+' minutes<br/>'):'';
-
-			var materials=record.data.materials,
-			pages=record.data.pages,
-			activities=record.data.activities;
-			outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
-			if(materials && pages){
-			    outString+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
-			}
-			outString+=(materials)?'<br/>':'';
-			if(activities.length>0){
-			    var listString='';
-			    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
-			    for(index in activities){
-				listString+=(listString!='')?', ':'';
-				listString+=activities[index].activity_name;
-			    }
-			    outString+=(listString+'<br/>');
-			}
-			outString+=(record.data.notes)?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+record.data.notes+'<br/>':'';
-			panel.setHtml(outString);
-			Ext.Viewport.add(panel);
-			panel.show();*/
 		    }
 		}
 	    });
@@ -600,31 +571,33 @@ Ext.define('app.controller.ReportController', {
 			listeners: {
 			    show: function(scope, item, panel){
 				panel.removeAt(0);//get rid of default toolbar
-				var outString=(item.record.get('class_name'))?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline">'+item.record.get('class_name')+'</h2>'):'';
-				outString+=(item.record.get('date_taught'))?('<h3 style="float:right;text-align:right;display:inline">'+Ext.Date.format(item.record.get('date_taught'), 'n/j/Y')+'</h3>'):'';
+				var outString=(item.record.get('class_name'))?('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+item.record.get('class_name')+'</h2>'):'';
+				outString+=(item.record.get('date_taught'))?('<h3 style="float:right;text-align:right;display:inline;margin-bottom:0;">'+Ext.Date.format(item.record.get('date_taught'), 'n/j/Y')+'</h3>'):'';
 				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>'):'';
-				outString+=(item.record.get('code'))?('<h4 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+':</h4> '+item.record.get('code')+'<br/>'):'';
-				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
-				outString+=(item.record.get('time_spent'))?('<h4 style="font-weight:bold;display:inline">Time Spent:</h4> '+item.record.get('time_spent')+' minutes<br/>'):'';
+				outString+='<p style="font-size:larger;">';
+				outString+=(item.record.get('code'))?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+item.record.get('code')+'<br/>'):'';
+				outString+=(item.record.get('description'))?('<strong>Description:</strong> '+item.record.get('description')+'<br/>'):'';
+				outString+=(item.record.get('time_spent'))?('<strong>Time Spent:</strong> '+item.record.get('time_spent')+' minutes<br/>'):'';
 
 				var materials=item.record.get('materials'),
 				pages=item.record.get('pages'),
 				activities=item.record.get('activities');
-				outString+=(materials)?('<h4 style="font-weight:bold;display:inline">Lesson Materials:</h4> '+materials):'';
+				outString+=(materials)?('<strong>Lesson Materials:</strong> '+materials):'';
 				if(materials && pages){
 				    outString+=(isNaN(pages))?(' (pages '+pages+')'):(' (page '+pages+')');
 				}
 				outString+=(materials)?'<br/>':'';
 				if(activities.length>0){
 				    var listString='';
-				    outString+='<h4 style="font-weight:bold;display:inline">Lesson Activities:</h4> ';
+				    outString+='<strong>Lesson Activities:</strong> ';
 				    for(i in activities){
 					listString+=(listString!='')?', ':'';
 					listString+=activities[i].activity_name;
 				    }
 				    outString+=(listString+'<br/>');
 				}
-				outString+=(item.record.get('notes'))?'<h4 style="font-weight:bold;display:inline">Notes:</h4> '+item.record.get('notes')+'<br/>':'';
+				outString+=(item.record.get('notes'))?'<strong>Notes:</strong> '+item.record.get('notes')+'<br/>':'';
+				outString+='</p>';
 				panel.setHtml(outString);
 			    }
 			}
@@ -780,37 +753,41 @@ Ext.define('app.controller.ReportController', {
 				panel.removeAt(0);//get rid of default toolbar
 				var outString=(item.record.get('code'))?('<h2 style="font-weight:bold;display:inline">'+Ext.String.capitalize(settings.tier)+': '+item.record.get('code')+'</h2><br/>'):'';
 				outString+=(outString!='')?('<div style="float:top;clear:both;width:100%;border-bottom:3px solid black;"></div>'):'';
-				outString+=(item.record.get('description'))?('<h4 style="font-weight:bold;display:inline">Description:</h4> '+item.record.get('description')+'<br/>'):'';
-				outString+=(item.record.get('total_time'))?('<h4 style="font-weight:bold;display:inline">Total Time Spent:</h4> '+item.record.get('total_time')+' minutes<br/>'):'';
+				outString+='<p style="font-size:larger;">';
+				outString+=(item.record.get('description'))?('<strong>Description:</strong> '+item.record.get('description')+'<br/>'):'';
+				outString+=(item.record.get('total_time'))?('<strong>Total Time Spent:</strong> '+item.record.get('total_time')+' minutes<br/>'):'';
+				outString+='</p>';
 				var journals=item.record.get('journals')
 				if(journals.length>0){
-				    outString+='<br/><h3 style="font-weight:bold;display:inline">Journal Entries:</h3><br/>';
+				    outString+='<h3 style="font-weight:bold;display:inline">Journal Entries:</h3><br/>';
 				    outString+='<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div><br/>';
 				    for(j in journals){
 					outString+='<div style="border-bottom: 1px solid lightgrey">';
-					outString+=(journals[j].class_name)?('<span style="font-size:18px;font-weight:bold;float:left;text-align:left;display:inline">'+journals[j].class_name+'</span>'):'';
-					outString+=(journals[j].date_taught)?('<span style="font-size:16px;float:right;text-align:right;display:inline">'+Ext.Date.format(journals[j].date_taught, 'n/j/Y')+'</span>'):'';
+					outString+=(journals[j].class_name)?('<h4 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+journals[j].class_name+'</h4>'):'';
+					outString+=(journals[j].date_taught)?('<h5 style="font-weight:normal;float:right;text-align:right;display:inline;margin-bottom:0;">'+Ext.Date.format(journals[j].date_taught, 'n/j/Y')+'</h5>'):'';
 					outString+=(journals[j].class_name || journals[j].date_taught)?('<div style="float:top;clear:both;width:100%;border-bottom:1px solid black;"></div>'):'';
-					outString+=(journals[j].time_spent)?('<span style="font-weight:bold;display:inline">Time Spent on '+item.record.get('code')+':</span> '+journals[j].time_spent+' minutes<br/>'):'';
+					outString+='<p>';
+					outString+=(journals[j].time_spent)?('<strong>Time Spent on '+item.record.get('code')+':</strong> '+journals[j].time_spent+' minutes<br/>'):'';
 					var materials=journals[j].materials,
 					pages=journals[j].pages,
 					activities=journals[j].activities;
-					outString+=(materials)?('<span style="font-weight:bold;display:inline">Lesson Materials:</span> '+materials):'';
+					outString+=(materials)?('<strong>Lesson Materials:</strong> '+materials):'';
 					if(materials && pages){
 					    outString+=(isNaN(pages))?(' (pages '+pages+')'):(' (page '+pages+')');
 					}
 					outString+=(materials)?'<br/>':'';
 					if(activities.length>0){
 					    var listString='';
-					    outString+='<span style="font-weight:bold;display:inline">Lesson Activities:</span> ';
+					    outString+='<strong>Lesson Activities:</strong> ';
 					    for(i in activities){
 						listString+=(listString!='')?', ':'';
 						listString+=activities[i].activity_name;
 					    }
 					    outString+=(listString+'<br/>');
 					}
-					outString+=(journals[j].notes)?'<span style="font-weight:bold;display:inline">Notes:</span> '+journals[j].notes+'<br/>':'';
-					outString+='<br/></div><br/>';				    
+					outString+=(journals[j].notes)?'<strong>Notes:</strong> '+journals[j].notes+'<br/>':'';
+					outString+='</p>';
+					outString+='</div><br/>';				    
 				    }
 				}
 				panel.setHtml(outString);
@@ -856,14 +833,76 @@ Ext.define('app.controller.ReportController', {
 	panzoom.setZoomOnPanGesture(true);
 	chart.redraw();
     },
-    printReport: function(){
+    exportReport: function(){
 	//TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
 	var settings=this.getReport().getSettings(),
 	content=this.getContent(),
-	doc=new jsPDF(),
-	html='';
+	html='<body>';
 	if(settings.type=='list'){
-	    
+	    var reportStore=Ext.getStore('ReportStore'),
+	    groups=reportStore.getGroups(),
+	    records, record, item,
+	    pdf=new jsPDF('p', 'in', 'letter');
+	    for(var g in groups){
+		records=groups[g].children;
+		html+=('<h2 style="display:inline">'+groups[g].name+'</h2><div class="jsPDF header_line-5px_solid_black"</div>');
+		for(var r in records){
+		    record=records[r];
+		    item='<div style="padding-left:2em">';
+		    item+=(record.data.class_name)?('<h3 style="float:left;font-weight:bold;text-align:left;display:inline;margin-bottom:0">'+record.data.class_name+'</h3>'):'';
+		    item+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline;margin-bottom:0">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
+		    item+='<div style="clear:both;border-bottom:2px solid black;width:100%;"></div>';
+		    item+=(record.data.code)?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+record.data.code+'<br/>'):'';
+		    item+=(record.data.description)?('<strong>Description:</strong> '+record.data.description+'<br/>'):'';
+		    item+=(record.data.time_spent)?('<strong>Time Spent:</strong> '+record.data.time_spent+' minutes<br/>'):'';
+
+		    var materials=record.data.materials,
+		    pages=record.data.pages,
+		    activities=record.data.activities;
+		    item+=(materials)?('<strong>Lesson Materials:</strong> '+materials):'';
+		    if(materials && pages){
+			item+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
+		    }
+		    item+=(materials)?'<br/>':'';
+		    if(activities.length>0){
+			var listString='';
+			item+='<strong>Lesson Activities:</strong> ';
+			for(index in activities){
+			    listString+=(listString!='')?', ':'';
+			    listString+=activities[index].activity_name;
+			}
+			item+=(listString+'<br/>');
+		    }
+		    item+=(record.data.notes)?'<jsPDF class="header_line" style="border-bottom:5px-solid-black;width:100%">Notes:</jsPDF> '+record.data.notes+'<br/>':'';
+		    item+='</div>';
+		    html+=item;
+		}
+		html+='<br/>';
+	    }
+	    html+='</body>';
+//	    var newwindow=window.open();
+//	    newwindow.document.write(html);
+	    var specialElementHandlers = {
+		'jsPDF': function(element, renderer){
+		    conosle.log(element);
+		    var rules=element.style.split(";");
+		    for(r in rules){
+			console.log(rules[r]);
+		//	var selectors[rules[r].split(':')
+		//	if(selector=='border-bottom"
+		    }
+		    console.log('jsPDF');
+		    return true;
+		},
+		// element with id of "bypass" - jQuery style selector
+		'#bypassme': function(element, renderer){
+		    // true = "handled elsewhere, bypass text extraction"
+		    return true;
+		}
+	    };
+	    html=html.replace(/<br\/>/g, '<h1></h1>');//hacky, but will have to suffice until jsPDF provides documentation 
+	    pdf.fromHTML(html, 0.5, 0.5, {'width': 7.5, 'elementHandlers': specialElementHandlers});
+	    pdf.save(settings.tier+'_list_'+Ext.Date.format(settings.fromDate, 'MdY')+'-'+Ext.Date.format(settings.toDate, 'MdY')+'.pdf');
 	}
 	else{
 

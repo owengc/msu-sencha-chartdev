@@ -189,8 +189,8 @@ Ext.define('app.view.ReportView', {
 				name: 'groupField',
 				label: 'Group By:',
 				usePicker: true,
-				hidden: true,
-				disabled: true,
+				//hidden: true,
+				//disabled: true,
 				options: [
 				    {text: 'Course', value: 'class_name'},
 				    {text: 'Date', value: 'date_taught'},
@@ -437,7 +437,7 @@ Ext.define('app.view.ReportView', {
 	
 	//for testing:
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
-            type: 'dot',
+            type: 'list',
             tier: 'standard',
             fromDate: new Date('Apr 1 2010'),
             toDate: new Date('Jun 1 2013')
