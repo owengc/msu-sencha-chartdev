@@ -838,7 +838,7 @@ Ext.define('app.controller.ReportController', {
 	content=this.getContent(),
 	html='<body>';
 	if(settings.type=='list'){
-	    var reportStore=Ext.getStore('ReportStore'),
+	    var reportStore=Ext.getStore('ReportStoreR'),
 	    groups=reportStore.getGroups(),
 	    records, record, item,
 	    pdf=new jsPDF('p', 'in', 'letter');
