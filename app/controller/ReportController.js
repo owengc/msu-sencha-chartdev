@@ -126,6 +126,7 @@ Ext.define('app.controller.ReportController', {
 		}
 		else{
 		    Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
+		    report.setMenuState({});
                     return false;
 		}
 	    }
