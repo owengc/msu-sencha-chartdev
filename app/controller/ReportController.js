@@ -72,12 +72,7 @@ Ext.define('app.controller.ReportController', {
 		doubletap: 'resetPanZoom'
 	    }
 	}
-    },
-    init: function(){
-	this.callParent();
-	console.log('controller init');
-	this.loadUserLog();
-    },
+    }
     toggleMenu: function(){
 	var menu=this.getMenu(),
         menuButton=this.getMenuButton(),
