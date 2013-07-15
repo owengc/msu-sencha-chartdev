@@ -229,7 +229,7 @@ Ext.define('app.controller.ReportController', {
             proxy.setExtraParam('token', token);
 	    proxy.setUrl('../promse/journal?action=getuserlog14');
 	}
-	Ext.Viewport.setMasked({xtype:'loadmask',message:'loading user logs...'});
+	Ext.Viewport.setMasked({xtype:'loadmask',message:'Loading user logs...'});
         userLog.load({
 	    callback: function(records, operations, success){
 		Ext.Viewport.setMasked(false);
