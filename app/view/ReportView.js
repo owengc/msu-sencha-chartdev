@@ -53,10 +53,7 @@ Ext.define('app.view.ReportView', {
 			hideAnimation: {type: 'slideOut', direction: 'left', duration: 250},
 			zIndex: 2
 		    }
-		],
-		initialize: function(){
-		    this.relayEvents(this.element, ['tap']);
-		}
+		]
 	    },
 	    {
 		xtype: 'formpanel',

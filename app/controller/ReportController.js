@@ -71,8 +71,9 @@ Ext.define('app.controller.ReportController', {
 	    content: {
 		doubletap: 'resetPanZoom'
 	    }
-	}
-    }
+	},
+	env: ''
+    },
     toggleMenu: function(){
 	var menu=this.getMenu(),
         menuButton=this.getMenuButton(),
@@ -134,6 +135,7 @@ Ext.define('app.controller.ReportController', {
 		}
 		else{
 		    Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
+		    report.setMenuState({});
                     return false;
 		}
 	    }
@@ -208,12 +210,14 @@ Ext.define('app.controller.ReportController', {
 	    option.value=value;
 	    filterDetail.setOptions([option]);
 	}
-	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+	var target=(this.getEnv()=='local')?'#report':'#main';
+	Ext.Viewport.animateActiveItem(target, {type: 'fade', duration: 250});
     },
     clearFilterDetailList: function(){
 	if(this.getFilterDetailList()){
 	    this.updateFilterDetailListDepth();
-	    Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+	    var target=(this.getEnv()=='local')?'#report':'#main';
+	    Ext.Viewport.animateActiveItem(target, {type: 'fade', duration: 250});
 	}
     },
     updateFilterDetailListDepth: function(){
@@ -227,18 +231,19 @@ Ext.define('app.controller.ReportController', {
 	}
     },
     loadUserLog:function(){
-	console.log('loaduserlog');
-        var userLogStore = Ext.getStore('ULStoreR'),
-	token=app.app.token||null;
+        var userLog = Ext.getStore('ULStoreR'),
+	token=app.app.token || null,
+	me=this;
 	if(token){
-	    var proxy=userLogStore.getProxy();
+	    var proxy=userLog.getProxy();
             proxy.setExtraParam('token', token);
 	    proxy.setUrl('../promse/journal?action=getuserlog14');
 	}
-	Ext.Viewport.setMasked({xtype:'loadmask',message:'loading user logs...'});
-        userLogStore.load({
+	Ext.Viewport.setMasked({xtype:'loadmask',message:'Loading user logs...'});
+        userLog.load({
 	    callback: function(records, operations, success){
 		Ext.Viewport.setMasked(false);
+		me.setEnv((token)?'server':'local');
             }
 	});
     },	
@@ -288,7 +293,6 @@ Ext.define('app.controller.ReportController', {
 	logs=userLogStore.getData().items,
 	numLogs=logs.length,
 	i=0;
-	console.log('contents of ul response: ', logs);
 	if(numLogs==0){
 	    return false;
 	}
@@ -380,7 +384,7 @@ Ext.define('app.controller.ReportController', {
 	    sorters: (settings.type=='list')?['date_taught']:['code']
 	});
 	reportStore.load();
-
+	reportStore.sort();
 	if(settings.filterSwitch==1){
 	    var filterType=settings.filterType,
 	    filterTier=settings.filterTier[1], 
