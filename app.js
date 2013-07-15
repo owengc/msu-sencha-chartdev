@@ -47,6 +47,7 @@ Ext.application({
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
 	Ext.Viewport.add(Ext.create('app.view.ReportView', {}));
+	app.app.getController('ReportController').loadUserLog()
     },
     onUpdated: function() {
         Ext.Msg.confirm(

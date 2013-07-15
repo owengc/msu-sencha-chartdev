@@ -36,10 +36,7 @@ Ext.define('app.view.ReportView', {
 			ui: 'confirm',
 			iconCls: 'arrow_up'
 		    }
-		],
-		initialize: function(){
-		    this.relayEvents(this.element, ['tap']);
-		}
+		]
 	    },
 	    {
 		xtype: 'formpanel',

@@ -67,14 +67,8 @@ Ext.define('app.controller.ReportController', {
 	    content: {
 		doubletap: 'resetPanZoom'
 	    }
-	}
-    },
-    launch: function(){
-	//here for testing purposes. main app controller normally calls loadUserLog
-	var userLogStore=Ext.getStore('ULStoreR');
-	if(!userLogStore.isLoaded()){
-	    this.loadUserLog();
-	}
+	},
+	env: ''
     },
     toggleMenu: function(){
 	var menu=this.getMenu(),
@@ -206,12 +200,14 @@ Ext.define('app.controller.ReportController', {
 	    option.value=value;
 	    filterDetail.setOptions([option]);
 	}
-	Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+	var target=(this.getEnv()=='local')?'#report':'#main';
+	Ext.Viewport.animateActiveItem(target, {type: 'fade', duration: 250});
     },
     clearFilterDetailList: function(){
 	if(this.getFilterDetailList()){
 	    this.updateFilterDetailListDepth();
-	    Ext.Viewport.animateActiveItem('#report', {type: 'fade', duration: 250});
+	    var target=(this.getEnv()=='local')?'#report':'#main';
+	    Ext.Viewport.animateActiveItem(target, {type: 'fade', duration: 250});
 	}
     },
     updateFilterDetailListDepth: function(){
@@ -226,7 +222,8 @@ Ext.define('app.controller.ReportController', {
     },
     loadUserLog:function(){
         var userLog = Ext.getStore('ULStoreR'),
-	token=app.app.token || null;
+	token=app.app.token || null,
+	me=this;
 	if(token){
 	    var proxy=userLog.getProxy();
             proxy.setExtraParam('token', token);
@@ -236,6 +233,7 @@ Ext.define('app.controller.ReportController', {
         userLog.load({
 	    callback: function(records, operations, success){
 		Ext.Viewport.setMasked(false);
+		me.setEnv((token)?'server':'local');
             }
 	});
     },	
