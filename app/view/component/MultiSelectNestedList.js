@@ -43,7 +43,6 @@ Ext.define('app.view.component.MultiSelectNestedList', {
 		list.setMode('MULTI');
 		list.setDeselectOnContainerClick(false);
 		this.limitDepth();
-		console.log(list, list.getStore().getData().items);
 		var branchId=list.getStore().getData().items[0].parentNode.getId(),
 		branchesWithSelections=this.getBranchesWithSelections();
 		if(branchId){

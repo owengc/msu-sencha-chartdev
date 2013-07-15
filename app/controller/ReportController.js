@@ -69,10 +69,12 @@ Ext.define('app.controller.ReportController', {
 	    }
 	}
     },
-    init: function(){
-	this.callParent();
-	console.log('controller init');
-	this.loadUserLog();
+    launch: function(){
+	//here for testing purposes. main app controller normally calls loadUserLog
+	var userLogStore=Ext.getStore('ULStoreR');
+	if(!userLogStore.isLoaded()){
+	    this.loadUserLog();
+	}
     },
     toggleMenu: function(){
 	var menu=this.getMenu(),
@@ -223,16 +225,15 @@ Ext.define('app.controller.ReportController', {
 	}
     },
     loadUserLog:function(){
-	console.log('loaduserlog');
-        var userLogStore = Ext.getStore('ULStoreR'),
-	token=app.app.token||null;
+        var userLog = Ext.getStore('ULStoreR'),
+	token=app.app.token || null;
 	if(token){
-	    var proxy=userLogStore.getProxy();
+	    var proxy=userLog.getProxy();
             proxy.setExtraParam('token', token);
 	    proxy.setUrl('../promse/journal?action=getuserlog14');
 	}
 	Ext.Viewport.setMasked({xtype:'loadmask',message:'loading user logs...'});
-        userLogStore.load({
+        userLog.load({
 	    callback: function(records, operations, success){
 		Ext.Viewport.setMasked(false);
             }
@@ -284,7 +285,6 @@ Ext.define('app.controller.ReportController', {
 	logs=userLogStore.getData().items,
 	numLogs=logs.length,
 	i=0;
-	console.log('contents of ul response: ', logs);
 	if(numLogs==0){
 	    return false;
 	}
@@ -373,10 +373,10 @@ Ext.define('app.controller.ReportController', {
 	    storeId: 'ReportStoreR',
 	    model: 'ReportModelR',
 	    data: reportData,
-	    //sorters: (settings.type=='list')?['date_taught']:['code']
+	    sorters: (settings.type=='list')?['date_taught']:['code']
 	});
 	reportStore.load();
-	//reportStore.sort();
+	reportStore.sort();
 
 	if(settings.filterSwitch==1){
 	    var filterType=settings.filterType,
