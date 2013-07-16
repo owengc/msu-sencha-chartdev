@@ -70,7 +70,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Report Type:',
 					height: 75
@@ -130,7 +130,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Report Presentation Tier:',
 					height: 75
@@ -182,7 +182,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Grouping Parameter:',
 					height: 75
@@ -220,7 +220,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Report Start Date:',
 					height: 75
@@ -258,7 +258,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Report End Date:',
 					height: 75
@@ -321,7 +321,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Filter Type:',
 					height: 75
@@ -363,7 +363,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '33%',
+				    height: '300px',
 				    toolbar: {
 					title: 'Select Filter Tier:',
 					height: 75
