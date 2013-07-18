@@ -25,7 +25,8 @@ Ext.application({
         'Ext.MessageBox',
     ],
     controllers: [
-	'ReportController'
+	'ReportController',
+	'JournalController'
     ],
     icon: {
         '57': 'resources/icons/Icon.png',
@@ -47,7 +48,7 @@ Ext.application({
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
 	Ext.Viewport.add(Ext.create('app.view.ReportView', {}));
-	app.app.getController('ReportController').loadUserLog()
+	app.app.getController('ReportController').loadUserLog();
     },
     onUpdated: function() {
         Ext.Msg.confirm(
