@@ -75,13 +75,18 @@ Ext.define('app.view.ReportView', {
 				itemId: 'report_type',
 				name: 'type',
 				label: 'Report Type:',
-				usePicker: true,
+				usePicker: false,
 				options: [
 				    {text: 'List', value: 'list'},
 				    {text: 'Dot Plot', value: 'dot'},
 				    {text: 'Bar Graph', value: 'bar'}
 				],
-				defaultPhonePickerConfig: {
+				defaultTabletPickerConfig: {
+				    height: '153px',
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				},
+				/*defaultPhonePickerConfig: {
 				    usePicker: true,
 				    hideOnMaskTap: true,
 				    stretchY: true,
@@ -100,7 +105,7 @@ Ext.define('app.view.ReportView', {
 					    'font-size': '1.5em'
 					},
 					//ui: 'decline'
-				    }*/,
+				    }*//*,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -110,7 +115,7 @@ Ext.define('app.view.ReportView', {
 					},
 					ui: 'confirm'
 				    }
-				},
+				},*/
 				listeners: {
 				    change: function(me, newValue, oldValue, eOpts){
 					var groupField=me.getParent().down('#report_groupField');
@@ -135,13 +140,18 @@ Ext.define('app.view.ReportView', {
 				itemId: 'report_tier',
 				name: 'tier',
 				label: 'Present By:',
-				usePicker: true,
+				usePicker: false,
 				options: [
 				    {text: 'Standard', value: 'standard'},
 				    {text: 'Cluster', value: 'cluster'},
 				    {text: 'Domain', value: 'domain'}
 				],
-				defaultPhonePickerConfig: {
+				defaultTabletPickerConfig: {
+				    height: '153px',
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				},
+				/*defaultPhonePickerConfig: {
 				    usePicker: true,
 				    hideOnMaskTap: true,
 				    stretchY: true,
@@ -160,7 +170,7 @@ Ext.define('app.view.ReportView', {
 					    'font-size': '1.5em'
 					},
 					//ui: 'decline'
-				    }*/,
+				    }*//*,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -170,7 +180,7 @@ Ext.define('app.view.ReportView', {
 					},
 					ui: 'confirm'
 				    }
-				},
+				},*/
 				listeners: {
 				    change: function(me, newValue, oldValue, eOpts){
 					var groupField=me.getParent().down('#report_groupField'),
@@ -185,7 +195,7 @@ Ext.define('app.view.ReportView', {
 				itemId: 'report_groupField',
 				name: 'groupField',
 				label: 'Group By:',
-				usePicker: true,
+				usePicker: false,
 				//hidden: true,
 				//disabled: true,
 				options: [
@@ -193,7 +203,12 @@ Ext.define('app.view.ReportView', {
 				    {text: 'Date', value: 'date_taught'},
 				    {text: 'Code', value: 'code'}
 				],
-				defaultPhonePickerConfig: {
+				defaultTabletPickerConfig: {
+				    height: '153px',
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				},
+				/*defaultPhonePickerConfig: {
 				    usePicker: true,
 				    hideOnMaskTap: true,
 				    stretchY: true,
@@ -212,7 +227,7 @@ Ext.define('app.view.ReportView', {
 					    'font-size': '1.5em'
 					},
 					//ui: 'decline'
-				    }*/,
+				    }*//*,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -222,7 +237,7 @@ Ext.define('app.view.ReportView', {
 					},
 					ui: 'confirm'
 				    }
-				}
+				}*/
 			    },
 			    {
 				xtype: 'datepickerfield',
@@ -237,7 +252,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
+				    height: '250px',
 				    toolbar: {
 					title: 'Select Report Start Date:',
 					height: 75
@@ -275,7 +290,7 @@ Ext.define('app.view.ReportView', {
 				    stretchY: true,
 				    showAnimation: {type: 'fadeIn', duration: 250},
 				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
+				    height: '250px',
 				    toolbar: {
 					title: 'Select Report End Date:',
 					height: 75
@@ -327,12 +342,17 @@ Ext.define('app.view.ReportView', {
 				itemId: 'report_filter_type',
 				name: 'filterType',
 				label: 'Filter Type:',
-				usePicker: true,
+				usePicker: false,
 				options: [
 				    {text: 'Include records', value: 'include'},
 				    {text: 'Exclude records', value: 'exclude'}
 				],
-				defaultPhonePickerConfig: {
+				defaultTabletPickerConfig: {
+				    height: '106px',
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				},
+				/*defaultPhonePickerConfig: {
 				    usePicker: true,
 				    hideOnMaskTap: true,
 				    stretchY: true,
@@ -351,7 +371,7 @@ Ext.define('app.view.ReportView', {
 					    'font-size': '1.5em'
 					},
 					//ui: 'decline'
-				    }*/,
+				    }*//*,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -361,20 +381,25 @@ Ext.define('app.view.ReportView', {
 					},
 					ui: 'confirm'
 				    }
-				}
+				}*/
 			    },
 			    {
 				xtype: 'selectfield',
 				itemId: 'report_filter_tier',
 				name: 'filterTier',
 				label: 'where',
-				usePicker: true,
+				usePicker: false,
 				options: [
 				    {text: 'Standard', value: [4, 'standard']},
 				    {text: 'Cluster', value: [3, 'cluster']},
 				    {text: 'Domain', value: [2, 'domain']}
 				],
-				defaultPhonePickerConfig: {
+				defaultTabletPickerConfig: {
+				    height: '153px',
+				    showAnimation: {type: 'fadeIn', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250},
+				},
+				/*defaultPhonePickerConfig: {
 				    usePicker: true,
 				    hideOnMaskTap: true,
 				    stretchY: true,
@@ -393,7 +418,7 @@ Ext.define('app.view.ReportView', {
 					    'font-size': '1.5em'
 					},
 					//ui: 'decline'
-				    }*/,
+					}*//*,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -403,7 +428,7 @@ Ext.define('app.view.ReportView', {
 					},
 					ui: 'confirm'
 				    }
-				}
+				}*/
 			    },
 			    {
 				xtype: 'selectfield',

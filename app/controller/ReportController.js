@@ -836,20 +836,27 @@ Ext.define('app.controller.ReportController', {
 	//TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
 	var settings=this.getReport().getSettings(),
 	content=this.getContent(),
-	html='<body>';
+	html='<!doctype><html><head><title>Report</title></head><body>';
 	if(settings.type=='list'){
 	    var reportStore=Ext.getStore('ReportStoreR'),
 	    groups=reportStore.getGroups(),
-	    records, record, item,
-	    pdf=new jsPDF('p', 'in', 'letter');
+	    records, record, item='',
+	    pdf=new jsPDF('p', 'in', 'letter');//setting up for 8.5x11 portrait
+	    pdf.marginX=0.5;
+	    pdf.marginY=0.5;
+	    pdf.pageWidth=7.5;
+	    pdf.pageHeight=10;
+	    pdf.lastY=pdf.marginY;
+	    pdf.heights=[];
+	    pdf.maxHeight=0;
+	    pdf.averageHeight=0;
 	    for(var g in groups){
 		records=groups[g].children;
-		html+=('<h2 style="display:inline">'+groups[g].name+'</h2><div class="jsPDF header_line-5px_solid_black"</div>');
+		html+=('<h2 style="display:inline;border-bottom:5px solid black;width:100%">'+groups[g].name+'</h2>');
 		for(var r in records){
 		    record=records[r];
-		    item='<div style="padding-left:2em">';
 		    item+=(record.data.class_name)?('<h3 style="float:left;font-weight:bold;text-align:left;display:inline;margin-bottom:0">'+record.data.class_name+'</h3>'):'';
-		    item+=(record.data.date_taught)?('<h3 style="float:right;text-align:right;display:inline;margin-bottom:0">'+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'</h3>'):'';
+		    item+=(record.data.date_taught)?('<strong>Date:</strong> '+Ext.Date.format(record.data.date_taught, 'n/j/Y')):'';
 		    item+='<div style="clear:both;border-bottom:2px solid black;width:100%;"></div>';
 		    item+=(record.data.code)?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+record.data.code+'<br/>'):'';
 		    item+=(record.data.description)?('<strong>Description:</strong> '+record.data.description+'<br/>'):'';
@@ -872,36 +879,104 @@ Ext.define('app.controller.ReportController', {
 			}
 			item+=(listString+'<br/>');
 		    }
-		    item+=(record.data.notes)?'<jsPDF class="header_line" style="border-bottom:5px-solid-black;width:100%">Notes:</jsPDF> '+record.data.notes+'<br/>':'';
-		    item+='</div>';
+		    item+=(record.data.notes)?('<strong>Notes:</strong> '+record.data.notes+'<br/>'):'';
 		    html+=item;
+		    html+='<hr/>';
 		}
-		html+='<br/>';
+		html+='<h1></h1>';
 	    }
-	    html+='</body>';
+	    html+='</body></html>';
 //	    var newwindow=window.open();
 //	    newwindow.document.write(html);
-	    var specialElementHandlers = {
-		'jsPDF': function(element, renderer){
-		    conosle.log(element);
-		    var rules=element.style.split(";");
-		    for(r in rules){
-			console.log(rules[r]);
-		//	var selectors[rules[r].split(':')
-		//	if(selector=='border-bottom"
-		    }
-		    console.log('jsPDF');
-		    return true;
-		},
+	    var specialElementHandlers={
 		// element with id of "bypass" - jQuery style selector
 		'#bypassme': function(element, renderer){
 		    // true = "handled elsewhere, bypass text extraction"
+		    console.log('bypass');
 		    return true;
+		},
+		'HR': function(element, renderer){
+		    var pdf=renderer.pdf,
+		    height=renderer.y-pdf.lastY,
+		    sum=0,
+		    numHeights=pdf.heights.length,
+		    i=0;
+		    console.log('renderer.y:', renderer.y, 'height:',height);
+		    for(;i<numHeights;i++){
+			sum+=(pdf.heights[i]);
+		    }
+		    pdf.averageHeight=(sum/numHeights);
+		    if(height>pdf.maxHeight){
+			pdf.maxHeight=height;
+		    }
+		    if((renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY) || 
+		       (renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY-pdf.averageHeight) ||
+		       (renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY-pdf.maxHeight)){
+			pdf.addPage();
+			//console.log(element, renderer);
+			renderer.y=pdf.marginY;
+		    }
+		    else{
+			renderer.y+=0.15;
+		    }
+		    pdf.heights.push(renderer.y-pdf.lastY),
+		    pdf.lastY=(renderer.y+height);
+		    return true;
+		},
+		'DIV': function(element, renderer){
+		    if(element.getAttribute('class')=='header_line'){
+			var style=element.getAttribute('style'),
+			ruleHash={};
+			if(style){
+			    var rules=style.split(";");
+			    for(r in rules){
+				ruleHash[rules[r].split(':')[0]]=rules[r].split(':')[1];
+				//console.log(rules[r].split(':')[0], ':', rules[r].split(':')[1]);
+				//	if(selector=='border-bottom"
+			    }
+			}/*
+			if(ruleHash['border-bottom']){
+			    var value=ruleHash['border-bottom'].split(' ');
+			    thickness=value[0],
+			    color=value[1],
+			    type=value[2];
+			    if(ruleHash['width']){
+				value=ruleHash['width'],
+				length;
+				if(value.search(/%$/)){
+				    length=(parseInt(value)/100)*
+			    }
+			}
+			pdf.line(renderer.x, renderer.y,*/
+			return true;
+		    }
+		    else{
+			return false;
+		    }
+		},
+		'#jsPDF': function(element, renderer){
+		    console.log(renderer);
+		    var style=element.getAttribute('style'),
+		    className=element.getAttribute('class'),
+		    ruleHash={};
+		    if(className && style){
+			var rules=style.split(";");
+			for(r in rules){
+			    ruleHash[rules[r].split(':')[0]]=rules[r].split(':')[1];
+			    console.log(rules[r].split(':')[0], ':', rules[r].split(':')[1]);
+			    //	if(selector=='border-bottom"
+			}
+			if(className=='header_line'){
+//			    renderer.line(
+			}
+		    }
+		    return element;
 		}
 	    };
 	    html=html.replace(/<br\/>/g, '<h1></h1>');//hacky, but will have to suffice until jsPDF provides documentation 
 	    pdf.fromHTML(html, 0.5, 0.5, {'width': 7.5, 'elementHandlers': specialElementHandlers});
-	    pdf.save(settings.tier+'_list_'+Ext.Date.format(settings.fromDate, 'MdY')+'-'+Ext.Date.format(settings.toDate, 'MdY')+'.pdf');
+	    //pdf.output('dataurlnewwindow', {});
+	    //pdf.save(settings.tier+'_list_'+Ext.Date.format(settings.fromDate, 'MdY')+'-'+Ext.Date.format(settings.toDate, 'MdY')+'.pdf');
 	}
 	else{
 
