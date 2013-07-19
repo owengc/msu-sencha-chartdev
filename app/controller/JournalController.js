@@ -62,6 +62,6 @@ Ext.define('app.controller.JournalController', {
         for(;i<rangeSelectorCount;i++){
             rangeSelectors[i].displayTotalMinutes();
         }
-        console.log('duration changed');
+        //console.log('duration changed');
     }
 });
