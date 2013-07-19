@@ -453,17 +453,18 @@ Ext.define('app.view.ReportView', {
 	]
     },//report
     initialize: function(){
-	this.callParent(); 
+	this.callParent(arguments); 
 	this.setInitialized(true);
 	
-	
-	//for testing:
+	//for testing/defaults:
+	var today=new Date(),
+	lastWeek=new Date();
+	lastWeek.setDate(today.getDate()-7);
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
             type: 'list',
             tier: 'standard',
-            fromDate: new Date('Apr 1 2010'),
-            toDate: new Date('Jun 1 2013')
+            fromDate: lastWeek,
+            toDate: today
         });
     }
-    
 });

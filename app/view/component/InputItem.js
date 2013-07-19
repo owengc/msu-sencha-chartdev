@@ -4,7 +4,6 @@ Ext.define('app.view.component.InputItem', {
     xtype: 'inputitem',
     alias: 'widget.inputitem',
     config: {
-	style: 'border-bottom:solid 1px lightgrey',
  	idPrefix: '',
 	layout: {
 	    type: 'hbox'
@@ -12,6 +11,7 @@ Ext.define('app.view.component.InputItem', {
 	items: [
 	    {
 		xtype: 'container',
+		cls: 'o-list-item-label',
 		layout: 'hbox',
 		items: [
 		    {
@@ -25,6 +25,18 @@ Ext.define('app.view.component.InputItem', {
 			label: '',
 			readOnly: true,
 			cls: 'o-field-small',
+			listeners: {
+			    element: 'element',
+			    'tap': function(){
+				this.infoPanel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 150, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []});
+				var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+this.getValue()+'</h2>');
+				outString+=('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>');
+				outString+=('<strong>Description:</strong> '+this.description);
+				this.infoPanel.setHtml(outString);
+				Ext.Viewport.add(this.infoPanel);
+				this.infoPanel.show();
+			    }
+			}
 		    },
 		    {
 			xtype: 'textfield',
@@ -51,31 +63,32 @@ Ext.define('app.view.component.InputItem', {
 	]
     },
     initialize: function(){
-	this.callParent();
+	this.callParent(arguments);
 	this.setIdPrefix(this.config.prefix);
     },
     updateRecord: function(record){
-	console.log('rec', record);
-	var fullCodeCmp=this.down('#fullcodeCmp'),
+	var fullcodeCmp=this.down('#fullcodeCmp'),
 	totalPercentCmp=this.down('#totalPercentCmp'),
 	totalMinutesCmp=this.down('#totalMinutesCmp'),
 	prefix=this.getIdPrefix(),
-	idNum=record.get('id').match(/\d+/g)[0],
-	rsConfig={};
-	
-	fullCodeCmp.setValue(record.get('fullcode'));
-	fullCodeCmp.setItemId(prefix+idNum+fullCodeCmp.idSuffix);
-	fullCodeCmp.description=record.get('frameworktitle');
+	idNum=record.get('framework_id'),
+	rsConfig={};	
+	//console.log(idNum);
+
+	/*set up unique itemIds for all the components in this row*/
+	fullcodeCmp.setValue(record.get('fullcode'));
+	fullcodeCmp.setItemId(prefix+idNum+fullcodeCmp.idSuffix);
+	fullcodeCmp.description=record.get('frameworktitle');
 	totalPercentCmp.setItemId(prefix+idNum+totalPercentCmp.idSuffix);
 	totalMinutesCmp.setItemId(prefix+idNum+totalMinutesCmp.idSuffix);
 
-
-	rsConfig.regions=record.get('duration_mask');
-	console.log(rsConfig.regions);
+	/*set up config object for new rangeselector, create rangeselector and add it to this row*/
+	rsConfig.regions=record.get('duration_mask');//RangeSelectors will default to '00000000000000000000' if .regions is not specified
+	//console.log(rsConfig.regions);
 	rsConfig.itemId=(prefix+idNum);
 	rsConfig.totalPercentCmp=totalPercentCmp.getItemId();
 	rsConfig.totalMinutesCmp=totalMinutesCmp.getItemId();
-	rsConfig.durationCmp=('journal_duration');
+	rsConfig.durationCmp=('journal_duration');//IMPORTANT - make sure this is set to the itemId of the lesson duration numeric input field
 	rsConfig.flex=1;
 	this.add(Ext.create('app.view.component.RangeSelector', rsConfig));
 	this.callParent(arguments);

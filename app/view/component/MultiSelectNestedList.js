@@ -88,7 +88,7 @@ Ext.define('app.view.component.MultiSelectNestedList', {
 	}
     },
     initialize: function(){
-	this.callParent();
+	this.callParent(arguments);
 
 	this.setStore(this.config.store);
 	this.setItemId(this.config.itemId);

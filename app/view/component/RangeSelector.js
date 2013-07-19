@@ -210,7 +210,7 @@ Ext.define('app.view.component.RangeSelector', {
 			buttons[i].area=Ext.util.Region.getRegion(buttons[i].element);
 		    }
 		    this.setArea(Ext.util.Region.getRegion(this.element));
-		    console.log('selector resized', this.element.dom.scrollWidth);
+		    //console.log('selector resized', this.element.dom.scrollWidth);
 		    //console.log(this.area.toString());
 		}
 	    },
@@ -231,14 +231,13 @@ Ext.define('app.view.component.RangeSelector', {
       must be called first [this.callParent()].
      */
     initialize: function(){
-	this.callParent();//Important - takes care of establishing everything associated with the parent class (SegmentedButton)
+	this.callParent(arguments);//Important - takes care of establishing everything associated with the parent class (SegmentedButton)
 	//Establish number of buttons given increment setting
 	var increment=this.getIncrement(),//default of 5 is given in class definition config above
 	numButtons=(100/increment),
 	regions='',
 	i=0;
 	//Create and initialize buttons
-	this.removeAll();
 	for(;i<numButtons;i++){
 	    var button=Ext.create('Ext.Button', {//There are a number of custom properties being added to the button class. In the future, an extension of Ext.Button might be nice
 		index: i,//custom index used to identify buttons
@@ -251,10 +250,10 @@ Ext.define('app.view.component.RangeSelector', {
 	    regions+='0';//build empty region string for default empty state
 	}
 	this.setItemId(this.config.itemId);
-	this.setRegions(this.config.regions || regions);//Pull in region data is available, otherwise initialize to empty state.
-	this.setTotalPercentCmp(this.config.totalPercentCmp);
-	this.setTotalMinutesCmp(this.config.totalMinutesCmp);
-	this.setDurationCmp(this.config.durationCmp);
+	this.setRegions(this.config.regions || regions);//Pull in region data if available, otherwise initialize to empty state.
+	this.setTotalPercentCmp(this.config.totalPercentCmp);//save references to related components' itemIds
+	this.setTotalMinutesCmp(this.config.totalMinutesCmp);//...
+	this.setDurationCmp(this.config.durationCmp);///...
 	this.initializeRegions();//Now that the buttons are in place, set them to 'on' or 'off' according to region data
     },
     /*
@@ -485,7 +484,7 @@ Ext.define('app.view.component.RangeSelector', {
 	//console.log(this.total);
     },
     /*
-      recordTotal - This function tallies the total % selected in the RangeSelector and updates RangeSelector.totalPercentage
+      recordTotal - This function tallies the total % selected in the RangeSelector, updates RangeSelector.totalPercentage
       and displays the updated total value. Then calls function to display total minutes given the % and the lesson duration 
       retrieved from Lesson Duration input on the page.
      */
@@ -507,7 +506,7 @@ Ext.define('app.view.component.RangeSelector', {
     },
     /*
       displayTotalPercentage - This function updates the displayed total percentage value. Looks up the total % display component using
-      id fed into config at initialization. 
+      itemId fed into config at initialization. 
      */
     displayTotalPercent: function(){
 	var outString=Math.round(this.getTotal())+'%';
@@ -515,7 +514,7 @@ Ext.define('app.view.component.RangeSelector', {
     },
     /*
       displayTotalPercentage - This function updates the displayed total percentage value. Looks up the total % display component using
-      id fed into config at initialization. 
+      itemId fed into config at initialization. 
      */
     displayTotalMinutes: function(){
 	var totalMinutes=0, 

@@ -51,16 +51,5 @@ Ext.application({
 	//app.app.getController('ReportController').loadUserLog();
 	Ext.Viewport.add(Ext.create('app.view.JournalView', {})); 
 	app.app.getController('JournalController').loadUserLog();
-    },
-    onUpdated: function() {
-        Ext.Msg.confirm(
-            "Application Update",
-            "This application has just successfully been updated to the latest version. Reload now?",
-            function(buttonId) {
-                if (buttonId === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
     }
 });

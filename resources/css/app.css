@@ -4061,12 +4061,17 @@ body.x-desktop {
 }
 
 /*CUSTOM...*/
+.o-list-item-label {
+    border-bottom: solid 1px lightgrey;
+}
+
 .o-field-small {
     margin: 0;
     font-size: 12px;
 }
 
 .o-blue-bold {
+    margin: 0;
     font-size: 14px;
     font-weight: bold;
     color: blue;
