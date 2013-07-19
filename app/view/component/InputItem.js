@@ -1,23 +1,18 @@
-Ext.define('iPad2.view.component.InputItem', {
+Ext.define('app.view.component.InputItem', {
     extend: 'Ext.dataview.component.DataItem',
-    requires: ['iPad2.view.component.RangeSelector', 'Ext.Container', 'Ext.field.Text'],
+    requires: ['app.view.component.RangeSelector', 'Ext.Container', 'Ext.field.Text'],
     xtype: 'inputitem',
     alias: 'widget.inputitem',
     config: {
-	layout: 'fit',/*layout: {
-	    type: 'hbox',
-	    align: 'stretch'
-	},*/
 	style: 'border-bottom:solid 1px lightgrey',
-	idPrefix: '',
+ 	idPrefix: '',
+	layout: {
+	    type: 'hbox'
+	},
 	items: [
-	    /*{
+	    {
 		xtype: 'container',
-		layout: {
-		    type: 'hbox',
-		    align: 'stretch'
-		},
-		items: [*/
+		items: [
 		    {
 			xtype: 'textfield',
 			itemId: 'fullcodeCmp',
@@ -37,7 +32,7 @@ Ext.define('iPad2.view.component.InputItem', {
 			readOnly: true,
 			cls: 'o-field-small',
 			inputCls: 'o-field-small',
-			width: '50px'
+			width: '50px',
 		    },
 		    {
 			xtype: 'textfield',
@@ -47,19 +42,9 @@ Ext.define('iPad2.view.component.InputItem', {
 			readOnly: true,
 			cls: 'o-field-small',
 			inputCls: 'o-field-small',
-			width: '50px'
-		    },/*
+			width: '50px',
+		    }
 		]
-	    },*/
-	    {
-		xtype: 'rangeselector',
-		itemId: 'rangeSelector',
-		totalPercentCmp: '_percent',
-		totalMinutesCmp: '_minutes',
-		durationCmp: 'duration',
-		regions: '00000000000000000000',
-		ready: false,
-		flex: 1
 	    }
 	]
     },
@@ -68,29 +53,26 @@ Ext.define('iPad2.view.component.InputItem', {
 	this.setIdPrefix(this.config.prefix);
     },
     updateRecord: function(record){
-//	myrec=record;
-	console.log('rec:', record);
-	var rangeSelector=this.down('#rangeSelector'),
-	fullCodeCmp=this.down('#fullcodeCmp'),
+	var fullCodeCmp=this.down('#fullcodeCmp'),
 	totalPercentCmp=this.down('#totalPercentCmp'),
 	totalMinutesCmp=this.down('#totalMinutesCmp'),
 	prefix=this.getIdPrefix(),
 	idNum=record.get('id').match(/\d+/g)[0],
-	rsConfig=rangeSelector.getInitialConfig();
+	rsConfig={};
 	
 	fullCodeCmp.setValue(record.get('fullcode'));
+	fullCodeCmp.setItemId(prefix+idNum+'_label');
 	fullCodeCmp.description=record.get('frameworktitle');
-//	fullCodeCmp.
 	totalPercentCmp.setItemId(prefix+idNum+totalPercentCmp.idSuffix);
 	totalMinutesCmp.setItemId(prefix+idNum+totalMinutesCmp.idSuffix);
-	
+
 	rsConfig.regions=record.get('duration_mask');
 	rsConfig.itemId=(prefix+idNum);
 	rsConfig.totalPercentCmp=totalPercentCmp.getItemId();
 	rsConfig.totalMinutesCmp=totalMinutesCmp.getItemId();
-	rsConfig.ready=true;
-	rangeSelector.config=rsConfig;
-	rangeSelector.initialize();
+	rsConfig.durationCmp=('journal_duration');
+	rsConfig.flex=1;
+	this.add(Ext.create('app.view.component.RangeSelector', rsConfig));
 	this.callParent(arguments);
     }
 });

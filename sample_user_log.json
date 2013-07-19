@@ -17,7 +17,7 @@
                "fullcode" : "K.CC.2",
                "frameworktitle" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
                "percent" : "15",
-               "duration_mask" : "",
+               "duration_mask" : "00011111000011100100",
                "framework_id" : "9369"
             }
          ],
@@ -97,14 +97,14 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
-               "duration_mask" : "00000000000000000000",
+               "duration_mask" : "00000000000111111000",
                "framework_id" : "9368"
             },
             {
                "fullcode" : "Other Math Topics",
                "frameworktitle" : "Other Content Topics",
                "percent" : "10",
-               "duration_mask" : "00000000000000000000",
+               "duration_mask" : "00000111000000000000",
                "framework_id" : "10201"
             }
          ],
@@ -132,14 +132,14 @@
                "fullcode" : "K.CC.1 ",
                "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
-               "duration_mask" : "00000000000000000000",
+               "duration_mask" : "00001111000000000000",
                "framework_id" : "9368"
             },
             {
                "fullcode" : "Other Math Topics",
                "frameworktitle" : "Other Content Topics",
                "percent" : "10",
-               "duration_mask" : "00000000000000000000",
+               "duration_mask" : "11000000000000001111",
                "framework_id" : "10201"
             }
          ],

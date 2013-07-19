@@ -74,6 +74,23 @@ Ext.define('app.controller.ReportController', {
 	},
 	env: ''
     },
+    loadUserLog:function(){
+        var userLog = Ext.getStore('ULStoreR'),
+	token=app.app.token || null,
+	me=this;
+	if(token){
+	    var proxy=userLog.getProxy();
+            proxy.setExtraParam('token', token);
+	    proxy.setUrl('../promse/journal?action=getuserlog14');
+	}
+	Ext.Viewport.setMasked({xtype:'loadmask',message:'Loading user logs...'});
+        userLog.load({
+	    callback: function(records, operations, success){
+		Ext.Viewport.setMasked(false);
+		me.setEnv((token)?'server':'local');
+            }
+	});
+    },	
     toggleMenu: function(){
 	var menu=this.getMenu(),
         menuButton=this.getMenuButton(),
@@ -230,23 +247,6 @@ Ext.define('app.controller.ReportController', {
 	    filterDetailList.setTargetDepth(filterTier.getValue()[0]);
 	}
     },
-    loadUserLog:function(){
-        var userLog = Ext.getStore('ULStoreR'),
-	token=app.app.token || null,
-	me=this;
-	if(token){
-	    var proxy=userLog.getProxy();
-            proxy.setExtraParam('token', token);
-	    proxy.setUrl('../promse/journal?action=getuserlog14');
-	}
-	Ext.Viewport.setMasked({xtype:'loadmask',message:'Loading user logs...'});
-        userLog.load({
-	    callback: function(records, operations, success){
-		Ext.Viewport.setMasked(false);
-		me.setEnv((token)?'server':'local');
-            }
-	});
-    },	
     updateContent: function(settings){
         var report=this.getReport(),
 	content=this.getContent(),

@@ -47,8 +47,10 @@ Ext.application({
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
         // Initialize the main view
-	Ext.Viewport.add(Ext.create('app.view.ReportView', {}));
-	app.app.getController('ReportController').loadUserLog();
+	//Ext.Viewport.add(Ext.create('app.view.ReportView', {}));
+	//app.app.getController('ReportController').loadUserLog();
+	Ext.Viewport.add(Ext.create('app.view.JournalView', {})); 
+	app.app.getController('JournalController').loadUserLog();
     },
     onUpdated: function() {
         Ext.Msg.confirm(

@@ -10,7 +10,7 @@
   of 5 results in splitting the timeline into 20 buttons, each button representing 
   5% of the total.
 */
-Ext.define('iPad2.view.component.RangeSelector', {
+Ext.define('app.view.component.RangeSelector', {
     extend: 'Ext.SegmentedButton',
     alias: 'widget.rangeselector',
     xtype: 'rangeselector',
@@ -25,7 +25,6 @@ Ext.define('iPad2.view.component.RangeSelector', {
 	    pack: 'center',
 	    align: 'stretchmax'
 	},
-	ready: true,
 	cls: 'o-rangeselector',//Important for CSS styling
 	allowMultiple: true,//Do not change
 	increment: 5,//This determines the granularity (number of buttons) of the RangeSelector. For example, default value of 5 results in 20 buttons, each worth 5% of total
@@ -211,7 +210,7 @@ Ext.define('iPad2.view.component.RangeSelector', {
 			buttons[i].area=Ext.util.Region.getRegion(buttons[i].element);
 		    }
 		    this.setArea(Ext.util.Region.getRegion(this.element));
-		    //console.log('selector resized', this.element.dom.scrollWidth);
+		    console.log('selector resized', this.element.dom.scrollWidth);
 		    //console.log(this.area.toString());
 		}
 	    },
@@ -233,16 +232,13 @@ Ext.define('iPad2.view.component.RangeSelector', {
      */
     initialize: function(){
 	this.callParent();//Important - takes care of establishing everything associated with the parent class (SegmentedButton)
-	if(this.config.ready && this.config.ready==false){//Check for ready flag, which is required when RangeSelector is created before all config data is present
-	    return false;
-	}	    
 	//Establish number of buttons given increment setting
 	var increment=this.getIncrement(),//default of 5 is given in class definition config above
 	numButtons=(100/increment),
 	regions='',
 	i=0;
-
 	//Create and initialize buttons
+	this.removeAll();
 	for(;i<numButtons;i++){
 	    var button=Ext.create('Ext.Button', {//There are a number of custom properties being added to the button class. In the future, an extension of Ext.Button might be nice
 		index: i,//custom index used to identify buttons
@@ -472,7 +468,6 @@ Ext.define('iPad2.view.component.RangeSelector', {
 	tempRegions='',
 	i=0,
 	total=0;
-	
 	for(;i<buttonCount;i++){
 	    if(this.isPressed(buttons[i])){
 		tempRegions+='1';
