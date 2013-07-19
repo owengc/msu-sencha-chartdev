@@ -91,6 +91,8 @@ Ext.define('app.view.component.InputItem', {
 	rsConfig.durationCmp=('journal_duration');//IMPORTANT - make sure this is set to the itemId of the lesson duration numeric input field
 	rsConfig.flex=1;
 	this.add(Ext.create('app.view.component.RangeSelector', rsConfig));
+	this.setData(record);
+	this.setItemId('ii'+idNum);
 	this.callParent(arguments);
     }
 });
