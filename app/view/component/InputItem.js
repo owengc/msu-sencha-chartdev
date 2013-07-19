@@ -12,13 +12,15 @@ Ext.define('app.view.component.InputItem', {
 	items: [
 	    {
 		xtype: 'container',
+		layout: 'hbox',
 		items: [
 		    {
 			xtype: 'textfield',
 			itemId: 'fullcodeCmp',
+			idSuffix: '_label',
 			inputCls: 'o-blue-bold',
 			docked: 'top',
-			width: '100px',
+			width: '140px',
 			description: '',
 			label: '',
 			readOnly: true,
@@ -32,7 +34,7 @@ Ext.define('app.view.component.InputItem', {
 			readOnly: true,
 			cls: 'o-field-small',
 			inputCls: 'o-field-small',
-			width: '50px',
+			width: '70px',
 		    },
 		    {
 			xtype: 'textfield',
@@ -42,7 +44,7 @@ Ext.define('app.view.component.InputItem', {
 			readOnly: true,
 			cls: 'o-field-small',
 			inputCls: 'o-field-small',
-			width: '50px',
+			width: '70px',
 		    }
 		]
 	    }
@@ -53,6 +55,7 @@ Ext.define('app.view.component.InputItem', {
 	this.setIdPrefix(this.config.prefix);
     },
     updateRecord: function(record){
+	console.log('rec', record);
 	var fullCodeCmp=this.down('#fullcodeCmp'),
 	totalPercentCmp=this.down('#totalPercentCmp'),
 	totalMinutesCmp=this.down('#totalMinutesCmp'),
@@ -61,12 +64,14 @@ Ext.define('app.view.component.InputItem', {
 	rsConfig={};
 	
 	fullCodeCmp.setValue(record.get('fullcode'));
-	fullCodeCmp.setItemId(prefix+idNum+'_label');
+	fullCodeCmp.setItemId(prefix+idNum+fullCodeCmp.idSuffix);
 	fullCodeCmp.description=record.get('frameworktitle');
 	totalPercentCmp.setItemId(prefix+idNum+totalPercentCmp.idSuffix);
 	totalMinutesCmp.setItemId(prefix+idNum+totalMinutesCmp.idSuffix);
 
+
 	rsConfig.regions=record.get('duration_mask');
+	console.log(rsConfig.regions);
 	rsConfig.itemId=(prefix+idNum);
 	rsConfig.totalPercentCmp=totalPercentCmp.getItemId();
 	rsConfig.totalMinutesCmp=totalMinutesCmp.getItemId();

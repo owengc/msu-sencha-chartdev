@@ -25,6 +25,7 @@ Ext.define('app.model.ULStandardModelR', {
 		 return record.get('frameworktitle');
 	     }
 	    },
+	    {name: 'duration_mask', type: 'string'},
             {name: 'percent', type: 'int'},
             {name: 'framework_id', type: 'int'},
 	    {name: 'standard_id', type: 'int',
