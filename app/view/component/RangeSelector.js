@@ -95,7 +95,7 @@ Ext.define('app.view.component.RangeSelector', {
 			var lastButton=this.getButtonByIndex(state.lastTouched);
 
 			/*this block helps deal with buggy/missing touchmove events*/
-			if(Math.abs(state.touched-state.lastTouched)>1){//A gap is present any time the 
+			if(Math.abs(state.touched-state.lastTouched)>1){//A gap is present any time the 'touched' button is not adjacent to the 'lastTouched' button 
 			    var gapStart=(state.direction=='right')?state.lastTouched+1:state.touched+1,
 			    gapEnd=(state.direction=='right')?state.touched-1:state.lastTouched-1,
 			    i=gapStart;
