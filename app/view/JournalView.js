@@ -21,7 +21,7 @@ Ext.define('app.view.JournalView', {
 		labelWidth: '115px',
 		labelWrap: true,
 		height: '60px',
-		itemId: 'journal_duration',//make sure that this matches the 'durationFieldCmp' setting in InputItem
+		itemId: 'duration',//make sure that this matches the 'durationFieldCmp' setting in InputItem
 		minValue: 0,
 		maxValue: 360,
 		value: 0
@@ -39,62 +39,6 @@ Ext.define('app.view.JournalView', {
 		    idPrefix: 'rs'
 		}
 	    },
-	    /*{
-		xtype: 'container',
-		layout: {
-		    type: 'hbox'
-		},
-		items: [    
-		    {
-			xtype: 'container',
-			layout: 'hbox',
-			items: [
-			    {
-				xtype: 'textfield',
-				itemId: 'rs99_label',
-				inputCls: 'o-blue-bold',
-				docked: 'top',
-				width: '140px',
-				description: '',
-				label: '',
-				readOnly: true,
-				cls: 'o-field-small',
-				value: 'K.OA.3'
-			    },
-			    {
-				xtype: 'textfield',
-				itemId: 'rs99_percent',
-				idSuffix: '_percent',
-				label: '',
-				readOnly: true,
-				cls: 'o-field-small',
-				inputCls: 'o-field-small',
-				width: '70px',
-			    },
-			    {
-				xtype: 'textfield',
-				itemId: 'rs99_minutes',
-				idSuffix: '_minutes',
-				label: '',
-				readOnly: true,
-				cls: 'o-field-small',
-				inputCls: 'o-field-small',
-				width: '70px',
-			    }
-			]
-		    },
-		    {
-			xtype: 'rangeselector',
-			itemId: 'rs99',
-			totalPercentCmp: 'rs99_percent',
-			totalMinutesCmp: 'rs99_minutes',
-			durationCmp: 'journal_duration',
-			regions: '11110000001111111100',
-			ready: true,
-			flex: 1
-		    }
-		]
-	    },*/
 	    {
 		xtype: 'button',
 		text: 'Send',

@@ -9,7 +9,7 @@ Ext.define('app.controller.JournalController', {
 	stores: ['ULStoreR', 'CCStoreR'],
 	views: ['JournalView'],
 	refs: {
-	    durationField: '[itemId=journal_duration]',//mysterious. in all my other controller refs, using # with itemId works perfectly. not so with this one
+	    durationField: '[itemId=duration]',//mysterious. in all my other controller refs, using # with itemId works perfectly. not so with this one
 	    inputList: '#journal_inputList'
 	},
 	control: {
