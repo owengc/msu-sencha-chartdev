@@ -149,14 +149,14 @@ Ext.define('app.controller.ReportController', {
         var settings=this.getMenu().getValues(true, false);
       	if(this.validateMenuForm(settings)){
 	    var report=this.getReport();
-	    if(JSON.stringify(settings)!=JSON.stringify(report.getSettings())){
+	    if(this.settingsChanged(settings, report.getSettings())){
 		report.setSettings(settings);
 		if(this.updateContent(settings)){
 		    return true;
 		}
 		else{
 		    Ext.Msg.alert("Oops!", "Those settings resulted in an empty report. Please adjust the settings and try again.", Ext.emptyFn);
-		    report.setMenuState({});
+		    report.setSettings({});
                     return false;
 		}
 	    }
@@ -182,6 +182,14 @@ Ext.define('app.controller.ReportController', {
 	    }
 	}
         return true;
+    },
+    settingsChanged: function(obj1, obj2){
+        for(p in obj1){//by no means a robust object comparison operator, but should do the trick in this context 
+            if(!obj2.hasOwnProperty(p) || obj1[p].toString()!=obj2[p].toString()){
+                return true;
+            }
+        }
+        return false;
     },
     toggleFilter: function(scope, s, t, newValue, oldValue){
 	var filter=this.getFilter();
@@ -255,10 +263,10 @@ Ext.define('app.controller.ReportController', {
         var report=this.getReport(),
 	content=this.getContent(),
 	userLogStore=Ext.getStore('ULStoreR');
+	userLogStore.clearFilter(true);
 	if(content){
 	    report.remove(content, true);
 	}
-
 	if(settings.fromDate && settings.toDate){
 	    userLogStore.filterBy(function(rec, id){
 		var date=rec.get('datetaught');
@@ -839,29 +847,31 @@ Ext.define('app.controller.ReportController', {
     exportReport: function(){
 	//TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
 	var settings=this.getReport().getSettings(),
-	content=this.getContent(),
-	html='<!doctype><html><head><title>Report</title></head><body>';
+        menu=this.getMenu(),
+	content=this.getContent();
+        menu.submit({
+            url: '../promse/journal?token=8fbbd6f7c065e7176f47518922b38be0;action=generatereport;_dc=1372874005200;limit=25',
+            method: 'POST',
+	    success: function(response){
+                console.log(response);
+	    },
+            failure: function(response){
+                console.log(response);
+            }
+        });
+
+	//html=('<!doctype><html><head><title>Report for '+Ext.Date.format(settings.fromDate, 'n/j/Y')+'-'+Ext.Date.format(settings.toDate, 'n/j/Y')+'</title></head><body>'); 
 	if(settings.type=='list'){
-	    var reportStore=Ext.getStore('ReportStoreR'),
-	    groups=reportStore.getGroups(),
-	    records, record, item='',
-	    pdf=new jsPDF('p', 'in', 'letter');//setting up for 8.5x11 portrait
-	    pdf.marginX=0.5;
-	    pdf.marginY=0.5;
-	    pdf.pageWidth=7.5;
-	    pdf.pageHeight=10;
-	    pdf.lastY=pdf.marginY;
-	    pdf.heights=[];
-	    pdf.maxHeight=0;
-	    pdf.averageHeight=0;
-	    for(var g in groups){
+            /*var reportStore=Ext.getStore('ReportStoreR'), 
+            groups=reportStore.getGroups(),
+            records, record, item='';
+            for(var g in groups){
 		records=groups[g].children;
-		html+=('<h2 style="display:inline;border-bottom:5px solid black;width:100%">'+groups[g].name+'</h2>');
+		html+=('<h2 style="border-bottom:5px solid black;width:100%">'+groups[g].name+'</h2>');
 		for(var r in records){
 		    record=records[r];
-		    item+=(record.data.class_name)?('<h3 style="float:left;font-weight:bold;text-align:left;display:inline;margin-bottom:0">'+record.data.class_name+'</h3>'):'';
-		    item+=(record.data.date_taught)?('<strong>Date:</strong> '+Ext.Date.format(record.data.date_taught, 'n/j/Y')):'';
-		    item+='<div style="clear:both;border-bottom:2px solid black;width:100%;"></div>';
+		    item=(record.data.class_name)?('<h3 style="border-bottom:2px solid black;">'+record.data.class_name+'</h3>'):'';
+		    item+=(record.data.date_taught)?('<strong>Date:</strong> '+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'<br/>'):'';
 		    item+=(record.data.code)?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+record.data.code+'<br/>'):'';
 		    item+=(record.data.description)?('<strong>Description:</strong> '+record.data.description+'<br/>'):'';
 		    item+=(record.data.time_spent)?('<strong>Time Spent:</strong> '+record.data.time_spent+' minutes<br/>'):'';
@@ -873,117 +883,28 @@ Ext.define('app.controller.ReportController', {
 		    if(materials && pages){
 			item+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
 		    }
-		    item+=(materials)?'<br/>':'';
-		    if(activities.length>0){
+		    item+=(materials)?'<br/>':''; 
+		    if(activities.length>0){                                                                                                                                                         
 			var listString='';
 			item+='<strong>Lesson Activities:</strong> ';
 			for(index in activities){
-			    listString+=(listString!='')?', ':'';
-			    listString+=activities[index].activity_name;
+                            listString+=(listString!='')?', ':'';
+                            listString+=activities[index].activity_name;
 			}
-			item+=(listString+'<br/>');
+                        item+=(listString+'<br/>');
 		    }
 		    item+=(record.data.notes)?('<strong>Notes:</strong> '+record.data.notes+'<br/>'):'';
-		    html+=item;
-		    html+='<hr/>';
-		}
-		html+='<h1></h1>';
-	    }
+                    html+=item;
+                    html+='<br/>';
+                }
+                html+='<br/>';
+            }
 	    html+='</body></html>';
-//	    var newwindow=window.open();
-//	    newwindow.document.write(html);
-	    var specialElementHandlers={
-		// element with id of "bypass" - jQuery style selector
-		'#bypassme': function(element, renderer){
-		    // true = "handled elsewhere, bypass text extraction"
-		    console.log('bypass');
-		    return true;
-		},
-		'HR': function(element, renderer){
-		    var pdf=renderer.pdf,
-		    height=renderer.y-pdf.lastY,
-		    sum=0,
-		    numHeights=pdf.heights.length,
-		    i=0;
-		    console.log('renderer.y:', renderer.y, 'height:',height);
-		    for(;i<numHeights;i++){
-			sum+=(pdf.heights[i]);
-		    }
-		    pdf.averageHeight=(sum/numHeights);
-		    if(height>pdf.maxHeight){
-			pdf.maxHeight=height;
-		    }
-		    if((renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY) || 
-		       (renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY-pdf.averageHeight) ||
-		       (renderer.y+pdf.maxHeight) > (pdf.pageHeight-pdf.marginY-pdf.maxHeight)){
-			pdf.addPage();
-			//console.log(element, renderer);
-			renderer.y=pdf.marginY;
-		    }
-		    else{
-			renderer.y+=0.15;
-		    }
-		    pdf.heights.push(renderer.y-pdf.lastY),
-		    pdf.lastY=(renderer.y+height);
-		    return true;
-		},
-		'DIV': function(element, renderer){
-		    if(element.getAttribute('class')=='header_line'){
-			var style=element.getAttribute('style'),
-			ruleHash={};
-			if(style){
-			    var rules=style.split(";");
-			    for(r in rules){
-				ruleHash[rules[r].split(':')[0]]=rules[r].split(':')[1];
-				//console.log(rules[r].split(':')[0], ':', rules[r].split(':')[1]);
-				//	if(selector=='border-bottom"
-			    }
-			}/*
-			if(ruleHash['border-bottom']){
-			    var value=ruleHash['border-bottom'].split(' ');
-			    thickness=value[0],
-			    color=value[1],
-			    type=value[2];
-			    if(ruleHash['width']){
-				value=ruleHash['width'],
-				length;
-				if(value.search(/%$/)){
-				    length=(parseInt(value)/100)*
-			    }
-			}
-			pdf.line(renderer.x, renderer.y,*/
-			return true;
-		    }
-		    else{
-			return false;
-		    }
-		},
-		'#jsPDF': function(element, renderer){
-		    console.log(renderer);
-		    var style=element.getAttribute('style'),
-		    className=element.getAttribute('class'),
-		    ruleHash={};
-		    if(className && style){
-			var rules=style.split(";");
-			for(r in rules){
-			    ruleHash[rules[r].split(':')[0]]=rules[r].split(':')[1];
-			    console.log(rules[r].split(':')[0], ':', rules[r].split(':')[1]);
-			    //	if(selector=='border-bottom"
-			}
-			if(className=='header_line'){
-//			    renderer.line(
-			}
-		    }
-		    return element;
-		}
-	    };
-	    html=html.replace(/<br\/>/g, '<h1></h1>');//hacky, but will have to suffice until jsPDF provides documentation 
-	    pdf.fromHTML(html, 0.5, 0.5, {'width': 7.5, 'elementHandlers': specialElementHandlers});
-	    //pdf.output('dataurlnewwindow', {});
-	    //pdf.save(settings.tier+'_list_'+Ext.Date.format(settings.fromDate, 'MdY')+'-'+Ext.Date.format(settings.toDate, 'MdY')+'.pdf');
+	    var newwindow=window.open();
+	    newwindow.document.write(html);*/
 	}
 	else{
-
+	    
 	}
     }
 });

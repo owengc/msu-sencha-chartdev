@@ -66,8 +66,10 @@ Ext.define('app.view.ReportView', {
 			xtype: 'fieldset',
 			title: 'Configure Report:',
 			defaults: {
-			    minHeight: 60,
-			    labelWidth: '15%'
+			    minHeight: '60px',
+			    labelWidth: '150px',
+			    labelAlign: 'left',
+			    width: '100%'
 			},	
 			items: [			    
 			    {
@@ -453,7 +455,8 @@ Ext.define('app.view.ReportView', {
 	]
     },//report
     initialize: function(){
-	this.callParent(arguments); 
+	this.callParent(arguments);
+	this.setSettings({});
 	this.setInitialized(true);
 	
 	//for testing/defaults:
