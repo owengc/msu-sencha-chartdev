@@ -458,12 +458,13 @@ Ext.define('app.view.ReportView', {
 	
 	//for testing/defaults:
 	var today=new Date(),
-	lastWeek=new Date();
+	lastWeek=new Date(),
+	aug_1_2011=new Date('8-1-2011');
 	lastWeek.setDate(today.getDate()-7);
 	Ext.ComponentQuery.query('#report_menu')[0].setValues({
             type: 'list',
             tier: 'standard',
-            fromDate: lastWeek,
+            fromDate: aug_1_2011,
             toDate: today
         });
     }
