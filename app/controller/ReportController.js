@@ -861,7 +861,7 @@ Ext.define('app.controller.ReportController', {
             failure: function(form, response){
                 console.log(response);
 		Ext.Viewport.setMasked(false);
-		Ext.Msg.alert("Oops!", "Failed to generate report. Please try again later or contact the system administrator for assitance.", Ext.emptyFn)
+		Ext.Msg.alert("Oops!", "Failed to generate report. Please try again later or contact the system administrator for assistance.", Ext.emptyFn)
             },
 	    scope: me
         });
