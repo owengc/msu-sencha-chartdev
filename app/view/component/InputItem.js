@@ -91,7 +91,7 @@ Ext.define('app.view.component.InputItem', {
 				    var data=this.up('inputitem').getData().data;
 				    var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+data.fullcode+'</h2>');
 				    outString+=('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>');
-				    outString+=('<strong>Description:</strong> '+data.frameworktitle);
+				    outString+=('<strong>Description:</strong> '+data.description);
 				    this.infoPanel.setHtml(outString);
 				    Ext.Viewport.add(this.infoPanel);
 				}
