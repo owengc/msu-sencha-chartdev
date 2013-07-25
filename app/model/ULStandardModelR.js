@@ -14,15 +14,10 @@ Ext.define('app.model.ULStandardModelR', {
 		    return fullCode;
 		}
 	    },
-	    {name: 'frameworktitle', type: 'string',
-	     convert: function(value, record){
-		 var frameworkTitle=value.replace(/^\s+|\s+$/g, '');
-		 return frameworkTitle;
-	     }
-	    },
 	    {name: 'description', type: 'string',
 	     convert: function(value, record){
-		 return record.get('frameworktitle');
+		 var description=value.replace(/^\s+|\s+$/g, '');
+		 return description;
 	     }
 	    },
 	    {name: 'duration_mask', type: 'string'},

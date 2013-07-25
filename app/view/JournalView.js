@@ -48,21 +48,21 @@ Ext.define('app.view.JournalView', {
 		    var standards=[
 			{
                             "framework_id" : "9368",
-                            "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+                            "description" : "1. Count to 100 by ones and by tens.  ",
                             "fullcode" : "K.CC.1 ",
 			    "levelname" : "Standard",
                             "leaf" : "true",
 			},
 			{
                             "framework_id" : "9369",
-                            "frameworktitle" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
+                            "description" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
                             "fullcode" : "K.CC.2",
                             "levelname" : "Standard",
                             "leaf" : "true",
 			},
 			{
                             "framework_id" : "9370",
-                            "frameworktitle" : "3. Write numbers from 0 to 20. Represent a number of objects with a written numeral 0-20 (with 0 representing a count of no objects). ",
+                            "description" : "3. Write numbers from 0 to 20. Represent a number of objects with a written numeral 0-20 (with 0 representing a count of no objects). ",
                             "fullcode" : "K.CC.3",
                             "levelname" : "Standard",
                             "leaf" : "true",

@@ -37,7 +37,8 @@ Ext.define('app.view.component.InputItem', {
 				    Ext.Msg.confirm("Remove Standard", "Are you sure you want to remove <b>"+ii.getData().data.fullcode+"</b>?", 
 						    function(response){
 							if(response=='yes'){
-							    var store=ii.up('dataview').getStore(),
+//							    var store=ii.up('dataview').getStore(),
+							    var store=Ext.getStore('ULStandardStoreR');
 							    record=store.getById(ii.getData().id);
 							    store.remove(record);
 							}
