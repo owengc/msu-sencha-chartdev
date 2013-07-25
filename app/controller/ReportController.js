@@ -105,7 +105,7 @@ Ext.define('app.controller.ReportController', {
 		}
 		setTimeout(function(){
 		    exportButton.setUi('normal');
-		    //exportButton.hide(); THIS SHOULD BE UN-COMMENTED WHEN PRINTING IS READY
+		    exportButton.hide();
 		    menu.show();
 		}, 250);
 		setTimeout(function(){
@@ -136,7 +136,7 @@ Ext.define('app.controller.ReportController', {
 		    setTimeout(function(){
 			content.show();
 			exportButton.setUi('confirm');
-			//exportButton.show(); THIS SHOULD BE UN-COMMENTED WHEN PRINTING IS READY
+			exportButton.show();
 		    }, 250);
 		    if(panZoomButton){
 			setTimeout(function(){panZoomButton.show();}, 500);
