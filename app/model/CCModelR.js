@@ -1,7 +1,6 @@
 Ext.define('app.model.CCModelR', {
     extend: 'Ext.data.Model',
     config: {
-	idProperty: 'id',
         fields: [
 	    {name: 'grade_id', type: 'string'},
 	    {name: 'domain_id', type: 'string'},

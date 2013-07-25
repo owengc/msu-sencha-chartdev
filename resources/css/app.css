@@ -2776,7 +2776,7 @@ audio {
 /* line 40, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/base/src/form/_Panel.scss */
 .x-label-align-left,
 .x-label-align-right {
-  -webkit-box-orient: horizontal;
+  -webkit-box-orient: horizontal !important;
   -ms-flex-direction: row;
   flex-direction: row;
 }
