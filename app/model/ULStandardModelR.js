@@ -33,6 +33,7 @@ Ext.define('app.model.ULStandardModelR', {
 	     convert: function(value, record){
 		 if(value!=null){
 		     var description=value.replace(/^\s+|\s+$/g, '');
+		     return description || 'No description.';
 		 }
 		 return '';
 	     }
