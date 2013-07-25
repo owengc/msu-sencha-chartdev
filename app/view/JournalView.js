@@ -33,10 +33,53 @@ Ext.define('app.view.JournalView', {
 		height: '200px',
 		scrollable: 'vertical',
 		store: null,
+		maxItemCache: 0,
 		useComponents: true,
 		defaultType: 'inputitem',
 		itemConfig: {
 		    idPrefix: 'rs'
+		},
+		disableSelection: true
+	    },
+	    {
+		xtype: 'button',
+		text: 'Add Standards',
+		handler: function(){
+		    var standards=[
+			{
+                            "framework_id" : "9368",
+                            "frameworktitle" : "1. Count to 100 by ones and by tens.  ",
+                            "fullcode" : "K.CC.1 ",
+			    "levelname" : "Standard",
+                            "leaf" : "true",
+			},
+			{
+                            "framework_id" : "9369",
+                            "frameworktitle" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
+                            "fullcode" : "K.CC.2",
+                            "levelname" : "Standard",
+                            "leaf" : "true",
+			},
+			{
+                            "framework_id" : "9370",
+                            "frameworktitle" : "3. Write numbers from 0 to 20. Represent a number of objects with a written numeral 0-20 (with 0 representing a count of no objects). ",
+                            "fullcode" : "K.CC.3",
+                            "levelname" : "Standard",
+                            "leaf" : "true",
+			}
+		    ],
+		    index=Math.floor(Math.random()*3),
+		    standard=standards[index],
+		    store=Ext.getStore('ULStandardStoreR');
+		    if(store){
+			if(store.findRecord('framework_id', standard['framework_id'], 0, false, true, true)){
+			    console.log('duplicate standard chosen');
+			}
+			else{
+			    store.add(standard);
+			}
+			//console.log(store.findRecord('framework_id', standard['framework_id'], 0, false, true, true));
+		    }
 		}
 	    },
 	    {

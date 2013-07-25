@@ -7,83 +7,109 @@ Ext.define('app.view.component.InputItem', {
  	idPrefix: '',
 	data: null,
 	layout: {
-	    type: 'hbox'
+	    type: 'hbox',
+	    pack: 'left'
 	},
+	cls: 'o-list-item',
 	items: [
 	    {
 		xtype: 'container',
-		cls: 'o-list-item-label',
 		layout: 'hbox',
 		items: [
-		    {
-			xtype: 'textfield',
-			itemId: 'fullcodeCmp',
-			idSuffix: '_label',
-			inputCls: 'o-blue-bold',
-			docked: 'top',
-			width: '140px',
-			description: '',
-			label: '',
-			readOnly: true,
-			cls: 'o-field-small',
+		    { 
+			xtype: 'container',
+			layout: {
+			    type: 'vbox',
+			    align: 'center',
+			    pack: 'center'
+			},
+			cls: 'o-button-wrapper',
+			items: [
+			    {
+				xtype: 'button',
+				cls: 'o-delete-button',
+				text: 'X',
+				width: '25px',
+				height: '25px',
+				ui: 'plain-round',
+				handler: function(){
+				    var ii=this.up('inputitem');
+				    Ext.Msg.confirm("Remove Standard", "Are you sure you want to remove <b>"+ii.getData().data.fullcode+"</b>?", 
+						    function(response){
+							if(response=='yes'){
+							    var store=ii.up('dataview').getStore(),
+							    record=store.getById(ii.getData().id);
+							    store.remove(record);
+							}
+						    });
+				}
+			    }
+			]
 		    },
 		    {
-			xtype: 'textfield',
-			itemId: 'totalPercentCmp',
-			idSuffix: '_percent',
-			label: '',
-			readOnly: true,
-			cls: 'o-field-small',
-			inputCls: 'o-field-small',
-			width: '70px',
-		    },
-		    {
-			xtype: 'textfield',
-			itemId: 'totalMinutesCmp',
-			idSuffix: '_minutes',
-			label: '',
-			readOnly: true,
-			cls: 'o-field-small',
-			inputCls: 'o-field-small',
-			width: '70px',
-		    }
-		],
-		listeners: {
-		    element: 'element',
-		    'tap': function(){
-			if(!this.infoPanel){
-			    this.infoPanel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 150, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []});
-			    var data=this.up('inputitem').getData().data;
-			    var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+data.fullcode+'</h2>');
-			    outString+=('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>');
-			    outString+=('<strong>Description:</strong> '+data.frameworktitle);
-			    this.infoPanel.setHtml(outString);
-			    Ext.Viewport.add(this.infoPanel);
+			xtype: 'container',
+			layout: 'hbox',
+			items: [
+			    {
+				xtype: 'textfield',
+				itemId: 'fullcodeCmp',
+				idSuffix: '_label',
+				inputCls: 'o-blue-bold',
+				docked: 'top',
+				width: '140px',
+				description: '',
+				label: '',
+				readOnly: true,
+				cls: 'o-field-small',
+			    },
+			    {
+				xtype: 'textfield',
+				itemId: 'totalPercentCmp',
+				idSuffix: '_percent',
+				label: '',
+				readOnly: true,
+				cls: 'o-field-small',
+				inputCls: 'o-field-small',
+				width: '70px',
+			    },
+			    {
+				xtype: 'textfield',
+				itemId: 'totalMinutesCmp',
+				idSuffix: '_minutes',
+				label: '',
+				readOnly: true,
+				cls: 'o-field-small',
+				inputCls: 'o-field-small',
+				width: '70px',
+			    }
+			],
+			listeners: {
+			    element: 'element',
+			    'tap': function(){
+				if(!this.infoPanel){
+				    this.infoPanel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 150, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []});
+				    var data=this.up('inputitem').getData().data;
+				    var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+data.fullcode+'</h2>');
+				    outString+=('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>');
+				    outString+=('<strong>Description:</strong> '+data.frameworktitle);
+				    this.infoPanel.setHtml(outString);
+				    Ext.Viewport.add(this.infoPanel);
+				}
+				this.infoPanel.show();
+			    }
 			}
-			this.infoPanel.show();
-		    },
-		    'swipe': function(){
-			var ii=this.up('inputitem');
-			Ext.Msg.confirm("Remove Standard", "Are you sure you want to remove <b>"+ii.getData().data.fullcode+"</b>?", 
-					function(response){
-					    if(response=='yes'){
-						var store=ii.up('dataview').getStore(),
-						record=store.getById(ii.getData().id);
-						store.remove(record);
-						ii.destroy();
-					    }
-					});
 		    }
-		}
+		]
 	    }
 	]
     },
     initialize: function(){
-	this.callParent(arguments);
-	this.setIdPrefix(this.config.prefix);
+	this.setIdPrefix(this.config.idPrefix);
     },
     updateRecord: function(record){
+	this.callParent(arguments);
 	if(record){
+	    console.log('inputlist record added:', record);
 	    var fullcodeCmp=this.down('#fullcodeCmp'),
 	    totalPercentCmp=this.down('#totalPercentCmp'),
 	    totalMinutesCmp=this.down('#totalMinutesCmp'),
@@ -110,6 +136,5 @@ Ext.define('app.view.component.InputItem', {
 	    this.setData(record);
 	    this.setItemId('ii'+idNum);
 	}	    
-	this.callParent(arguments);
     }
 });
