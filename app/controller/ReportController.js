@@ -848,16 +848,22 @@ Ext.define('app.controller.ReportController', {
 	//TODO:prepare HTML for export depending on report type, use jsPDF to generate PDF. then find a way to email it
 	var settings=this.getReport().getSettings(),
         menu=this.getMenu(),
-	content=this.getContent();
+	me=this;
+	Ext.Viewport.setMasked({xtype:'loadmask',message:'Generating report...'});
         menu.submit({
             url: '../promse/journal?token=8fbbd6f7c065e7176f47518922b38be0;action=generatereport;_dc=1372874005200;limit=25',
             method: 'POST',
-	    success: function(response){
+	    success: function(form, response){
                 console.log(response);
+		Ext.Viewport.setMasked(false);
+		Ext.Msg.alert("Success!", "Successfully generated report. Please check your email to retrieve your PDF.", Ext.emptyFn)
 	    },
-            failure: function(response){
+            failure: function(form, response){
                 console.log(response);
-            }
+		Ext.Viewport.setMasked(false);
+		Ext.Msg.alert("Oops!", "Failed to generate report. Please try again later or contact the system administrator for assitance.", Ext.emptyFn)
+            },
+	    scope: me
         });
 
 	//html=('<!doctype><html><head><title>Report for '+Ext.Date.format(settings.fromDate, 'n/j/Y')+'-'+Ext.Date.format(settings.toDate, 'n/j/Y')+'</title></head><body>'); 

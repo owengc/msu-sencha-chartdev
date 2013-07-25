@@ -61,6 +61,7 @@ Ext.define('app.view.ReportView', {
 		height: '100%',
 		showAnimation: {type: 'slideIn', direction: 'down', duration: 250},
 		hideAnimation: {type: 'slideOut', direction: 'up', duration: 250},
+		standardSubmit: false,
 		items: [
 		    {
 			xtype: 'fieldset',
