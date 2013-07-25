@@ -105,7 +105,7 @@ Ext.define('app.controller.ReportController', {
 		}
 		setTimeout(function(){
 		    exportButton.setUi('normal');
-		    exportButton.hide();
+		    //exportButton.hide(); THIS SHOULD BE UN-COMMENTED WHEN PRINTING IS READY
 		    menu.show();
 		}, 250);
 		setTimeout(function(){
@@ -133,7 +133,11 @@ Ext.define('app.controller.ReportController', {
 		}, 500);
 		content=this.getContent();
 		if(content){
-		    setTimeout(function(){content.show();exportButton.setUi('confirm');exportButton.show();}, 250);
+		    setTimeout(function(){
+			content.show();
+			exportButton.setUi('confirm');
+			//exportButton.show(); THIS SHOULD BE UN-COMMENTED WHEN PRINTING IS READY
+		    }, 250);
 		    if(panZoomButton){
 			setTimeout(function(){panZoomButton.show();}, 500);
 		    }
