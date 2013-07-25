@@ -14,11 +14,11 @@
          "classname" : "2nd Grade Math",
          "standards" : [
             {
-               "fullcode" : "K.CC.2",
+               "code" : "K.CC.2",
                "description" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
                "percent" : "15",
                "duration_mask" : "00011111000011100100",
-               "framework_id" : "9369"
+               "standard_id" : "9369"
             }
          ],
          "notes" : "no comments",
@@ -40,11 +40,11 @@
          "classname" : "2nd Grade Math",
          "standards" : [
             {
-               "fullcode" : "K.CC.2",
+               "code" : "K.CC.2",
                "description" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
                "percent" : "15",
                "duration_mask" : "11110000111100001111",
-               "framework_id" : "9369"
+               "standard_id" : "9369"
             }
          ],
          "notes" : "no comments",
@@ -66,11 +66,11 @@
          "classname" : "Algebra I",
          "standards" : [
             {
-               "fullcode" : "",
+               "code" : "",
                "description" : "School Vacation/Weekend",
                "percent" : "10",
                "duration_mask" : "00000000000000000000",
-               "framework_id" : "10109"
+               "standard_id" : "10109"
             }
          ],
          "notes" : "",
@@ -94,18 +94,18 @@
          "notes" : "",
          "standards" : [
             {
-               "fullcode" : "K.CC.1 ",
+               "code" : "K.CC.1 ",
                "description" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
                "duration_mask" : "00000000000111111000",
-               "framework_id" : "9368"
+               "standard_id" : "9368"
             },
             {
-               "fullcode" : "Other Math Topics",
+               "code" : "Other Math Topics",
                "description" : "Other Content Topics",
                "percent" : "10",
                "duration_mask" : "00000111000000000000",
-               "framework_id" : "10201"
+               "standard_id" : "10201"
             }
          ],
          "activitycsv" : "2",
@@ -129,18 +129,18 @@
          "notes" : "",
          "standards" : [
             {
-               "fullcode" : "K.CC.1 ",
+               "code" : "K.CC.1 ",
                "description" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
                "duration_mask" : "00001111000000000000",
-               "framework_id" : "9368"
+               "standard_id" : "9368"
             },
             {
-               "fullcode" : "Other Math Topics",
+               "code" : "Other Math Topics",
                "description" : "Other Content Topics",
                "percent" : "10",
                "duration_mask" : "11000000000000001111",
-               "framework_id" : "10201"
+               "standard_id" : "10201"
             }
          ],
          "activitycsv" : "1",
@@ -164,11 +164,11 @@
          "notes" : "",
          "standards" : [
             {
-               "fullcode" : "K.CC.1 ",
+               "code" : "K.CC.1 ",
                "description" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
                "duration_mask" : "00000000000000000000",
-               "framework_id" : "9368"
+               "standard_id" : "9368"
             }
          ],
          "activitycsv" : "1",
@@ -192,11 +192,11 @@
          "notes" : "",
          "standards" : [
             {
-               "fullcode" : "1.OA.1",
+               "code" : "1.OA.1",
                "description" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
                "percent" : "10",
                "duration_mask" : "00000000000000000000",
-               "framework_id" : "9399"
+               "standard_id" : "9399"
             }
          ],
          "activitycsv" : "1",
@@ -220,11 +220,11 @@
          "notes" : "many",
          "standards" : [
             {
-               "fullcode" : "K.CC.1 ",
+               "code" : "K.CC.1 ",
                "description" : "1. Count to 100 by ones and by tens.  ",
                "percent" : "10",
                "duration_mask" : "00000000000000000000",
-               "framework_id" : "9368"
+               "standard_id" : "9368"
             }
          ],
          "activitycsv" : "2",
@@ -249,11 +249,11 @@
          "usermaterials" : "Triangle",
          "standards" : [
             {
-               "fullcode" : "1.OA.1",
+               "code" : "1.OA.1",
                "description" : "1.  Use addition and subtraction within 20 to solve word problems involving  situations of adding to, taking from, putting together, taking apart,  and comparing, with unknowns in all positions, e.g., by using objects,  drawings, and equations with a symbol for the unknown number to  represent the problem.",
                "percent" : "10",
                "duration_mask" : "00000000000000000000",
-               "framework_id" : "9399"
+               "standard_id" : "9399"
             }
          ],
          "activitycsv" : "1",
