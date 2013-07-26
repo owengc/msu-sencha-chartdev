@@ -4072,7 +4072,7 @@ body.x-desktop {
   background-color: #ccc !important;
   color: white !important;
   font-size: 14px;
-  font-family: "Lucida Console";
+  font-family: "Lucida Console", Monaco, monospace;
   padding: 0 !important;
   margin: 0 !important;
 }
@@ -4103,8 +4103,6 @@ body.x-desktop {
 
 .o-rangeselector .x-button {
   border: 0;
-  /*border-top: 1px solid lightgray;*/
- /* border-bottom: 1px solid lightgray;*/
   background: none;
   background-image: -webkit-gradient(linear, 100% 100%, 0, 100% 100%, 34, color-stop(0%, rgba(180, 180, 180, 1)), color-stop(100%, rgba(200, 200, 200, 0.5)));
   background-image: -webkit-linear-gradient(rgba(180, 180, 180, 1), rgba(200, 200, 200, 0.5) 100%);

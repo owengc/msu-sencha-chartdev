@@ -47,23 +47,23 @@ Ext.define('app.view.JournalView', {
 		handler: function(){
 		    var standards=[
 			{
-                            "framework_id" : "9368",
+                            "standard_id" : "9368",
                             "description" : "1. Count to 100 by ones and by tens.  ",
-                            "fullcode" : "K.CC.1 ",
+                            "code" : "K.CC.1 ",
 			    "levelname" : "Standard",
                             "leaf" : "true",
 			},
 			{
-                            "framework_id" : "9369",
+                            "standard_id" : "9369",
                             "description" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
-                            "fullcode" : "K.CC.2",
+                            "code" : "K.CC.2",
                             "levelname" : "Standard",
                             "leaf" : "true",
 			},
 			{
-                            "framework_id" : "9370",
+                            "standard_id" : "9370",
                             "description" : "3. Write numbers from 0 to 20. Represent a number of objects with a written numeral 0-20 (with 0 representing a count of no objects). ",
-                            "fullcode" : "K.CC.3",
+                            "code" : "K.CC.3",
                             "levelname" : "Standard",
                             "leaf" : "true",
 			}
@@ -72,13 +72,13 @@ Ext.define('app.view.JournalView', {
 		    standard=standards[index],
 		    store=Ext.getStore('ULStandardStoreR');
 		    if(store){
-			if(store.findRecord('framework_id', standard['framework_id'], 0, false, true, true)){
+			if(store.findRecord('standard_id', standard['standard_id'], 0, false, true, true)){
 			    console.log('duplicate standard chosen');
 			}
 			else{
 			    store.add(standard);
 			}
-			//console.log(store.findRecord('framework_id', standard['framework_id'], 0, false, true, true));
+			//console.log(store.findRecord('standard_id', standard['standard_id'], 0, false, true, true));
 		    }
 		}
 	    },

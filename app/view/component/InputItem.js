@@ -34,10 +34,9 @@ Ext.define('app.view.component.InputItem', {
 				ui: 'plain-round',
 				handler: function(){
 				    var ii=this.up('inputitem');
-				    Ext.Msg.confirm("Remove Standard", "Are you sure you want to remove <b>"+ii.getData().data.fullcode+"</b>?", 
+				    Ext.Msg.confirm("Remove Standard", "Are you sure you want to remove <b>"+ii.getData().data.code+"</b>?", 
 						    function(response){
 							if(response=='yes'){
-//							    var store=ii.up('dataview').getStore(),
 							    var store=Ext.getStore('ULStandardStoreR');
 							    record=store.getById(ii.getData().id);
 							    store.remove(record);
@@ -53,7 +52,7 @@ Ext.define('app.view.component.InputItem', {
 			items: [
 			    {
 				xtype: 'textfield',
-				itemId: 'fullcodeCmp',
+				itemId: 'labelCmp',
 				idSuffix: '_label',
 				inputCls: 'o-blue-bold',
 				docked: 'top',
@@ -90,7 +89,7 @@ Ext.define('app.view.component.InputItem', {
 				if(!this.infoPanel){
 				    this.infoPanel=Ext.create('Ext.Panel', {modal: true, centered: true, width: 600, height: 150, styleHtmlContent: true, scrollable: 'vertical', hideOnMaskTap: true, fullscreen: false, hidden: true, zIndex: 30, items: []});
 				    var data=this.up('inputitem').getData().data;
-				    var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+data.fullcode+'</h2>');
+				    var outString=('<h2 style="font-weight:bold;float:left;text-align:left;display:inline;margin-bottom:0;">'+data.code+'</h2>');
 				    outString+=('<div style="float:top;clear:both;width:100%;border-bottom:2px solid black;"></div>');
 				    outString+=('<strong>Description:</strong> '+data.description);
 				    this.infoPanel.setHtml(outString);
@@ -111,17 +110,17 @@ Ext.define('app.view.component.InputItem', {
 	this.callParent(arguments);
 	if(record){
 	    console.log('inputlist record added:', record);
-	    var fullcodeCmp=this.down('#fullcodeCmp'),
+	    var labelCmp=this.down('#labelCmp'),
 	    totalPercentCmp=this.down('#totalPercentCmp'),
 	    totalMinutesCmp=this.down('#totalMinutesCmp'),
 	    prefix=this.getIdPrefix(),
-	    idNum=record.get('framework_id'),
+	    idNum=record.get('standard_id'),
 	    rsConfig={};	
 	    //console.log(idNum);
 
 	    /*set up unique itemIds for all the components in this row*/
-	    fullcodeCmp.setValue(record.get('fullcode'));
-	    fullcodeCmp.setItemId(prefix+idNum+fullcodeCmp.idSuffix);
+	    labelCmp.setValue(record.get('code'));
+	    labelCmp.setItemId(prefix+idNum+labelCmp.idSuffix);
 	    totalPercentCmp.setItemId(prefix+idNum+totalPercentCmp.idSuffix);
 	    totalMinutesCmp.setItemId(prefix+idNum+totalMinutesCmp.idSuffix);
 
