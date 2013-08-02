@@ -705,7 +705,8 @@ Ext.define('app.controller.ReportController', {
 			title: {
                             text: ('Time spent (in minutes) by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y')),
 			},
-			minimum: 0
+			minimum: 0,
+			renderer: function (value, a, b, c) {console.log(value, a, b, c);return Math.floor(value);/*value.toFixed(0)*/}
 		    },
 		    {
 			type: 'category',

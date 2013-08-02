@@ -195,23 +195,12 @@ Ext.define('app.view.component.RangeSelector', {
 		}
 	    },
 	    /*
-	      resize - This function updates the RangeSelector's knowledge of it's size/position with respect to the screen after it's DOM element
-	      is resized as a result of either the browser window changing size or the layout changing. Also updates the area property of each
-	      button.
+	      resize - This function calls 'updateSize' to make RangeSelector aware of its DOM elements' dimensions
 	     */
 	    resize: {
 		buffer: 100, //buffer reduces calls to this function as resize is taking place, all that matters is final size in 'resting' state
 		fn: function(){
-		    var buttons=this.getItems().items,
-		    buttonCount=buttons.length,
-		    i=0;
-		    
-		    for(;i<buttonCount;i++){
-			buttons[i].area=Ext.util.Region.getRegion(buttons[i].element);
-		    }
-		    this.setArea(Ext.util.Region.getRegion(this.element));
-		    //console.log('selector resized', this.element.dom.scrollWidth);
-		    //console.log(this.area.toString());
+		    this.updateSize();
 		}
 	    },
 	    /*
@@ -255,6 +244,23 @@ Ext.define('app.view.component.RangeSelector', {
 	this.setTotalMinutesCmp(this.config.totalMinutesCmp);//...
 	this.setDurationCmp(this.config.durationCmp);///...
 	this.initializeRegions();//Now that the buttons are in place, set them to 'on' or 'off' according to region data
+    },
+    /*
+      updateSize - This function updates the RangeSelector's knowledge of it's size/position with respect to the screen after it's DOM element
+      is resized as a result of either the browser window changing size or the layout changing. Also updates the area property of each
+      button.
+    */
+    updateSize: function(){
+	var buttons=this.getItems().items,
+	buttonCount=buttons.length,
+	i=0;
+	
+	for(;i<buttonCount;i++){
+	    buttons[i].area=Ext.util.Region.getRegion(buttons[i].element);
+	}
+	this.setArea(Ext.util.Region.getRegion(this.element));
+	//console.log('selector resized', this.element.dom.scrollWidth);
+	//console.log(this.area.toString());
     },
     /*
       getButtonByTouch - This function uses the touch position (pageX) to look up which button corresponds to that position
