@@ -222,6 +222,7 @@ Ext.define('app.view.component.RangeSelector', {
 		fn: function(){
 		    this.displayTotalPercent();
 		    this.displayTotalMinutes();
+		    this.fireEvent('resize');
 		}
 	    }
 	}
