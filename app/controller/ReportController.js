@@ -299,7 +299,7 @@ Ext.define('app.controller.ReportController', {
 	    {name: 'standards'},
 
 	    {name: 'code', type: 'string'},
-	    {name: 'description', type: 'string'},
+	    {name: 'description', type: 'string'}
 	],
 	reportData=[],
 	logs=userLogStore.getData().items,
@@ -524,10 +524,7 @@ Ext.define('app.controller.ReportController', {
 			fromDate: settings.fromDate,
 			toDate: settings.toDate,
 			title: {
-                            text: ('Log entries by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y')),
-			},
-			style: {
-
+                            text: ('Log entries by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y'))
 			},
 			label: {
                             rotate: 45
@@ -573,7 +570,11 @@ Ext.define('app.controller.ReportController', {
 			    }
 			},
 			modeToggleButton: {
-			    cls: ['x-panzoom-toggle', 'x-zooming'], iconCls: 'expand'
+			    cls: [
+				'x-panzoom-toggle',
+				'x-zooming'
+			    ],
+			    iconCls: 'expand'
 			}
 		    },
 		    {
@@ -635,7 +636,7 @@ Ext.define('app.controller.ReportController', {
 		{name: 'journals'},
 		{name: 'total_time', type: 'int'},
 		{name: 'code', type: 'string'},
-		{name: 'description', type: 'string'},
+		{name: 'description', type: 'string'}
 	    ],
 	    barChartData=[],
 	    itemHash={},
@@ -703,7 +704,7 @@ Ext.define('app.controller.ReportController', {
                             'total_time'
 			],
 			title: {
-                            text: ('Time spent (in minutes) by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y')),
+                            text: ('Time spent (in minutes) by '+settings.tier+' between '+Ext.Date.format(settings.fromDate, 'F j, Y')+' and '+Ext.Date.format(settings.toDate, 'F j, Y'))
 			},
 			minimum: 0,
 			renderer: function (value, a, b, c) {console.log(value, a, b, c);return Math.floor(value);/*value.toFixed(0)*/}
@@ -866,52 +867,5 @@ Ext.define('app.controller.ReportController', {
             },
 	    scope: me
         });
-
-	//html=('<!doctype><html><head><title>Report for '+Ext.Date.format(settings.fromDate, 'n/j/Y')+'-'+Ext.Date.format(settings.toDate, 'n/j/Y')+'</title></head><body>'); 
-	if(settings.type=='list'){
-            /*var reportStore=Ext.getStore('ReportStoreR'), 
-            groups=reportStore.getGroups(),
-            records, record, item='';
-            for(var g in groups){
-		records=groups[g].children;
-		html+=('<h2 style="border-bottom:5px solid black;width:100%">'+groups[g].name+'</h2>');
-		for(var r in records){
-		    record=records[r];
-		    item=(record.data.class_name)?('<h3 style="border-bottom:2px solid black;">'+record.data.class_name+'</h3>'):'';
-		    item+=(record.data.date_taught)?('<strong>Date:</strong> '+Ext.Date.format(record.data.date_taught, 'n/j/Y')+'<br/>'):'';
-		    item+=(record.data.code)?('<strong>'+Ext.String.capitalize(settings.tier)+':</strong> '+record.data.code+'<br/>'):'';
-		    item+=(record.data.description)?('<strong>Description:</strong> '+record.data.description+'<br/>'):'';
-		    item+=(record.data.time_spent)?('<strong>Time Spent:</strong> '+record.data.time_spent+' minutes<br/>'):'';
-
-		    var materials=record.data.materials,
-		    pages=record.data.pages,
-		    activities=record.data.activities;
-		    item+=(materials)?('<strong>Lesson Materials:</strong> '+materials):'';
-		    if(materials && pages){
-			item+=(isNaN(record.data.pages))?(' (pages '+pages+')'):(' (page '+pages+')');
-		    }
-		    item+=(materials)?'<br/>':''; 
-		    if(activities.length>0){                                                                                                                                                         
-			var listString='';
-			item+='<strong>Lesson Activities:</strong> ';
-			for(index in activities){
-                            listString+=(listString!='')?', ':'';
-                            listString+=activities[index].activity_name;
-			}
-                        item+=(listString+'<br/>');
-		    }
-		    item+=(record.data.notes)?('<strong>Notes:</strong> '+record.data.notes+'<br/>'):'';
-                    html+=item;
-                    html+='<br/>';
-                }
-                html+='<br/>';
-            }
-	    html+='</body></html>';
-	    var newwindow=window.open();
-	    newwindow.document.write(html);*/
-	}
-	else{
-	    
-	}
     }
 });

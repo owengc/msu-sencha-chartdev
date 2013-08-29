@@ -51,21 +51,21 @@ Ext.define('app.view.JournalView', {
                             "description" : "1. Count to 100 by ones and by tens.  ",
                             "code" : "K.CC.1 ",
 			    "levelname" : "Standard",
-                            "leaf" : "true",
+                            "leaf" : "true"
 			},
 			{
                             "standard_id" : "9369",
                             "description" : "2. Count forward beginning from a given number within the known sequence (instead of having to begin at 1). ",
                             "code" : "K.CC.2",
                             "levelname" : "Standard",
-                            "leaf" : "true",
+                            "leaf" : "true"
 			},
 			{
                             "standard_id" : "9370",
                             "description" : "3. Write numbers from 0 to 20. Represent a number of objects with a written numeral 0-20 (with 0 representing a count of no objects). ",
                             "code" : "K.CC.3",
                             "levelname" : "Standard",
-                            "leaf" : "true",
+                            "leaf" : "true"
 			}
 		    ],
 		    index=Math.floor(Math.random()*3),

@@ -8,7 +8,7 @@ Ext.define("app.store.CCStoreR", {
 	autoLoad: true,
         proxy: {
 	    type: 'ajax',
-	    url: 'framework.json',
+	    url: 'framework.json'
 	}
     }
 });

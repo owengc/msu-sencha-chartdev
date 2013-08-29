@@ -14,6 +14,6 @@ Ext.define("app.store.ULStoreR", {
 	    }
 	},
 	groupField: 'classname',
-	sorters: ['datetaught', 'duration'],
-    },
+	sorters: ['datetaught', 'duration']
+    }
 });

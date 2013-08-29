@@ -87,38 +87,8 @@ Ext.define('app.view.ReportView', {
 				defaultTabletPickerConfig: {
 				    height: '153px',
 				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250}
 				},
-				/*defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
-				    toolbar: {
-					title: 'Select Report Type:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*//*,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
-				    }
-				},*/
 				listeners: {
 				    change: function(me, newValue, oldValue, eOpts){
 					var groupField=me.getParent().down('#report_groupField');
@@ -152,38 +122,8 @@ Ext.define('app.view.ReportView', {
 				defaultTabletPickerConfig: {
 				    height: '153px',
 				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
+				    hideAnimation: {type: 'fadeOut', duration: 250}
 				},
-				/*defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
-				    toolbar: {
-					title: 'Select Report Presentation Tier:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*//*,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
-				    }
-				},*/
 				listeners: {
 				    change: function(me, newValue, oldValue, eOpts){
 					var groupField=me.getParent().down('#report_groupField'),
@@ -209,38 +149,8 @@ Ext.define('app.view.ReportView', {
 				defaultTabletPickerConfig: {
 				    height: '153px',
 				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				},
-				/*defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
-				    toolbar: {
-					title: 'Select Grouping Parameter:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*//*,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
-				    }
-				}*/
+				    hideAnimation: {type: 'fadeOut', duration: 250}
+				}
 			    },
 			    {
 				xtype: 'datepickerfield',
@@ -260,15 +170,7 @@ Ext.define('app.view.ReportView', {
 					title: 'Select Report Start Date:',
 					height: 75
 				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*/,
+				    cancelButton: false,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -298,15 +200,7 @@ Ext.define('app.view.ReportView', {
 					title: 'Select Report End Date:',
 					height: 75
 				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*/,
+				    cancelButton: false,
 				    doneButton: {
 					margin: '0 5',
 					height: 60,
@@ -323,7 +217,7 @@ Ext.define('app.view.ReportView', {
 				itemId: 'report_filterSwitch',
 				name: 'filterSwitch',
 				label: 'Filter:',
-				value: 0,
+				value: 0
 			    }
 			]
 		    },
@@ -353,38 +247,8 @@ Ext.define('app.view.ReportView', {
 				defaultTabletPickerConfig: {
 				    height: '106px',
 				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				},
-				/*defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
-				    toolbar: {
-					title: 'Select Filter Type:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-				    }*//*,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
-				    }
-				}*/
+				    hideAnimation: {type: 'fadeOut', duration: 250}
+				}
 			    },
 			    {
 				xtype: 'selectfield',
@@ -400,38 +264,8 @@ Ext.define('app.view.ReportView', {
 				defaultTabletPickerConfig: {
 				    height: '153px',
 				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				},
-				/*defaultPhonePickerConfig: {
-				    usePicker: true,
-				    hideOnMaskTap: true,
-				    stretchY: true,
-				    showAnimation: {type: 'fadeIn', duration: 250},
-				    hideAnimation: {type: 'fadeOut', duration: 250},
-				    height: '300px',
-				    toolbar: {
-					title: 'Select Filter Tier:',
-					height: 75
-				    },
-				    cancelButton: false/*{
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					//ui: 'decline'
-					}*//*,
-				    doneButton: {
-					margin: '0 5',
-					height: 60,
-					width: 150,
-					style: {
-					    'font-size': '1.5em'
-					},
-					ui: 'confirm'
-				    }
-				}*/
+				    hideAnimation: {type: 'fadeOut', duration: 250}
+				}
 			    },
 			    {
 				xtype: 'selectfield',

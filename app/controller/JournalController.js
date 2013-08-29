@@ -2,7 +2,7 @@ Ext.define('app.controller.JournalController', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.MessageBox',
-        'Ext.data.Store',
+        'Ext.data.Store'
     ],
     config: {
 	models: ['ULModelR', 'ULStandardModelR', 'CCModelR'],
@@ -17,7 +17,7 @@ Ext.define('app.controller.JournalController', {
 		keyup: 'updateDuration',
 		change: 'updateDuration'
 	    }
-	},
+	}
     },
     loadUserLog: function(){
         var userLog = Ext.getStore('ULStoreR'),
@@ -44,7 +44,7 @@ Ext.define('app.controller.JournalController', {
 		var standardStore=Ext.create('Ext.data.Store', {
 		    storeId: 'ULStandardStoreR',
 		    model: 'app.model.ULStandardModelR',
-		    data: standards,
+		    data: standards
 		});
 		standardStore.load();
 		var durationField=me.getDurationField(),

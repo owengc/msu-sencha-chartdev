@@ -15,6 +15,7 @@ Ext.define('app.view.component.RangeSelector', {
     alias: 'widget.rangeselector',
     xtype: 'rangeselector',
     requires: [
+	'app.view.component.RangeSelectorButton',
 	'Ext.Button',
 	'Ext.util.Region'
     ],
@@ -57,14 +58,14 @@ Ext.define('app.view.component.RangeSelector', {
 
 		    if(button){
 			state.touchInProgress=true;
-			state.touched=button.index;
+			state.touched=button.getIndex();
 			state.lastTouched=null;
 			state.direction=null;
 			state.lastDirection=null;
 			state.reversed=false;
 
 			this.toggleButtonByIndex(state.touched);
-			//console.log('touchstart over button ' + button.index);
+			//console.log('touchstart over button ' + button.getIndex());
 			//console.log('touchstart: '+this.getPressedIndices().toString());
 		    }
 		}
@@ -82,10 +83,10 @@ Ext.define('app.view.component.RangeSelector', {
 		    var button=this.getButtonByTouch(e.pageX),
 		    state=this.getState();
 		    
-		    if(button && state.touchInProgress && state.touched!=button.index){//Confirms that the touch has moved over a new button
+		    if(button && state.touchInProgress && state.touched!=button.getIndex()){//Confirms that the touch has moved over a new button
 			//Update state variables
 			state.lastTouched=state.touched
-			state.touched=button.index;
+			state.touched=button.getIndex();
 			
 			state.lastDirection=state.direction;
 			state.direction=(state.lastTouched<state.touched)?'right':'left';
@@ -117,16 +118,16 @@ Ext.define('app.view.component.RangeSelector', {
 			    else{
 				this.toggleButtonByIndex(state.touched);
 				this.recordTotal();//Update and display the new total
-				//console.log('touchmove over button ' + button.index + '|pageX: ' + e.pageX + ', pageY: ' + e.pageY);
+				//console.log('touchmove over button ' + button.getIndex() + '|pageX: ' + e.pageX + ', pageY: ' + e.pageY);
 			    }
 			}
 			else{//If the direction is reversed, the previously touched button must be toggled back to it's previous state (reversal undoes the action)
 			    this.toggleButtonByIndex(state.lastTouched);
 			    this.toggleButtonByIndex(state.touched);
 			    this.recordTotal();//Update and display the new total
-			    //console.log('touchmove over button ' + button.index + '|pageX: ' + e.pageX + ', pageY: ' + e.pageY);
+			    //console.log('touchmove over button ' + button.getIndex() + '|pageX: ' + e.pageX + ', pageY: ' + e.pageY);
 			}	
-			//console.log('touchmove over button ' + button.index);	
+			//console.log('touchmove over button ' + button.getIndex());	
 			//console.log('touchmove: '+this.getPressedIndices().toString());
 		    }
 		}
@@ -149,7 +150,7 @@ Ext.define('app.view.component.RangeSelector', {
 		    state.reverse=false;
 		    
 		    this.recordRegions();
-		    //console.log('touchend over button ' + button.index);
+		    //console.log('touchend over button ' + button.getIndex());
 		    //console.log('touchend: '+this.getPressedIndices().toString());
 		}
 	    },
@@ -163,8 +164,8 @@ Ext.define('app.view.component.RangeSelector', {
 		    var button=this.getButtonByTouch(e.pageX);
 
 		    if(button){
-			this.toggleButtonByIndex(button.index);
-			//console.log('tap on button '+button.index);
+			this.toggleButtonByIndex(button.getIndex());
+			//console.log('tap on button '+button.getIndex());
 			//console.log('tap: '+this.getPressedIndices().toString());
 		    }
 		}
@@ -190,7 +191,7 @@ Ext.define('app.view.component.RangeSelector', {
 			    }
 			}
 			this.setPressedButtons(pressedIndicesNew);
-			//console.log('longpress on button '+button.index);
+			//console.log('longpress on button '+button.getIndex());
 		    }
 		}
 	    },
@@ -228,7 +229,8 @@ Ext.define('app.view.component.RangeSelector', {
 	i=0;
 	//Create and initialize buttons
 	for(;i<numButtons;i++){
-	    var button=Ext.create('Ext.Button', {//There are a number of custom properties being added to the button class. In the future, an extension of Ext.Button might be nice
+	    var button=Ext.create(/*'Ext.Button'*/'app.view.component.RangeSelectorButton', {
+		//There are a number of custom properties being added to the button class. In the future, an extension of Ext.Button might be nice
 		index: i,//custom index used to identify buttons
 		text: '&nbsp;',
 		width: increment+'%',//set size of each button based on increment
@@ -256,7 +258,7 @@ Ext.define('app.view.component.RangeSelector', {
 	i=0;
 	
 	for(;i<buttonCount;i++){
-	    buttons[i].area=Ext.util.Region.getRegion(buttons[i].element);
+	    buttons[i].setArea(Ext.util.Region.getRegion(buttons[i].element));
 	}
 	this.setArea(Ext.util.Region.getRegion(this.element));
 	//console.log('selector resized', this.element.dom.scrollWidth);
@@ -277,7 +279,7 @@ Ext.define('app.view.component.RangeSelector', {
 	i=0;
 
 	for(;i<buttonCount;i++){
-	    if(!buttons[i].area.isOutOfBoundX(pageX)){
+	    if(!buttons[i].getArea().isOutOfBoundX(pageX)){
 		button=buttons[i];
 		break;
 	    }   
@@ -313,7 +315,7 @@ Ext.define('app.view.component.RangeSelector', {
 	i=0;
 
 	for(;i<pressedButtonCount;i++){
-	    pressedIndices.push(pressedButtons[i].index);
+	    pressedIndices.push(pressedButtons[i].getIndex());
 	}
 	return pressedIndices;
     },
