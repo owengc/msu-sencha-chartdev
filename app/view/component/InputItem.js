@@ -53,7 +53,6 @@ Ext.define('app.view.component.InputItem', {
 			    {
 				xtype: 'textfield',
 				itemId: 'labelCmp',
-				idSuffix: '_label',
 				inputCls: 'o-blue-bold',
 				docked: 'top',
 				width: '140px',
@@ -65,7 +64,6 @@ Ext.define('app.view.component.InputItem', {
 			    {
 				xtype: 'textfield',
 				itemId: 'totalPercentCmp',
-				idSuffix: '_percent',
 				label: '',
 				readOnly: true,
 				cls: 'o-field-small',
@@ -75,7 +73,6 @@ Ext.define('app.view.component.InputItem', {
 			    {
 				xtype: 'textfield',
 				itemId: 'totalMinutesCmp',
-				idSuffix: '_minutes',
 				label: '',
 				readOnly: true,
 				cls: 'o-field-small',
@@ -120,9 +117,9 @@ Ext.define('app.view.component.InputItem', {
 
 	    /*set up unique itemIds for all the components in this row*/
 	    labelCmp.setValue(record.get('code'));
-	    labelCmp.setItemId(prefix+idNum+'_label'/*labelCmp.idSuffix*/);
-	    totalPercentCmp.setItemId(prefix+idNum+'_percent'/*totalPercentCmp.idSuffix*/);
-	    totalMinutesCmp.setItemId(prefix+idNum+'_minutes'/*totalMinutesCmp.idSuffix*/);
+	    labelCmp.setItemId(prefix+idNum+'_label');
+	    totalPercentCmp.setItemId(prefix+idNum+'_percent');
+	    totalMinutesCmp.setItemId(prefix+idNum+'_minutes');
 
 	    /*set up config object for new rangeselector, create rangeselector and add it to this row*/
 	    rsConfig.regions=record.get('duration_mask');//RangeSelectors will default to '00000000000000000000' if .regions is not specified

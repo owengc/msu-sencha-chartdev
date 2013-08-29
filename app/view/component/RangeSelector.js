@@ -229,8 +229,7 @@ Ext.define('app.view.component.RangeSelector', {
 	i=0;
 	//Create and initialize buttons
 	for(;i<numButtons;i++){
-	    var button=Ext.create(/*'Ext.Button'*/'app.view.component.RangeSelectorButton', {
-		//There are a number of custom properties being added to the button class. In the future, an extension of Ext.Button might be nice
+	    var button=Ext.create('app.view.component.RangeSelectorButton', {
 		index: i,//custom index used to identify buttons
 		text: '&nbsp;',
 		width: increment+'%',//set size of each button based on increment
